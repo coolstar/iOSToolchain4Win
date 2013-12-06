@@ -1,0 +1,22 @@
+#!/usr/bin/python
+import sys, os
+
+lastwinpathfound = ""
+lastunixpathfound = ""
+movehackused=False
+argv = sys.argv
+for x in range(len(argv)):
+	if os.path.exists(argv[x]):
+		lastunixpathfound = argv[x]
+		lastpathfound = argv[x] = os.popen("cygpath -wa '"+argv[x]+"'").read().rstrip('\n')
+
+if not ("-o" in argv):
+	argv.append("-o")
+	argv.append(lastwinpathfound+".tmp")
+	movehackused = True
+
+os.execv(os.path.dirname(__file__)+"/../extern/arm-apple-darwin11-strip.exe",argv)
+
+if movehackused:
+	os.remove(lastunixpathfound)
+	os.rename(lastunixpathfound+".tmp", lastunixpathfound)
