@@ -16,6 +16,6 @@ for x in range(len(argv)):
 		arg = argv[x][2:]
 		if ("-v" in argv):
 			print("Converting '"+arg+"' to "+os.popen("cygpath -wa '"+arg+"'").read().rstrip('\n'))
-		argv[x]="-L"+os.popen("cygpath -wa '"+arg+"'").read().rstrip('\n')
+		argv[x]="-F"+os.popen("cygpath -wa '"+arg+"'").read().rstrip('\n')
 
 os.execv(os.path.dirname(__file__)+"/../extern/arm-apple-darwin11-ld.exe",argv)
