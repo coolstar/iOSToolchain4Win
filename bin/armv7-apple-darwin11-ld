@@ -8,5 +8,8 @@ for x in range(len(argv)):
 	elif argv[x].startswith("-L"):
 		arg = argv[x][2:]
 		argv[x]="-L"+os.popen("cygpath -wa '"+arg+"'").read().rstrip('\n')
+	elif argv[x].startswith("-F"):
+		arg = argv[x][2:]
+		argv[x]="-L"+os.popen("cygpath -wa '"+arg+"'").read().rstrip('\n')
 
 os.execv(os.path.dirname(__file__)+"/../extern/arm-apple-darwin11-ld.exe",argv)
