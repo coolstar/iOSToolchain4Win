@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import sys, os
+import sys, os, platform
 
 lastwinpathfound = ""
 lastunixpathfound = ""
@@ -15,7 +15,11 @@ if not ("-o" in argv):
 	argv.append(lastwinpathfound+".tmp")
 	movehackused = True
 
-os.execv(os.path.dirname(__file__)+"/../extern/arm-apple-darwin11-strip.exe",argv)
+if platform.system() == 'CYGWIN_NT-5.1':
+	print(" Using XP Hacked Strip")
+	os.execv(os.path.dirname(__file__)+"/../extern/arm-apple-darwin11-strip-XP.exe",argv)
+else:
+	os.execv(os.path.dirname(__file__)+"/../extern/arm-apple-darwin11-strip.exe",argv)
 
 if movehackused:
 	os.remove(lastunixpathfound)

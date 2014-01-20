@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import sys, os
+import sys, os, platform
 
 argv = sys.argv
 for x in range(len(argv)):
@@ -9,4 +9,8 @@ for x in range(len(argv)):
 		arg = argv[x][2:]
 		argv[x]="-L"+os.popen("cygpath -wa '"+arg+"'").read().rstrip('\n')
 
-os.execv(os.path.dirname(__file__)+"/../extern/lipo.exe",argv)
+if platform.system() == 'CYGWIN_NT-5.1':
+	print(" Using XP Hacked Lipo")
+	os.execv(os.path.dirname(__file__)+"/../extern/lipo-XP.exe",argv)
+else:
+	os.execv(os.path.dirname(__file__)+"/../extern/lipo.exe",argv)

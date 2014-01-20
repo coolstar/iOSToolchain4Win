@@ -1,9 +1,13 @@
 #!/usr/bin/python
-import sys, os
+import sys, os, platform
 
 argv = sys.argv
 for x in range(len(argv)):
         if os.path.exists(argv[x]):
                 argv[x] = os.popen("cygpath -wa '"+argv[x]+"'").read().rstrip('\n')
 
-os.execv(os.path.dirname(__file__)+"/../extern/arm-apple-darwin11-codesign_allocate.exe",argv)
+if platform.system() == 'CYGWIN_NT-5.1':
+	print(" Using XP Hacked Codesign Allocate")
+	os.execv(os.path.dirname(__file__)+"/../extern/arm-apple-darwin11-codesign_allocate-XP.exe",argv)
+else:
+	os.execv(os.path.dirname(__file__)+"/../extern/arm-apple-darwin11-codesign_allocate.exe",argv)
