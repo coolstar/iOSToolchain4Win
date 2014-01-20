@@ -16,7 +16,6 @@ if not ("-o" in argv):
 	movehackused = True
 
 if platform.system() == 'CYGWIN_NT-5.1':
-	print(" Using XP Hacked Strip")
 	os.execv(os.path.dirname(__file__)+"/../extern/arm-apple-darwin11-strip-XP.exe",argv)
 else:
 	os.execv(os.path.dirname(__file__)+"/../extern/arm-apple-darwin11-strip.exe",argv)

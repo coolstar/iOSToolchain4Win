@@ -19,7 +19,6 @@ for x in range(len(argv)):
 		argv[x]="-F"+os.popen("cygpath -wa '"+arg+"'").read().rstrip('\n')
 
 if platform.system() == 'CYGWIN_NT-5.1':
-	print(" Using XP Hacked Ld")
 	os.execv(os.path.dirname(__file__)+"/../extern/arm-apple-darwin11-ld-XP.exe",argv)
 else:
 	os.execv(os.path.dirname(__file__)+"/../extern/arm-apple-darwin11-ld.exe",argv)
