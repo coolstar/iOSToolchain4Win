@@ -74,8 +74,7 @@ namespace sys {
       MILLISECONDS_PER_SECOND = 1000,       ///< One Thousand
       NANOSECONDS_PER_MICROSECOND = 1000,   ///< One Thousand
       NANOSECONDS_PER_MILLISECOND = 1000000,///< One Million
-      NANOSECONDS_PER_POSIX_TICK = 100,     ///< Posix tick is 100 Hz (10ms)
-      NANOSECONDS_PER_WIN32_TICK = 100      ///< Win32 tick is 100 Hz (10ms)
+      NANOSECONDS_PER_WIN32_TICK = 100      ///< Win32 tick is 10^7 Hz (10ns)
     };
 
   /// @}
@@ -236,15 +235,6 @@ namespace sys {
              ( nanos_ / NANOSECONDS_PER_MILLISECOND );
     }
 
-    /// Converts the TimeValue into the corresponding number of "ticks" for
-    /// Posix, correcting for the difference in Posix zero time.
-    /// @brief Convert to unix time (100 nanoseconds since 12:00:00a Jan 1,1970)
-    uint64_t toPosixTime() const {
-      uint64_t result = seconds_ - PosixZeroTimeSeconds;
-      result += nanos_ / NANOSECONDS_PER_POSIX_TICK;
-      return result;
-    }
-
     /// Converts the TimeValue into the corresponding number of seconds
     /// since the epoch (00:00:00 Jan 1,1970).
     uint64_t toEpochTime() const {
@@ -253,9 +243,10 @@ namespace sys {
 
     /// Converts the TimeValue into the corresponding number of "ticks" for
     /// Win32 platforms, correcting for the difference in Win32 zero time.
-    /// @brief Convert to windows time (seconds since 12:00:00a Jan 1, 1601)
+    /// @brief Convert to Win32's FILETIME
+    /// (100ns intervals since 00:00:00 Jan 1, 1601 UTC)
     uint64_t toWin32Time() const {
-      uint64_t result = seconds_ - Win32ZeroTimeSeconds;
+      uint64_t result = (uint64_t)10000000 * (seconds_ - Win32ZeroTimeSeconds);
       result += nanos_ / NANOSECONDS_PER_WIN32_TICK;
       return result;
     }

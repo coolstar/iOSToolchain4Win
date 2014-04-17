@@ -63,6 +63,14 @@ public:
     ///   - constructor/destructor signatures.
     iOS,
 
+    /// The iOS 64-bit ABI is follows ARM's published 64-bit ABI more
+    /// closely, but we don't guarantee to follow it perfectly.
+    ///
+    /// It is documented here:
+    ///    http://infocenter.arm.com
+    ///                  /help/topic/com.arm.doc.ihi0059a/IHI0059A_cppabi64.pdf
+    iOS64,
+
     /// The generic AArch64 ABI is also a modified version of the Itanium ABI,
     /// but it has fewer divergences than the 32-bit ARM ABI.
     ///
@@ -105,6 +113,7 @@ public:
     case GenericItanium:
     case GenericARM:
     case iOS:
+    case iOS64:
       return true;
 
     case Microsoft:
@@ -120,6 +129,7 @@ public:
     case GenericItanium:
     case GenericARM:
     case iOS:
+    case iOS64:
       return false;
 
     case Microsoft:
@@ -131,8 +141,19 @@ public:
   /// \brief Is the default C++ member function calling convention
   /// the same as the default calling convention?
   bool isMemberFunctionCCDefault() const {
-    // Right now, this is always true for Microsoft.
+    // Right now, this is always false for Microsoft.
     return !isMicrosoft();
+  }
+
+  /// Are arguments to a call destroyed left to right in the callee?
+  /// This is a fundamental language change, since it implies that objects
+  /// passed by value do *not* live to the end of the full expression.
+  /// Temporaries passed to a function taking a const reference live to the end
+  /// of the full expression as usual.  Both the caller and the callee must
+  /// have access to the destructor, while only the caller needs the
+  /// destructor if this is false.
+  bool areArgsDestroyedLeftToRightInCallee() const {
+    return isMicrosoft();
   }
 
   /// \brief Does this ABI have different entrypoints for complete-object
@@ -141,14 +162,15 @@ public:
     return isItaniumFamily();
   }
 
-  /// \brief Does this ABI have different entrypoints for complete-object
-  /// and base-subobject destructors?
-  bool hasDestructorVariants() const {
+  /// \brief Does this ABI allow virtual bases to be primary base classes?
+  bool hasPrimaryVBases() const {
     return isItaniumFamily();
   }
 
-  /// \brief Does this ABI allow virtual bases to be primary base classes?
-  bool hasPrimaryVBases() const {
+  /// \brief Does this ABI use key functions?  If so, class data such as the
+  /// vtable is emitted with strong linkage by the TU containing the key
+  /// function.
+  bool hasKeyFunctions() const {
     return isItaniumFamily();
   }
 
@@ -183,6 +205,7 @@ public:
   bool canKeyFunctionBeInline() const {
     switch (getKind()) {
     case GenericARM:
+    case iOS64:
       return false;
 
     case GenericAArch64:
@@ -218,7 +241,7 @@ public:
 
     /// Only allocate objects in the tail padding of a base class if
     /// the base class is not POD according to the rules of C++ TR1.
-    /// This is non strictly conforming in C++11 mode.
+    /// This is non-strictly conforming in C++11 mode.
     UseTailPaddingUnlessPOD03,
 
     /// Only allocate objects in the tail padding of a base class if
@@ -235,6 +258,11 @@ public:
     case GenericARM:
     case iOS:
       return UseTailPaddingUnlessPOD03;
+
+    // iOS on ARM64 uses the C++11 POD rules.  It does not honor the
+    // Itanium exception about classes with over-large bitfields.
+    case iOS64:
+      return UseTailPaddingUnlessPOD11;
 
     // MSVC always allocates fields in the tail-padding of a base class
     // subobject, even if they're POD.

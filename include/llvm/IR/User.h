@@ -19,6 +19,7 @@
 #ifndef LLVM_IR_USER_H
 #define LLVM_IR_USER_H
 
+#include "llvm/ADT/iterator_range.h"
 #include "llvm/IR/Value.h"
 #include "llvm/Support/ErrorHandling.h"
 
@@ -54,7 +55,7 @@ protected:
   Use *allocHungoffUses(unsigned) const;
   void dropHungoffUses() {
     Use::zap(OperandList, OperandList + NumOperands, true);
-    OperandList = 0;
+    OperandList = nullptr;
     // Reset NumOperands so User::operator delete() does the right thing.
     NumOperands = 0;
   }
@@ -112,19 +113,28 @@ public:
   //
   typedef Use*       op_iterator;
   typedef const Use* const_op_iterator;
+  typedef iterator_range<op_iterator> op_range;
+  typedef iterator_range<const_op_iterator> const_op_range;
 
   inline op_iterator       op_begin()       { return OperandList; }
   inline const_op_iterator op_begin() const { return OperandList; }
   inline op_iterator       op_end()         { return OperandList+NumOperands; }
   inline const_op_iterator op_end()   const { return OperandList+NumOperands; }
+  inline op_range operands() {
+    return op_range(op_begin(), op_end());
+  }
+  inline const_op_range operands() const {
+    return const_op_range(op_begin(), op_end());
+  }
 
   /// Convenience iterator for directly iterating over the Values in the
   /// OperandList
-  class value_op_iterator : public std::iterator<std::forward_iterator_tag,
-                                                 Value*> {
+  class value_op_iterator
+      : public std::iterator<std::random_access_iterator_tag, Value *,
+                             ptrdiff_t, Value *, Value *> {
     op_iterator OI;
   public:
-    explicit value_op_iterator(Use *U) : OI(U) {}
+    explicit value_op_iterator(Use *U = nullptr) : OI(U) {}
 
     bool operator==(const value_op_iterator &x) const {
       return OI == x.OI;
@@ -133,21 +143,47 @@ public:
       return !operator==(x);
     }
 
-    /// Iterator traversal: forward iteration only
-    value_op_iterator &operator++() {          // Preincrement
-      ++OI;
+    value_op_iterator &operator+=(ptrdiff_t n) {
+      OI += n;
       return *this;
     }
-    value_op_iterator operator++(int) {        // Postincrement
-      value_op_iterator tmp = *this; ++*this; return tmp;
+    value_op_iterator &operator-=(ptrdiff_t n) {
+      OI -= n;
+      return *this;
+    }
+    value_op_iterator operator+(ptrdiff_t n) const {
+      return value_op_iterator(OI + n);
+    }
+    friend value_op_iterator operator+(ptrdiff_t n,
+                                       const value_op_iterator &i) {
+      return i + n;
+    }
+    value_op_iterator operator-(ptrdiff_t n) const {
+      return value_op_iterator(OI - n);
+    }
+    ptrdiff_t operator-(const value_op_iterator &RHS) const {
+      return OI - RHS.OI;
+    }
+    bool operator<(const value_op_iterator &RHS) const { return OI < RHS.OI; }
+    bool operator>(const value_op_iterator &RHS) const { return OI > RHS.OI; }
+    bool operator<=(const value_op_iterator &RHS) const { return OI <= RHS.OI; }
+    bool operator>=(const value_op_iterator &RHS) const { return OI >= RHS.OI; }
+    value_op_iterator &operator++() { return *this += 1; }
+    value_op_iterator &operator--() { return *this -= 1; }
+    value_op_iterator operator++(int) {
+      value_op_iterator tmp = *this;
+      ++*this;
+      return tmp;
+    }
+    value_op_iterator operator--(int) {
+      value_op_iterator tmp = *this;
+      --*this;
+      return tmp;
     }
 
-    /// Retrieve a pointer to the current Value.
-    Value *operator*() const {
-      return *OI;
-    }
-
+    Value *operator*() const { return *OI; }
     Value *operator->() const { return operator*(); }
+    Value *operator[](ptrdiff_t n) const { return *(*this + n); }
   };
 
   inline value_op_iterator value_op_begin() {
@@ -155,6 +191,9 @@ public:
   }
   inline value_op_iterator value_op_end() {
     return value_op_iterator(op_end());
+  }
+  inline iterator_range<value_op_iterator> operand_values() {
+    return iterator_range<value_op_iterator>(value_op_begin(), value_op_end());
   }
 
   // dropAllReferences() - This function is in charge of "letting go" of all
@@ -166,8 +205,8 @@ public:
   // delete.
   //
   void dropAllReferences() {
-    for (op_iterator i = op_begin(), e = op_end(); i != e; ++i)
-      i->set(0);
+    for (Use &U : operands())
+      U.set(nullptr);
   }
 
   /// replaceUsesOfWith - Replaces all references to the "From" definition with
@@ -193,12 +232,6 @@ template<> struct simplify_type<User::const_op_iterator> {
     return Val->get();
   }
 };
-
-// value_use_iterator::getOperandNo - Requires the definition of the User class.
-template<typename UserTy>
-unsigned value_use_iterator<UserTy>::getOperandNo() const {
-  return U - U->getUser()->op_begin();
-}
 
 } // End llvm namespace
 

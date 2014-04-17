@@ -19,6 +19,7 @@
 #include "llvm/Support/CodeGen.h"
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Target/TargetMachine.h"
+#include "llvm/Target/TargetOptions.h"
 #include <string>
 using namespace llvm;
 
@@ -85,9 +86,6 @@ FileType("filetype", cl::init(TargetMachine::CGFT_AssemblyFile),
                         "Emit nothing, for performance testing"),
              clEnumValEnd));
 
-cl::opt<bool> DisableDotLoc("disable-dot-loc", cl::Hidden,
-                            cl::desc("Do not use .loc entries"));
-
 cl::opt<bool> DisableCFI("disable-cfi", cl::Hidden,
                          cl::desc("Do not use .cfi_* directives"));
 
@@ -108,11 +106,6 @@ cl::opt<bool>
 DisableFPElim("disable-fp-elim",
               cl::desc("Disable frame pointer elimination optimization"),
               cl::init(false));
-
-cl::opt<bool>
-DisableFPElimNonLeaf("disable-non-leaf-fp-elim",
-  cl::desc("Disable frame pointer elimination optimization for non-leaf funcs"),
-  cl::init(false));
 
 cl::opt<bool>
 EnableUnsafeFPMath("enable-unsafe-fp-math",
@@ -155,7 +148,7 @@ FloatABIForCalls("float-abi",
 
 cl::opt<llvm::FPOpFusion::FPOpFusionMode>
 FuseFPOps("fp-contract",
-          cl::desc("Enable aggresive formation of fused FP ops"),
+          cl::desc("Enable aggressive formation of fused FP ops"),
           cl::init(FPOpFusion::Standard),
           cl::values(
               clEnumValN(FPOpFusion::Fast, "fast",
@@ -186,11 +179,6 @@ OverrideStackAlignment("stack-alignment",
                        cl::desc("Override default stack alignment"),
                        cl::init(0));
 
-cl::opt<bool>
-EnableRealignStack("realign-stack",
-                   cl::desc("Realign stack if needed"),
-                   cl::init(true));
-
 cl::opt<std::string>
 TrapFuncName("trap-func", cl::Hidden,
         cl::desc("Emit a call to trap function rather than a trap instruction"),
@@ -200,11 +188,6 @@ cl::opt<bool>
 EnablePIE("enable-pie",
           cl::desc("Assume the creation of a position independent executable."),
           cl::init(false));
-
-cl::opt<bool>
-SegmentedStacks("segmented-stacks",
-                cl::desc("Use segmented stacks if possible."),
-                cl::init(false));
 
 cl::opt<bool>
 UseInitArray("use-init-array",
@@ -220,8 +203,29 @@ cl::opt<std::string> StartAfter("start-after",
                           cl::value_desc("pass-name"),
                           cl::init(""));
 
-cl::opt<unsigned>
-SSPBufferSize("stack-protector-buffer-size", cl::init(8),
-              cl::desc("Lower bound for a buffer to be considered for "
-                       "stack protection"));
+// Common utility function tightly tied to the options listed here. Initializes
+// a TargetOptions object with CodeGen flags and returns it.
+static inline TargetOptions InitTargetOptionsFromCodeGenFlags() {
+  TargetOptions Options;
+  Options.LessPreciseFPMADOption = EnableFPMAD;
+  Options.NoFramePointerElim = DisableFPElim;
+  Options.AllowFPOpFusion = FuseFPOps;
+  Options.UnsafeFPMath = EnableUnsafeFPMath;
+  Options.NoInfsFPMath = EnableNoInfsFPMath;
+  Options.NoNaNsFPMath = EnableNoNaNsFPMath;
+  Options.HonorSignDependentRoundingFPMathOption =
+      EnableHonorSignDependentRoundingFPMath;
+  Options.UseSoftFloat = GenerateSoftFloatCalls;
+  if (FloatABIForCalls != FloatABI::Default)
+    Options.FloatABIType = FloatABIForCalls;
+  Options.NoZerosInBSS = DontPlaceZerosInBSS;
+  Options.GuaranteedTailCallOpt = EnableGuaranteedTailCallOpt;
+  Options.DisableTailCalls = DisableTailCalls;
+  Options.StackAlignmentOverride = OverrideStackAlignment;
+  Options.TrapFuncName = TrapFuncName;
+  Options.PositionIndependentExecutable = EnablePIE;
+  Options.UseInitArray = UseInitArray;
+  return Options;
+}
+
 #endif

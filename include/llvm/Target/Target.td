@@ -22,12 +22,22 @@ include "llvm/IR/Intrinsics.td"
 class RegisterClass; // Forward def
 
 // SubRegIndex - Use instances of SubRegIndex to identify subregisters.
-class SubRegIndex<list<SubRegIndex> comps = []> {
+class SubRegIndex<int size, int offset = 0> {
   string Namespace = "";
+
+  // Size - Size (in bits) of the sub-registers represented by this index.
+  int Size = size;
+
+  // Offset - Offset of the first bit that is part of this sub-register index.
+  // Set it to -1 if the same index is used to represent sub-registers that can
+  // be at different offsets (for example when using an index to access an
+  // element in a register tuple).
+  int Offset = offset;
 
   // ComposedOf - A list of two SubRegIndex instances, [A, B].
   // This indicates that this SubRegIndex is the result of composing A and B.
-  list<SubRegIndex> ComposedOf = comps;
+  // See ComposedSubRegIndex.
+  list<SubRegIndex> ComposedOf = [];
 
   // CoveringSubRegIndices - A list of two or more sub-register indexes that
   // cover this sub-register.
@@ -46,6 +56,16 @@ class SubRegIndex<list<SubRegIndex> comps = []> {
   // the synthetic index dsub_1_dsub_2 unless some SubRegIndex is defined with
   // CoveringSubRegIndices = [dsub_1, dsub_2].
   list<SubRegIndex> CoveringSubRegIndices = [];
+}
+
+// ComposedSubRegIndex - A sub-register that is the result of composing A and B.
+// Offset is set to the sum of A and B's Offsets. Size is set to B's Size.
+class ComposedSubRegIndex<SubRegIndex A, SubRegIndex B>
+  : SubRegIndex<B.Size, !if(!eq(A.Offset, -1), -1,
+                        !if(!eq(B.Offset, -1), -1,
+                            !add(A.Offset, B.Offset)))> {
+  // See SubRegIndex.
+  let ComposedOf = [A, B];
 }
 
 // RegAltNameIndex - The alternate name set to use for register operands of
@@ -425,6 +445,11 @@ class Instruction {
   string TwoOperandAliasConstraint = "";
 
   ///@}
+
+  /// UseNamedOperandTable - If set, the operand indices of this instruction
+  /// can be queried via the getNamedOperandIdx() function which is generated
+  /// by TableGen.
+  bit UseNamedOperandTable = 0;
 }
 
 /// PseudoInstExpansion - Expansion information for a pseudo-instruction.
@@ -607,6 +632,11 @@ def f64imm : Operand<f64>;
 ///
 def zero_reg;
 
+/// All operands which the MC layer classifies as predicates should inherit from
+/// this class in some manner. This is already handled for the most commonly
+/// used PredicateOperand, but may be useful in other circumstances.
+class PredicateOp;
+
 /// OperandWithDefaultOps - This Operand class can be used as the parent class
 /// for an Operand that needs to be initialized with a default value if
 /// no value is supplied in a pattern.  This class can be used to simplify the
@@ -622,7 +652,7 @@ class OperandWithDefaultOps<ValueType ty, dag defaultops>
 /// AlwaysVal specifies the value of this predicate when set to "always
 /// execute".
 class PredicateOperand<ValueType ty, dag OpTypes, dag AlwaysVal>
-  : OperandWithDefaultOps<ty, AlwaysVal> {
+  : OperandWithDefaultOps<ty, AlwaysVal>, PredicateOp {
   let MIOperandInfo = OpTypes;
 }
 
@@ -655,6 +685,27 @@ class InstrInfo {
   //
   // This option is a temporary migration help. It will go away.
   bit guessInstructionProperties = 1;
+
+  // TableGen's instruction encoder generator has support for matching operands
+  // to bit-field variables both by name and by position. While matching by
+  // name is preferred, this is currently not possible for complex operands,
+  // and some targets still reply on the positional encoding rules. When
+  // generating a decoder for such targets, the positional encoding rules must
+  // be used by the decoder generator as well.
+  //
+  // This option is temporary; it will go away once the TableGen decoder
+  // generator has better support for complex operands and targets have
+  // migrated away from using positionally encoded operands.
+  bit decodePositionallyEncodedOperands = 0;
+
+  // When set, this indicates that there will be no overlap between those
+  // operands that are matched by ordering (positional operands) and those
+  // matched by name.
+  //
+  // This option is temporary; it will go away once the TableGen decoder
+  // generator has better support for complex operands and targets have
+  // migrated away from using positionally encoded operands.
+  bit noNamedPositionallyEncodedOperands = 0;
 }
 
 // Standard Pseudo Instructions.
@@ -672,7 +723,7 @@ def INLINEASM : Instruction {
   let AsmString = "";
   let neverHasSideEffects = 1;  // Note side effect is encoded in an operand.
 }
-def PROLOG_LABEL : Instruction {
+def CFI_INSTRUCTION : Instruction {
   let OutOperandList = (outs);
   let InOperandList = (ins i32imm:$id);
   let AsmString = "";
@@ -770,6 +821,21 @@ def LIFETIME_END : Instruction {
   let AsmString = "LIFETIME_END";
   let neverHasSideEffects = 1;
 }
+def STACKMAP : Instruction {
+  let OutOperandList = (outs);
+  let InOperandList = (ins i64imm:$id, i32imm:$nbytes, variable_ops);
+  let isCall = 1;
+  let mayLoad = 1;
+  let usesCustomInserter = 1;
+}
+def PATCHPOINT : Instruction {
+  let OutOperandList = (outs unknown:$dst);
+  let InOperandList = (ins i64imm:$id, i32imm:$nbytes, unknown:$callee,
+                       i32imm:$nargs, i32imm:$cc, variable_ops);
+  let isCall = 1;
+  let mayLoad = 1;
+  let usesCustomInserter = 1;
+}
 }
 
 //===----------------------------------------------------------------------===//
@@ -793,6 +859,9 @@ class AsmParser {
   // ShouldEmitMatchRegisterName - Set to false if the target needs a hand
   // written register name matcher
   bit ShouldEmitMatchRegisterName = 1;
+
+  /// Does the instruction mnemonic allow '.'
+  bit MnemonicContainsDot = 0;
 }
 def DefaultAsmParser : AsmParser;
 
@@ -901,7 +970,7 @@ class AsmWriter {
   // AsmWriterClassName - This specifies the suffix to use for the asmwriter
   // class.  Generated AsmWriter classes are always prefixed with the target
   // name.
-  string AsmWriterClassName  = "AsmPrinter";
+  string AsmWriterClassName  = "InstPrinter";
 
   // Variant - AsmWriters can be of multiple different variants.  Variants are
   // used to support targets that need to emit assembly code in ways that are
@@ -911,21 +980,8 @@ class AsmWriter {
   // == 1, will expand to "y".
   int Variant = 0;
 
-
-  // FirstOperandColumn/OperandSpacing - If the assembler syntax uses a columnar
-  // layout, the asmwriter can actually generate output in this columns (in
-  // verbose-asm mode).  These two values indicate the width of the first column
-  // (the "opcode" area) and the width to reserve for subsequent operands.  When
-  // verbose asm mode is enabled, operands will be indented to respect this.
-  int FirstOperandColumn = -1;
-
   // OperandSpacing - Space between operand columns.
   int OperandSpacing = -1;
-
-  // isMCAsmWriter - Is this assembly writer for an MC emitter? This controls
-  // generation of the printInstruction() method. For MC printers, it takes
-  // an MCInstr* operand, otherwise it takes a MachineInstr*.
-  bit isMCAsmWriter = 0;
 }
 def DefaultAsmWriter : AsmWriter;
 
@@ -975,6 +1031,17 @@ class SubtargetFeature<string n, string a,  string v, string d,
   // features isn't set, then this one shouldn't be set either.
   //
   list<SubtargetFeature> Implies = i;
+}
+
+/// Specifies a Subtarget feature that this instruction is deprecated on.
+class Deprecated<SubtargetFeature dep> {
+  SubtargetFeature DeprecatedFeatureMask = dep;
+}
+
+/// A custom predicate used to determine if an instruction is
+/// deprecated or not.
+class ComplexDeprecationPredicate<string dep> {
+  string ComplexDeprecationPredicate = dep;
 }
 
 //===----------------------------------------------------------------------===//

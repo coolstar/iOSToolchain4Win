@@ -157,8 +157,8 @@ private:   // Intermediate data structures
 
   void HandlePhysRegUse(unsigned Reg, MachineInstr *MI);
   void HandlePhysRegDef(unsigned Reg, MachineInstr *MI,
-                        SmallVector<unsigned, 4> &Defs);
-  void UpdatePhysRegDefs(MachineInstr *MI, SmallVector<unsigned, 4> &Defs);
+                        SmallVectorImpl<unsigned> &Defs);
+  void UpdatePhysRegDefs(MachineInstr *MI, SmallVectorImpl<unsigned> &Defs);
 
   /// FindLastRefOrPartRef - Return the last reference or partial reference of
   /// the specified register.
@@ -177,7 +177,7 @@ private:   // Intermediate data structures
   void analyzePHINodes(const MachineFunction& Fn);
 public:
 
-  virtual bool runOnMachineFunction(MachineFunction &MF);
+  bool runOnMachineFunction(MachineFunction &MF) override;
 
   /// RegisterDefIsDead - Return true if the specified instruction defines the
   /// specified register, but that definition is dead.
@@ -258,10 +258,10 @@ public:
     (void)Removed;
     return true;
   }
-  
-  void getAnalysisUsage(AnalysisUsage &AU) const;
 
-  virtual void releaseMemory() {
+  void getAnalysisUsage(AnalysisUsage &AU) const override;
+
+  void releaseMemory() override {
     VirtRegInfo.clear();
   }
 

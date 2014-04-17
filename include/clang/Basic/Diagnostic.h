@@ -21,8 +21,6 @@
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/IntrusiveRefCntPtr.h"
-#include "llvm/ADT/OwningPtr.h"
-#include "llvm/Support/type_traits.h"
 #include <list>
 #include <vector>
 
@@ -36,6 +34,9 @@ namespace clang {
   class Preprocessor;
   class DiagnosticErrorTrap;
   class StoredDiagnostic;
+  namespace tok {
+  enum TokenKind : unsigned short;
+  }
 
 /// \brief Annotates a diagnostic with some code that should be
 /// inserted, removed, or replaced to fix the problem.
@@ -135,6 +136,7 @@ public:
   enum Level {
     Ignored = DiagnosticIDs::Ignored,
     Note = DiagnosticIDs::Note,
+    Remark = DiagnosticIDs::Remark,
     Warning = DiagnosticIDs::Warning,
     Error = DiagnosticIDs::Error,
     Fatal = DiagnosticIDs::Fatal
@@ -152,13 +154,15 @@ public:
     ak_c_string,        ///< const char *
     ak_sint,            ///< int
     ak_uint,            ///< unsigned
+    ak_tokenkind,       ///< enum TokenKind : unsigned
     ak_identifierinfo,  ///< IdentifierInfo
     ak_qualtype,        ///< QualType
     ak_declarationname, ///< DeclarationName
     ak_nameddecl,       ///< NamedDecl *
     ak_nestednamespec,  ///< NestedNameSpecifier *
     ak_declcontext,     ///< DeclContext *
-    ak_qualtype_pair    ///< pair<QualType, QualType>
+    ak_qualtype_pair,   ///< pair<QualType, QualType>
+    ak_attr             ///< Attr *
   };
 
   /// \brief Represents on argument value, which is a union discriminated
@@ -490,7 +494,14 @@ public:
       FatalErrorOccurred = true;
     LastDiagLevel = DiagnosticIDs::Ignored;
   }
-  
+
+  /// \brief Determine whether the previous diagnostic was ignored. This can
+  /// be used by clients that want to determine whether notes attached to a
+  /// diagnostic will be suppressed.
+  bool isLastDiagnosticIgnored() const {
+    return LastDiagLevel == DiagnosticIDs::Ignored;
+  }
+
   /// \brief Controls whether otherwise-unmapped extension diagnostics are
   /// mapped onto ignore/warning/error. 
   ///
@@ -530,22 +541,12 @@ public:
   bool setDiagnosticGroupMapping(StringRef Group, diag::Mapping Map,
                                  SourceLocation Loc = SourceLocation());
 
-  /// \brief Set the warning-as-error flag for the given diagnostic.
-  ///
-  /// This function always only operates on the current diagnostic state.
-  void setDiagnosticWarningAsError(diag::kind Diag, bool Enabled);
-
   /// \brief Set the warning-as-error flag for the given diagnostic group.
   ///
   /// This function always only operates on the current diagnostic state.
   ///
   /// \returns True if the given group is unknown, false otherwise.
   bool setDiagnosticGroupWarningAsError(StringRef Group, bool Enabled);
-
-  /// \brief Set the error-as-fatal flag for the given diagnostic.
-  ///
-  /// This function always only operates on the current diagnostic state.
-  void setDiagnosticErrorAsFatal(diag::kind Diag, bool Enabled);
 
   /// \brief Set the error-as-fatal flag for the given diagnostic group.
   ///
@@ -581,12 +582,18 @@ public:
     this->NumWarnings = NumWarnings;
   }
 
-  /// \brief Return an ID for a diagnostic with the specified message and level.
+  /// \brief Return an ID for a diagnostic with the specified format string and
+  /// level.
   ///
   /// If this is the first request for this diagnostic, it is registered and
   /// created, otherwise the existing ID is returned.
-  unsigned getCustomDiagID(Level L, StringRef Message) {
-    return Diags->getCustomDiagID((DiagnosticIDs::Level)L, Message);
+  ///
+  /// \param FormatString A fixed diagnostic format string that will be hashed
+  /// and mapped to a unique DiagID.
+  template <unsigned N>
+  unsigned getCustomDiagID(Level L, const char (&FormatString)[N]) {
+    return Diags->getCustomDiagID((DiagnosticIDs::Level)L,
+                                  StringRef(FormatString, N - 1));
   }
 
   /// \brief Converts a diagnostic argument (as an intptr_t) into the string
@@ -983,6 +990,10 @@ public:
   bool hasMaxRanges() const {
     return NumRanges == DiagnosticsEngine::MaxRanges;
   }
+
+  bool hasMaxFixItHints() const {
+    return NumFixits == DiagnosticsEngine::MaxFixItHints;
+  }
 };
 
 inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,
@@ -1003,7 +1014,13 @@ inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB, int I) {
   return DB;
 }
 
-inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,bool I) {
+// We use enable_if here to prevent that this overload is selected for
+// pointers or other arguments that are implicitly convertible to bool.
+template <typename T>
+inline
+typename std::enable_if<std::is_same<T, bool>::value,
+                        const DiagnosticBuilder &>::type
+operator<<(const DiagnosticBuilder &DB, T I) {
   DB.AddTaggedVal(I, DiagnosticsEngine::ak_sint);
   return DB;
 }
@@ -1011,6 +1028,12 @@ inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,bool I) {
 inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,
                                            unsigned I) {
   DB.AddTaggedVal(I, DiagnosticsEngine::ak_uint);
+  return DB;
+}
+
+inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,
+                                           tok::TokenKind I) {
+  DB.AddTaggedVal(static_cast<unsigned>(I), DiagnosticsEngine::ak_tokenkind);
   return DB;
 }
 
@@ -1027,17 +1050,24 @@ inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,
 // match.
 template<typename T>
 inline
-typename llvm::enable_if<llvm::is_same<T, DeclContext>, 
-                         const DiagnosticBuilder &>::type
+typename std::enable_if<std::is_same<T, DeclContext>::value,
+                        const DiagnosticBuilder &>::type
 operator<<(const DiagnosticBuilder &DB, T *DC) {
   DB.AddTaggedVal(reinterpret_cast<intptr_t>(DC),
                   DiagnosticsEngine::ak_declcontext);
   return DB;
 }
-  
+
 inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,
                                            const SourceRange &R) {
   DB.AddSourceRange(CharSourceRange::getTokenRange(R));
+  return DB;
+}
+
+inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,
+                                           ArrayRef<SourceRange> Ranges) {
+  for (const SourceRange &R: Ranges)
+    DB.AddSourceRange(CharSourceRange::getTokenRange(R));
   return DB;
 }
 
@@ -1046,7 +1076,7 @@ inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,
   DB.AddSourceRange(R);
   return DB;
 }
-  
+
 inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,
                                            const FixItHint &Hint) {
   if (!Hint.isNull())
@@ -1055,7 +1085,7 @@ inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,
 }
 
 inline DiagnosticBuilder DiagnosticsEngine::Report(SourceLocation Loc,
-                                            unsigned DiagID){
+                                                   unsigned DiagID) {
   assert(CurDiagID == ~0U && "Multiple diagnostics in flight at once!");
   CurDiagLoc = Loc;
   CurDiagID = DiagID;
@@ -1212,7 +1242,7 @@ public:
   ~StoredDiagnostic();
 
   /// \brief Evaluates true when this object stores a diagnostic.
-  operator bool() const { return Message.size() > 0; }
+  LLVM_EXPLICIT operator bool() const { return Message.size() > 0; }
 
   unsigned getID() const { return ID; }
   DiagnosticsEngine::Level getLevel() const { return Level; }
@@ -1302,7 +1332,7 @@ public:
 class IgnoringDiagConsumer : public DiagnosticConsumer {
   virtual void anchor();
   void HandleDiagnostic(DiagnosticsEngine::Level DiagLevel,
-                        const Diagnostic &Info) {
+                        const Diagnostic &Info) override {
     // Just ignore it.
   }
 };
@@ -1318,11 +1348,11 @@ public:
 
   virtual ~ForwardingDiagnosticConsumer();
 
-  virtual void HandleDiagnostic(DiagnosticsEngine::Level DiagLevel,
-                                const Diagnostic &Info);
-  virtual void clear();
+  void HandleDiagnostic(DiagnosticsEngine::Level DiagLevel,
+                        const Diagnostic &Info) override;
+  void clear() override;
 
-  virtual bool IncludeInDiagnosticCounts() const;
+  bool IncludeInDiagnosticCounts() const override;
 };
 
 // Struct used for sending info about how a type should be printed.

@@ -14,9 +14,14 @@
 #include "clang/Driver/Util.h"
 #include "llvm/ADT/SmallVector.h"
 
+namespace llvm {
+namespace opt {
+  class Arg;
+}
+}
+
 namespace clang {
 namespace driver {
-  class Arg;
 
 /// Action - Represent an abstract compilation step to perform.
 ///
@@ -45,10 +50,11 @@ public:
     LinkJobClass,
     LipoJobClass,
     DsymutilJobClass,
-    VerifyJobClass,
+    VerifyDebugInfoJobClass,
+    VerifyPCHJobClass,
 
     JobClassFirst=PreprocessJobClass,
-    JobClassLast=VerifyJobClass
+    JobClassLast=VerifyPCHJobClass
   };
 
   static const char *getClassName(ActionClass AC);
@@ -94,11 +100,12 @@ public:
 
 class InputAction : public Action {
   virtual void anchor();
-  const Arg &Input;
-public:
-  InputAction(const Arg &_Input, types::ID _Type);
+  const llvm::opt::Arg &Input;
 
-  const Arg &getInputArg() const { return Input; }
+public:
+  InputAction(const llvm::opt::Arg &_Input, types::ID _Type);
+
+  const llvm::opt::Arg &getInputArg() const { return Input; }
 
   static bool classof(const Action *A) {
     return A->getKind() == InputClass;
@@ -135,7 +142,7 @@ public:
 };
 
 class PreprocessJobAction : public JobAction {
-  virtual void anchor();
+  void anchor() override;
 public:
   PreprocessJobAction(Action *Input, types::ID OutputType);
 
@@ -145,7 +152,7 @@ public:
 };
 
 class PrecompileJobAction : public JobAction {
-  virtual void anchor();
+  void anchor() override;
 public:
   PrecompileJobAction(Action *Input, types::ID OutputType);
 
@@ -155,7 +162,7 @@ public:
 };
 
 class AnalyzeJobAction : public JobAction {
-  virtual void anchor();
+  void anchor() override;
 public:
   AnalyzeJobAction(Action *Input, types::ID OutputType);
 
@@ -165,7 +172,7 @@ public:
 };
 
 class MigrateJobAction : public JobAction {
-  virtual void anchor();
+  void anchor() override;
 public:
   MigrateJobAction(Action *Input, types::ID OutputType);
 
@@ -175,7 +182,7 @@ public:
 };
 
 class CompileJobAction : public JobAction {
-  virtual void anchor();
+  void anchor() override;
 public:
   CompileJobAction(Action *Input, types::ID OutputType);
 
@@ -185,7 +192,7 @@ public:
 };
 
 class AssembleJobAction : public JobAction {
-  virtual void anchor();
+  void anchor() override;
 public:
   AssembleJobAction(Action *Input, types::ID OutputType);
 
@@ -195,7 +202,7 @@ public:
 };
 
 class LinkJobAction : public JobAction {
-  virtual void anchor();
+  void anchor() override;
 public:
   LinkJobAction(ActionList &Inputs, types::ID Type);
 
@@ -205,7 +212,7 @@ public:
 };
 
 class LipoJobAction : public JobAction {
-  virtual void anchor();
+  void anchor() override;
 public:
   LipoJobAction(ActionList &Inputs, types::ID Type);
 
@@ -215,7 +222,7 @@ public:
 };
 
 class DsymutilJobAction : public JobAction {
-  virtual void anchor();
+  void anchor() override;
 public:
   DsymutilJobAction(ActionList &Inputs, types::ID Type);
 
@@ -225,11 +232,31 @@ public:
 };
 
 class VerifyJobAction : public JobAction {
-  virtual void anchor();
+  void anchor() override;
 public:
-  VerifyJobAction(ActionList &Inputs, types::ID Type);
+  VerifyJobAction(ActionClass Kind, Action *Input, types::ID Type);
+  VerifyJobAction(ActionClass Kind, ActionList &Inputs, types::ID Type);
   static bool classof(const Action *A) {
-    return A->getKind() == VerifyJobClass;
+    return A->getKind() == VerifyDebugInfoJobClass ||
+           A->getKind() == VerifyPCHJobClass;
+  }
+};
+
+class VerifyDebugInfoJobAction : public VerifyJobAction {
+  void anchor() override;
+public:
+  VerifyDebugInfoJobAction(Action *Input, types::ID Type);
+  static bool classof(const Action *A) {
+    return A->getKind() == VerifyDebugInfoJobClass;
+  }
+};
+
+class VerifyPCHJobAction : public VerifyJobAction {
+  void anchor() override;
+public:
+  VerifyPCHJobAction(Action *Input, types::ID Type);
+  static bool classof(const Action *A) {
+    return A->getKind() == VerifyPCHJobClass;
   }
 };
 

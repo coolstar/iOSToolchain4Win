@@ -21,7 +21,6 @@
 #include "llvm/ADT/SmallPtrSet.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/CodeGen/MachineBasicBlock.h"
-#include "llvm/CodeGen/ValueTypes.h"
 #include "llvm/IR/InlineAsm.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/Target/TargetRegisterInfo.h"
@@ -41,6 +40,8 @@ class MachineBasicBlock;
 class MachineFunction;
 class MachineModuleInfo;
 class MachineRegisterInfo;
+class SelectionDAG;
+class MVT;
 class TargetLowering;
 class Value;
 
@@ -49,8 +50,8 @@ class Value;
 /// function that is used when lowering a region of the function.
 ///
 class FunctionLoweringInfo {
+  const TargetMachine &TM;
 public:
-  const TargetLowering &TLI;
   const Function *Fn;
   MachineFunction *MF;
   MachineRegisterInfo *RegInfo;
@@ -115,12 +116,17 @@ public:
   /// there's no other convenient place for it to live right now.
   std::vector<std::pair<MachineInstr*, unsigned> > PHINodesToUpdate;
 
-  explicit FunctionLoweringInfo(const TargetLowering &TLI);
+  /// If the current MBB is a landing pad, the exception pointer and exception
+  /// selector registers are copied into these virtual registers by
+  /// SelectionDAGISel::PrepareEHLandingPad().
+  unsigned ExceptionPointerVirtReg, ExceptionSelectorVirtReg;
+
+  explicit FunctionLoweringInfo(const TargetMachine &TM) : TM(TM) {}
 
   /// set - Initialize this FunctionLoweringInfo with the given Function
   /// and its associated MachineFunction.
   ///
-  void set(const Function &Fn, MachineFunction &MF);
+  void set(const Function &Fn, MachineFunction &MF, SelectionDAG *DAG);
 
   /// clear - Clear out all the function-specific state. This returns this
   /// FunctionLoweringInfo to an empty state, ready to be used for a
@@ -147,11 +153,11 @@ public:
   /// register is a PHI destination and the PHI's LiveOutInfo is not valid.
   const LiveOutInfo *GetLiveOutRegInfo(unsigned Reg) {
     if (!LiveOutRegInfo.inBounds(Reg))
-      return NULL;
+      return nullptr;
 
     const LiveOutInfo *LOI = &LiveOutRegInfo[Reg];
     if (!LOI->IsValid)
-      return NULL;
+      return nullptr;
 
     return LOI;
   }

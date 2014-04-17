@@ -16,6 +16,7 @@
 
 #include "clang/Basic/LLVM.h"
 #include "clang/Basic/SourceManager.h"
+#include "clang/Lex/ModuleMap.h"
 
 namespace clang {
 class HeaderMap;
@@ -129,6 +130,11 @@ public:
     return (SrcMgr::CharacteristicKind)DirCharacteristic;
   }
 
+  /// \brief Whether this describes a system header directory.
+  bool isSystemHeaderDirectory() const {
+    return getDirCharacteristic() != SrcMgr::C_User;
+  }
+
   /// \brief Whether this header map is building a framework or not.
   bool isIndexHeaderMap() const { 
     return isHeaderMap() && IsIndexHeaderMap; 
@@ -155,18 +161,24 @@ public:
   /// \param [out] InUserSpecifiedSystemFramework If the file is found,
   /// set to true if the file is located in a framework that has been
   /// user-specified to be treated as a system framework.
-  const FileEntry *LookupFile(StringRef Filename, HeaderSearch &HS,
+  ///
+  /// \param [out] MappedName if this is a headermap which maps the filename to
+  /// a framework include ("Foo.h" -> "Foo/Foo.h"), set the new name to this
+  /// vector and point Filename to it.
+  const FileEntry *LookupFile(StringRef &Filename, HeaderSearch &HS,
                               SmallVectorImpl<char> *SearchPath,
                               SmallVectorImpl<char> *RelativePath,
-                              Module **SuggestedModule,
-                              bool &InUserSpecifiedSystemFramework) const;
+                              ModuleMap::KnownHeader *SuggestedModule,
+                              bool &InUserSpecifiedSystemFramework,
+                              bool &HasBeenMapped,
+                              SmallVectorImpl<char> &MappedName) const;
 
 private:
   const FileEntry *DoFrameworkLookup(
       StringRef Filename, HeaderSearch &HS,
       SmallVectorImpl<char> *SearchPath,
       SmallVectorImpl<char> *RelativePath,
-      Module **SuggestedModule,
+      ModuleMap::KnownHeader *SuggestedModule,
       bool &InUserSpecifiedSystemHeader) const;
 
 };

@@ -16,6 +16,7 @@
 
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/SmallPtrSet.h"
+#include "llvm/IR/CFG.h"
 #include "llvm/InitializePasses.h"
 #include "llvm/Pass.h"
 #include "llvm/Support/BranchProbability.h"
@@ -44,9 +45,9 @@ public:
     initializeBranchProbabilityInfoPass(*PassRegistry::getPassRegistry());
   }
 
-  void getAnalysisUsage(AnalysisUsage &AU) const;
-  bool runOnFunction(Function &F);
-  void print(raw_ostream &OS, const Module *M = 0) const;
+  void getAnalysisUsage(AnalysisUsage &AU) const override;
+  bool runOnFunction(Function &F) override;
+  void print(raw_ostream &OS, const Module *M = nullptr) const override;
 
   /// \brief Get an edge's probability, relative to other out-edges of the Src.
   ///
@@ -98,6 +99,9 @@ public:
   /// It is guaranteed to fall between 1 and UINT32_MAX.
   uint32_t getEdgeWeight(const BasicBlock *Src, const BasicBlock *Dst) const;
 
+  uint32_t getEdgeWeight(const BasicBlock *Src,
+                         succ_const_iterator Dst) const;
+
   /// \brief Set the raw edge weight for a given edge.
   ///
   /// This allows a pass to explicitly set the edge weight for an edge. It can
@@ -131,11 +135,15 @@ private:
   /// \brief Track the set of blocks directly succeeded by a returning block.
   SmallPtrSet<BasicBlock *, 16> PostDominatedByUnreachable;
 
+  /// \brief Track the set of blocks that always lead to a cold call.
+  SmallPtrSet<BasicBlock *, 16> PostDominatedByColdCall;
+
   /// \brief Get sum of the block successors' weights.
   uint32_t getSumForBlock(const BasicBlock *BB) const;
 
   bool calcUnreachableHeuristics(BasicBlock *BB);
   bool calcMetadataWeights(BasicBlock *BB);
+  bool calcColdCallHeuristics(BasicBlock *BB);
   bool calcPointerHeuristics(BasicBlock *BB);
   bool calcLoopBranchHeuristics(BasicBlock *BB);
   bool calcZeroHeuristics(BasicBlock *BB);

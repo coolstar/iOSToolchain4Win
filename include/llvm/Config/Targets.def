@@ -23,6 +23,6 @@
 #  error Please define the macro LLVM_TARGET(TargetName)
 #endif
 
-LLVM_TARGET(CppBackend) LLVM_TARGET(ARM) 
+LLVM_TARGET(CppBackend) LLVM_TARGET(ARM) LLVM_TARGET(ARM64) LLVM_TARGET(AArch64) 
 
 #undef LLVM_TARGET

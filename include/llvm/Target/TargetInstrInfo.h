@@ -66,7 +66,7 @@ public:
   /// rematerializable, meaning it has no side effects and requires no operands
   /// that aren't always available.
   bool isTriviallyReMaterializable(const MachineInstr *MI,
-                                   AliasAnalysis *AA = 0) const {
+                                   AliasAnalysis *AA = nullptr) const {
     return MI->getOpcode() == TargetOpcode::IMPLICIT_DEF ||
            (MI->getDesc().isRematerializable() &&
             (isReallyTriviallyReMaterializable(MI, AA) ||
@@ -173,6 +173,31 @@ public:
                                    const MachineMemOperand *&MMO,
                                    int &FrameIndex) const;
 
+  /// isStackSlotCopy - Return true if the specified machine instruction
+  /// is a copy of one stack slot to another and has no other effect.
+  /// Provide the identity of the two frame indices.
+  virtual bool isStackSlotCopy(const MachineInstr *MI, int &DestFrameIndex,
+                               int &SrcFrameIndex) const {
+    return false;
+  }
+
+  /// Compute the size in bytes and offset within a stack slot of a spilled
+  /// register or subregister.
+  ///
+  /// \param [out] Size in bytes of the spilled value.
+  /// \param [out] Offset in bytes within the stack slot.
+  /// \returns true if both Size and Offset are successfully computed.
+  ///
+  /// Not all subregisters have computable spill slots. For example,
+  /// subregisters registers may not be byte-sized, and a pair of discontiguous
+  /// subregisters has no single offset.
+  ///
+  /// Targets with nontrivial bigendian implementations may need to override
+  /// this, particularly to support spilled vector registers.
+  virtual bool getStackSlotRange(const TargetRegisterClass *RC, unsigned SubIdx,
+                                 unsigned &Size, unsigned &Offset,
+                                 const TargetMachine *TM) const;
+
   /// reMaterialize - Re-issue the specified 'original' instruction at the
   /// specific location targeting a new destination register.
   /// The register in Orig->getOperand(0).getReg() will be substituted by
@@ -205,7 +230,7 @@ public:
   virtual MachineInstr *
   convertToThreeAddress(MachineFunction::iterator &MFI,
                    MachineBasicBlock::iterator &MBBI, LiveVariables *LV) const {
-    return 0;
+    return nullptr;
   }
 
   /// commuteInstruction - If a target has any instructions that are
@@ -232,7 +257,7 @@ public:
   /// aggressive checks.
   virtual bool produceSameValue(const MachineInstr *MI0,
                                 const MachineInstr *MI1,
-                                const MachineRegisterInfo *MRI = 0) const;
+                                const MachineRegisterInfo *MRI = nullptr) const;
 
   /// AnalyzeBranch - Analyze the branching code at the end of MBB, returning
   /// true if it cannot be understood (e.g. it's a switch dispatch or isn't
@@ -505,22 +530,6 @@ public:
     return false;
   }
 
-  /// emitFrameIndexDebugValue - Emit a target-dependent form of
-  /// DBG_VALUE encoding the address of a frame index.  Addresses would
-  /// normally be lowered the same way as other addresses on the target,
-  /// e.g. in load instructions.  For targets that do not support this
-  /// the debug info is simply lost.
-  /// If you add this for a target you should handle this DBG_VALUE in the
-  /// target-specific AsmPrinter code as well; you will probably get invalid
-  /// assembly output if you don't.
-  virtual MachineInstr *emitFrameIndexDebugValue(MachineFunction &MF,
-                                                 int FrameIx,
-                                                 uint64_t Offset,
-                                                 const MDNode *MDPtr,
-                                                 DebugLoc dl) const {
-    return 0;
-  }
-
   /// foldMemoryOperand - Attempt to fold a load or store of the specified stack
   /// slot into the specified machine instruction for the specified operand(s).
   /// If this is possible, a new instruction is returned with the specified
@@ -546,7 +555,7 @@ protected:
                                           MachineInstr* MI,
                                           const SmallVectorImpl<unsigned> &Ops,
                                           int FrameIndex) const {
-    return 0;
+    return nullptr;
   }
 
   /// foldMemoryOperandImpl - Target-dependent implementation for
@@ -556,7 +565,7 @@ protected:
                                               MachineInstr* MI,
                                           const SmallVectorImpl<unsigned> &Ops,
                                               MachineInstr* LoadMI) const {
-    return 0;
+    return nullptr;
   }
 
 public:
@@ -588,7 +597,7 @@ public:
   /// value.
   virtual unsigned getOpcodeAfterMemoryUnfold(unsigned Opc,
                                       bool UnfoldLoad, bool UnfoldStore,
-                                      unsigned *LoadRegIndex = 0) const {
+                                      unsigned *LoadRegIndex = nullptr) const {
     return 0;
   }
 
@@ -622,6 +631,8 @@ public:
                                     const TargetRegisterInfo *TRI) const {
     return false;
   }
+
+  virtual bool enableClusterLoads() const { return false; }
 
   virtual bool shouldClusterLoads(MachineInstr *FirstLdSt,
                                   MachineInstr *SecondLdSt,
@@ -769,7 +780,7 @@ public:
                         const MachineRegisterInfo *MRI,
                         unsigned &FoldAsLoadDefReg,
                         MachineInstr *&DefMI) const {
-    return 0;
+    return nullptr;
   }
 
   /// FoldImmediate - 'Reg' is known to be defined by a move immediate
@@ -817,19 +828,19 @@ public:
 
   /// computeOperandLatency - Compute and return the latency of the given data
   /// dependent def and use when the operand indices are already known.
-  ///
-  /// FindMin may be set to get the minimum vs. expected latency.
   unsigned computeOperandLatency(const InstrItineraryData *ItinData,
                                  const MachineInstr *DefMI, unsigned DefIdx,
-                                 const MachineInstr *UseMI, unsigned UseIdx,
-                                 bool FindMin = false) const;
+                                 const MachineInstr *UseMI, unsigned UseIdx)
+    const;
 
   /// getInstrLatency - Compute the instruction latency of a given instruction.
   /// If the instruction has higher cost when predicated, it's returned via
   /// PredCost.
   virtual unsigned getInstrLatency(const InstrItineraryData *ItinData,
                                    const MachineInstr *MI,
-                                   unsigned *PredCost = 0) const;
+                                   unsigned *PredCost = nullptr) const;
+
+  virtual unsigned getPredicationCost(const MachineInstr *MI) const;
 
   virtual int getInstrLatency(const InstrItineraryData *ItinData,
                               SDNode *Node) const;
@@ -839,7 +850,7 @@ public:
                              const MachineInstr *DefMI) const;
 
   int computeDefOperandLatency(const InstrItineraryData *ItinData,
-                               const MachineInstr *DefMI, bool FindMin) const;
+                               const MachineInstr *DefMI) const;
 
   /// isHighLatencyDef - Return true if this opcode has high latency to its
   /// result.
@@ -948,6 +959,26 @@ public:
     return 0;
   }
 
+  /// \brief Return the minimum clearance before an instruction that reads an
+  /// unused register.
+  ///
+  /// For example, AVX instructions may copy part of an register operand into
+  /// the unused high bits of the destination register.
+  ///
+  /// vcvtsi2sdq %rax, %xmm0<undef>, %xmm14
+  ///
+  /// In the code above, vcvtsi2sdq copies %xmm0[127:64] into %xmm14 creating a
+  /// false dependence on any previous write to %xmm0.
+  ///
+  /// This hook works similarly to getPartialRegUpdateClearance, except that it
+  /// does not take an operand index. Instead sets \p OpNum to the index of the
+  /// unused register.
+  virtual unsigned getUndefRegClearance(const MachineInstr *MI, unsigned &OpNum,
+                                        const TargetRegisterInfo *TRI) const {
+    // The default implementation returns 0 for no undef register dependency.
+    return 0;
+  }
+
   /// breakPartialRegDependency - Insert a dependency-breaking instruction
   /// before MI to eliminate an unwanted dependency on OpNum.
   ///
@@ -972,7 +1003,7 @@ public:
   /// Create machine specific model for scheduling.
   virtual DFAPacketizer*
     CreateTargetScheduleState(const TargetMachine*, const ScheduleDAG*) const {
-    return NULL;
+    return nullptr;
   }
 
 private:

@@ -132,7 +132,7 @@ public:
   }
 
   /// Retrieves the source range for the friend declaration.
-  SourceRange getSourceRange() const LLVM_READONLY {
+  SourceRange getSourceRange() const override LLVM_READONLY {
     if (NamedDecl *ND = getFriendDecl()) {
       if (FunctionTemplateDecl *FTD = dyn_cast<FunctionTemplateDecl>(ND))
         return FTD->getSourceRange();
@@ -220,15 +220,19 @@ public:
 };
 
 inline CXXRecordDecl::friend_iterator CXXRecordDecl::friend_begin() const {
-  return friend_iterator(data().FirstFriend);
+  return friend_iterator(getFirstFriend());
 }
 
 inline CXXRecordDecl::friend_iterator CXXRecordDecl::friend_end() const {
   return friend_iterator(0);
 }
 
+inline CXXRecordDecl::friend_range CXXRecordDecl::friends() const {
+  return friend_range(friend_begin(), friend_end());
+}
+
 inline void CXXRecordDecl::pushFriendDecl(FriendDecl *FD) {
-  assert(FD->NextFriend == 0 && "friend already has next friend?");
+  assert(!FD->NextFriend && "friend already has next friend?");
   FD->NextFriend = data().FirstFriend;
   data().FirstFriend = FD;
 }

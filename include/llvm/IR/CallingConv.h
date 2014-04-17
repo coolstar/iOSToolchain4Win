@@ -51,6 +51,21 @@ namespace CallingConv {
     // (HiPE).
     HiPE = 11,
 
+    // WebKit JS - Calling convention for stack based JavaScript calls
+    WebKit_JS = 12,
+
+    // AnyReg - Calling convention for dynamic register based calls (e.g.
+    // stackmap and patchpoint intrinsics).
+    AnyReg = 13,
+
+    // PreserveMost - Calling convention for runtime calls that preserves most
+    // registers.
+    PreserveMost = 14,
+
+    // PreserveAll - Calling convention for runtime calls that preserves
+    // (almost) all registers.
+    PreserveAll = 15,
+
     // Target - This is the start of the target-specific calling conventions,
     // e.g. fastcall and thiscall on X86.
     FirstTargetCC = 64,
@@ -93,13 +108,6 @@ namespace CallingConv {
     /// Passes all arguments in register or parameter space.
     PTX_Device = 72,
 
-    /// MBLAZE_INTR - Calling convention used for MBlaze interrupt routines.
-    MBLAZE_INTR = 73,
-
-    /// MBLAZE_INTR - Calling convention used for MBlaze interrupt support
-    /// routines (i.e. GCC's save_volatiles attribute).
-    MBLAZE_SVOL = 74,
-
     /// SPIR_FUNC - Calling convention for SPIR non-kernel device functions.
     /// No lowering or expansion of arguments.
     /// Structures are passed as a pointer to a struct with the byval attribute.
@@ -119,7 +127,22 @@ namespace CallingConv {
     SPIR_KERNEL = 76,
 
     /// Intel_OCL_BI - Calling conventions for Intel OpenCL built-ins
-    Intel_OCL_BI = 77
+    Intel_OCL_BI = 77,
+
+    /// \brief The C convention as specified in the x86-64 supplement to the
+    /// System V ABI, used on most non-Windows systems.
+    X86_64_SysV = 78,
+
+    /// \brief The C convention as implemented on Windows/x86-64. This
+    /// convention differs from the more common \c X86_64_SysV convention
+    /// in a number of ways, most notably in that XMM registers used to pass
+    /// arguments are shadowed by GPRs, and vice versa.
+    X86_64_Win64 = 79,
+
+    /// \brief The calling convention used for __cdecl methods on win32.
+    /// Differs from the C calling convention only in that the order of the
+    /// first parameter and the sret parameter are swapped.
+    X86_CDeclMethod = 80
 
   };
 } // End CallingConv namespace

@@ -51,11 +51,6 @@ class IdentifierResolver {
     /// The decl must already be part of the decl chain.
     void RemoveDecl(NamedDecl *D);
 
-    /// Replaces the Old declaration with the New declaration. If the
-    /// replacement is successful, returns true. If the old
-    /// declaration was not found, returns false.
-    bool ReplaceDecl(NamedDecl *Old, NamedDecl *New);
-
     /// \brief Insert the given declaration at the given position in the list.
     void InsertDecl(DeclsTy::iterator Pos, NamedDecl *D) {
       Decls.insert(Pos, D);
@@ -155,11 +150,14 @@ public:
   /// if 'D' is in Scope 'S', otherwise 'S' is ignored and isDeclInScope returns
   /// true if 'D' belongs to the given declaration context.
   ///
-  /// \param ExplicitInstantiationOrSpecialization When true, we are checking
-  /// whether the declaration is in scope for the purposes of explicit template
-  /// instantiation or specialization. The default is false.
+  /// \param AllowInlineNamespace If \c true, we are checking whether a prior
+  ///        declaration is in scope in a declaration that requires a prior
+  ///        declaration (because it is either explicitly qualified or is a
+  ///        template instantiation or specialization). In this case, a
+  ///        declaration is in scope if it's in the inline namespace set of the
+  ///        context.
   bool isDeclInScope(Decl *D, DeclContext *Ctx, Scope *S = 0,
-                     bool ExplicitInstantiationOrSpecialization = false) const;
+                     bool AllowInlineNamespace = false) const;
 
   /// AddDecl - Link the decl to its shadowed decl chain.
   void AddDecl(NamedDecl *D);
@@ -167,11 +165,6 @@ public:
   /// RemoveDecl - Unlink the decl from its shadowed decl chain.
   /// The decl must already be part of the decl chain.
   void RemoveDecl(NamedDecl *D);
-
-  /// Replace the decl Old with the new declaration New on its
-  /// identifier chain. Returns true if the old declaration was found
-  /// (and, therefore, replaced).
-  bool ReplaceDecl(NamedDecl *Old, NamedDecl *New);
 
   /// \brief Insert the given declaration after the given iterator
   /// position.
