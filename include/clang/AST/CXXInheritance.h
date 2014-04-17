@@ -190,8 +190,8 @@ public:
   CXXBasePath&       front()       { return Paths.front(); }
   const CXXBasePath& front() const { return Paths.front(); }
   
-  decl_iterator found_decls_begin();
-  decl_iterator found_decls_end();
+  typedef llvm::iterator_range<decl_iterator> decl_range;
+  decl_range found_decls();
   
   /// \brief Determine whether the path from the most-derived type to the
   /// given base type is ambiguous (i.e., it refers to multiple subobjects of
@@ -287,9 +287,9 @@ public:
 
   // Iterate over the set of overriding virtual methods in a given
   // subobject.
-  typedef SmallVector<UniqueVirtualMethod, 4>::iterator 
+  typedef SmallVectorImpl<UniqueVirtualMethod>::iterator
     overriding_iterator;
-  typedef SmallVector<UniqueVirtualMethod, 4>::const_iterator
+  typedef SmallVectorImpl<UniqueVirtualMethod>::const_iterator
     overriding_const_iterator;
 
   // Add a new overriding method for a particular subobject.

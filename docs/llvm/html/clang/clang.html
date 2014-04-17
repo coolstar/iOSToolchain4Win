@@ -52,7 +52,7 @@
 <hr />
 <h1><a name="synopsis">SYNOPSIS</a></h1>
 <p><strong>clang</strong> [<strong>-c</strong>|<strong>-S</strong>|<strong>-E</strong>] <strong>-std=</strong><em>standard</em> <strong>-g</strong>
-  [<strong>-O0</strong>|<strong>-O1</strong>|<strong>-O2</strong>|<strong>-Os</strong>|<strong>-Oz</strong>|<strong>-O3</strong>|<strong>-Ofast</strong>|<strong>-O4</strong>]
+  [<strong>-O0</strong>|<strong>-O1</strong>|<strong>-O2</strong>|<strong>-O3</strong>|<strong>-Ofast</strong>|<strong>-Os</strong>|<strong>-Oz</strong>|<strong>-O</strong>|<strong>-O4</strong>]
   <strong>-W</strong><em>warnings...</em> <strong>-pedantic</strong>
   <strong>-I</strong><em>dir...</em> <strong>-L</strong><em>dir...</em>
   <strong>-D</strong><em>macro[=defn]</em>
@@ -127,7 +127,8 @@ stages.  In addition to compilation of code, Clang also supports other tools:</p
 <p><strong>Clang Static Analyzer</strong></p>
 <p>The Clang Static Analyzer is a tool that scans source code to try to find bugs
 through code analysis.  This tool uses many parts of Clang and is built into the
-same driver.</p>
+same driver.  Please see <a href="http://clang-analyzer.llvm.org">http://clang-analyzer.llvm.org</a> for more details
+on how to use the static analyzer.</p>
 <p>
 </p>
 <hr />
@@ -162,11 +163,6 @@ target-specific code generation, producing an assembly file.</p>
 <dd>
 <p>If no stage selection option is specified, all stages above are run, and the
 linker is run to combine the results into an executable or shared library.</p>
-</dd>
-<dt><strong><a name="analyze" class="item"><strong>--analyze</strong></a></strong></dt>
-
-<dd>
-<p>Run the Clang Static Analyzer.</p>
 </dd>
 </dl>
 <p>
@@ -309,7 +305,7 @@ a number of cross compilers, or may only support a native target.</p>
 <dt><strong><a name="mmacosx_version_min_version" class="item"><strong>-mmacosx-version-min</strong>=<em>version</em></a></strong></dt>
 
 <dd>
-<p>When building for Mac OS/X, specify the minimum version supported by your
+<p>When building for Mac OS X, specify the minimum version supported by your
 application.</p>
 </dd>
 <dt><strong><a name="miphoneos_version_min" class="item"><strong>-miphoneos-version-min</strong></a></strong></dt>
@@ -331,28 +327,81 @@ may not exist on earlier ones.</p>
 </p>
 <h2><a name="code_generation_options">Code Generation Options</a></h2>
 <dl>
-<dt><strong><a name="o0_o1_o2_os_oz_o3_ofast_o4" class="item"><strong>-O0</strong> <strong>-O1</strong> <strong>-O2</strong> <strong>-Os</strong> <strong>-Oz</strong> <strong>-O3</strong> <strong>-Ofast</strong> <strong>-O4</strong></a></strong></dt>
+<dt><strong><a name="o0_o1_o2_o3_ofast_os_oz_o_o4" class="item"><strong>-O0</strong> <strong>-O1</strong> <strong>-O2</strong> <strong>-O3</strong> <strong>-Ofast</strong> <strong>-Os</strong> <strong>-Oz</strong> <strong>-O</strong> <strong>-O4</strong></a></strong></dt>
 
 <dd>
-<p>Specify which optimization level to use.  <strong>-O0</strong> means &quot;no optimization&quot;: this
-level compiles the fastest and generates the most debuggable code.  <strong>-O2</strong> is a
-moderate level of optimization which enables most optimizations.  <strong>-Os</strong> is like
-<strong>-O2</strong> with extra optimizations to reduce code size.  <strong>-Oz</strong> is like <strong>-Os</strong> 
-(and thus <strong>-O2</strong>), but reduces code size further.  <strong>-O3</strong> is like <strong>-O2</strong>,
-except that it enables optimizations that take longer to perform or that may
-generate larger code (in an attempt to make the program run faster).
-<strong>-Ofast</strong> enables all the optimizations from <strong>-O3</strong> along with other aggressive
-optimizations that may violate strict compliance with language standards. On
-supported platforms, <strong>-O4</strong> enables link-time optimization; object files are
-stored in the LLVM bitcode file format and whole program optimization is done at
-link time. <strong>-O1</strong> is somewhere between <strong>-O0</strong> and <strong>-O2</strong>.</p>
+<p>Specify which optimization level to use:</p>
+<dl>
+<dt><strong><a name="o0" class="item"><strong>-O0</strong></a></strong></dt>
+
+<dd>
+<p>Means &quot;no optimization&quot;: this level compiles the fastest and
+generates the most debuggable code.</p>
+</dd>
+<dt><strong><a name="o1" class="item"><strong>-O1</strong></a></strong></dt>
+
+<dd>
+<p>Somewhere between <strong>-O0</strong> and <strong>-O2</strong>.</p>
+</dd>
+<dt><strong><a name="o2" class="item"><strong>-O2</strong></a></strong></dt>
+
+<dd>
+<p>Moderate level of optimization which enables most optimizations.</p>
+</dd>
+<dt><strong><a name="o3" class="item"><strong>-O3</strong></a></strong></dt>
+
+<dd>
+<p>Like <strong>-O2</strong>, except that it enables optimizations that take longer to perform
+or that may generate larger code (in an attempt to make the program run faster).</p>
+</dd>
+<dt><strong><a name="ofast" class="item"><strong>-Ofast</strong></a></strong></dt>
+
+<dd>
+<p>Enables all the optimizations from <strong>-O3</strong> along with other aggressive
+optimizations that may violate strict compliance with language standards.</p>
+</dd>
+<dt><strong><a name="os" class="item"><strong>-Os</strong></a></strong></dt>
+
+<dd>
+<p>Like <strong>-O2</strong> with extra optimizations to reduce code size.</p>
+</dd>
+<dt><strong><a name="oz" class="item"><strong>-Oz</strong></a></strong></dt>
+
+<dd>
+<p>Like <strong>-Os</strong> (and thus <strong>-O2</strong>), but reduces code size further.</p>
+</dd>
+<dt><strong><a name="o" class="item"><strong>-O</strong></a></strong></dt>
+
+<dd>
+<p>Equivalent to <strong>-O2</strong>.</p>
+</dd>
+<dt><strong><a name="o4_and_higher" class="item"><strong>-O4</strong> and higher</a></strong></dt>
+
+<dd>
+<p>Currently equivalent to <strong>-O3</strong></p>
+</dd>
+</dl>
 </dd>
 <dt><strong><a name="g" class="item"><strong>-g</strong></a></strong></dt>
 
 <dd>
 <p>Generate debug information.  Note that Clang debug information works best at
-<strong>-O0</strong>.  At higher optimization levels, only line number information is
-currently available.</p>
+<strong>-O0</strong>.</p>
+</dd>
+<dt><strong><a name="fstandalone_debug_fno_standalone_debug" class="item"><strong>-fstandalone-debug</strong> <strong>-fno-standalone-debug</strong></a></strong></dt>
+
+<dd>
+<p>Clang supports a number of optimizations to reduce the size of debug
+information in the binary. They work based on the assumption that the
+debug type information can be spread out over multiple compilation
+units.  For instance, Clang will not emit type definitions for types
+that are not needed by a module and could be replaced with a forward
+declaration.  Further, Clang will only emit type info for a dynamic
+C++ class in the module that contains the vtable for the class.</p>
+<p>The <strong>-fstandalone-debug</strong> option turns off these optimizations.  This
+is useful when working with 3rd-party libraries that don't come with
+debug information.  Note that Clang will never emit type information
+for types that are not referenced at all by the program.</p>
 </dd>
 <dt><strong><a name="fexceptions" class="item"><strong>-fexceptions</strong></a></strong></dt>
 
@@ -403,7 +452,7 @@ to the linker depending on the stage selection options).</p>
 <dt><strong><a name="____" class="item"><strong>-###</strong></a></strong></dt>
 
 <dd>
-<p>Print the commands to run for this compilation.</p>
+<p>Print (but do not run) the commands to run for this compilation.</p>
 </dd>
 <dt><strong><a name="help" class="item"><strong>--help</strong></a></strong></dt>
 

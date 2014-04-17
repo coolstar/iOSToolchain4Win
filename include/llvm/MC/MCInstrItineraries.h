@@ -119,8 +119,8 @@ public:
   /// Ctors.
   ///
   InstrItineraryData() : SchedModel(&MCSchedModel::DefaultSchedModel),
-                         Stages(0), OperandCycles(0),
-                         Forwardings(0), Itineraries(0) {}
+                         Stages(nullptr), OperandCycles(nullptr),
+                         Forwardings(nullptr), Itineraries(nullptr) {}
 
   InstrItineraryData(const MCSchedModel *SM, const InstrStage *S,
                      const unsigned *OS, const unsigned *F)
@@ -129,7 +129,7 @@ public:
 
   /// isEmpty - Returns true if there are no itineraries.
   ///
-  bool isEmpty() const { return Itineraries == 0; }
+  bool isEmpty() const { return Itineraries == nullptr; }
 
   /// isEndMarker - Returns true if the index is for the end marker
   /// itinerary.
@@ -157,17 +157,12 @@ public:
   /// class.  The latency is the maximum completion time for any stage
   /// in the itinerary.
   ///
-  /// InstrStages override the itinerary's MinLatency property. In fact, if the
-  /// stage latencies, which may be zero, are less than MinLatency,
-  /// getStageLatency returns a value less than MinLatency.
-  ///
-  /// If no stages exist, MinLatency is used. If MinLatency is invalid (<0),
-  /// then it defaults to one cycle.
+  /// If no stages exist, it defaults to one cycle.
   unsigned getStageLatency(unsigned ItinClassIndx) const {
     // If the target doesn't provide itinerary information, use a simple
     // non-zero default value for all instructions.
     if (isEmpty())
-      return SchedModel->MinLatency < 0 ? 1 : SchedModel->MinLatency;
+      return 1;
 
     // Calculate the maximum completion time for any stage.
     unsigned Latency = 0, StartCycle = 0;
@@ -176,7 +171,6 @@ public:
       Latency = std::max(Latency, StartCycle + IS->getCycles());
       StartCycle += IS->getNextCycles();
     }
-
     return Latency;
   }
 

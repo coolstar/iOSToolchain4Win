@@ -160,7 +160,7 @@ public:
     template<class OtherTy, class OtherIterTy>
     bundle_iterator(const bundle_iterator<OtherTy, OtherIterTy> &I)
       : MII(I.getInstrIterator()) {}
-    bundle_iterator() : MII(0) {}
+    bundle_iterator() : MII(nullptr) {}
 
     Ty &operator*() const { return *MII; }
     Ty *operator->() const { return &operator*(); }
@@ -242,6 +242,12 @@ public:
   reverse_iterator       rend  ()       { return instr_rend();   }
   const_reverse_iterator rend  () const { return instr_rend();   }
 
+  inline iterator_range<iterator> terminators() {
+    return iterator_range<iterator>(getFirstTerminator(), end());
+  }
+  inline iterator_range<const_iterator> terminators() const {
+    return iterator_range<const_iterator>(getFirstTerminator(), end());
+  }
 
   // Machine-CFG iterators
   typedef std::vector<MachineBasicBlock *>::iterator       pred_iterator;
@@ -256,7 +262,6 @@ public:
                                                          succ_reverse_iterator;
   typedef std::vector<MachineBasicBlock *>::const_reverse_iterator
                                                    const_succ_reverse_iterator;
-
   pred_iterator        pred_begin()       { return Predecessors.begin(); }
   const_pred_iterator  pred_begin() const { return Predecessors.begin(); }
   pred_iterator        pred_end()         { return Predecessors.end();   }
@@ -290,11 +295,29 @@ public:
   }
   bool                 succ_empty() const { return Successors.empty();   }
 
+  inline iterator_range<pred_iterator> predecessors() {
+    return iterator_range<pred_iterator>(pred_begin(), pred_end());
+  }
+  inline iterator_range<const_pred_iterator> predecessors() const {
+    return iterator_range<const_pred_iterator>(pred_begin(), pred_end());
+  }
+  inline iterator_range<succ_iterator> successors() {
+    return iterator_range<succ_iterator>(succ_begin(), succ_end());
+  }
+  inline iterator_range<const_succ_iterator> successors() const {
+    return iterator_range<const_succ_iterator>(succ_begin(), succ_end());
+  }
+
   // LiveIn management methods.
 
   /// addLiveIn - Add the specified register as a live in.  Note that it
   /// is an error to add the same register to the same set more than once.
   void addLiveIn(unsigned Reg)  { LiveIns.push_back(Reg); }
+
+  /// Add PhysReg as live in to this block, and ensure that there is a copy of
+  /// PhysReg to a virtual register of class RC. Return the virtual register
+  /// that is a copy of the live in PhysReg.
+  unsigned addLiveIn(unsigned PhysReg, const TargetRegisterClass *RC);
 
   /// removeLiveIn - Remove the specified register from the live in set.
   ///
@@ -358,6 +381,9 @@ public:
   ///
   void addSuccessor(MachineBasicBlock *succ, uint32_t weight = 0);
 
+  /// Set successor weight of a given iterator.
+  void setSuccWeight(succ_iterator I, uint32_t weight);
+
   /// removeSuccessor - Remove successor from the successors list of this
   /// MachineBasicBlock. The Predecessors list of succ is automatically updated.
   ///
@@ -405,8 +431,8 @@ public:
   /// branch to do so (e.g., a table jump).  True is a conservative answer.
   bool canFallThrough();
 
-  /// Returns a pointer to the first instructon in this block that is not a
-  /// PHINode instruction. When adding instruction to the beginning of the
+  /// Returns a pointer to the first instruction in this block that is not a
+  /// PHINode instruction. When adding instructions to the beginning of the
   /// basic block, they should be added before the returned value, not before
   /// the first instruction, which might be PHI.
   /// Returns end() is there's no non-PHI instruction.
@@ -495,7 +521,7 @@ public:
   ///
   /// If I points to a bundle of instructions, they are all erased.
   iterator erase(iterator I) {
-    return erase(I, llvm::next(I));
+    return erase(I, std::next(I));
   }
 
   /// Remove an instruction from the instruction list and delete it.
@@ -534,7 +560,7 @@ public:
   void splice(iterator Where, MachineBasicBlock *Other, iterator From) {
     // The range splice() doesn't allow noop moves, but this one does.
     if (Where != From)
-      splice(Where, Other, From, llvm::next(From));
+      splice(Where, Other, From, std::next(From));
   }
 
   /// Take a block of instructions from MBB 'Other' in the range [From, To),
@@ -601,7 +627,10 @@ public:
 
   // Debugging methods.
   void dump() const;
-  void print(raw_ostream &OS, SlotIndexes* = 0) const;
+  void print(raw_ostream &OS, SlotIndexes* = nullptr) const;
+
+  // Printing method used by LoopInfo.
+  void printAsOperand(raw_ostream &OS, bool PrintType = true);
 
   /// getNumber - MachineBasicBlocks are uniquely numbered at the function
   /// level, unless they're not in a MachineFunction yet, in which case this
@@ -649,8 +678,6 @@ private:
 };
 
 raw_ostream& operator<<(raw_ostream &OS, const MachineBasicBlock &MBB);
-
-void WriteAsOperand(raw_ostream &, const MachineBasicBlock*, bool t);
 
 // This is useful when building IndexedMaps keyed on basic block pointers.
 struct MBB2NumberFunctor :
@@ -726,6 +753,31 @@ template <> struct GraphTraits<Inverse<const MachineBasicBlock*> > {
   static inline ChildIteratorType child_end(NodeType *N) {
     return N->pred_end();
   }
+};
+
+
+
+/// MachineInstrSpan provides an interface to get an iteration range
+/// containing the instruction it was initialized with, along with all
+/// those instructions inserted prior to or following that instruction
+/// at some point after the MachineInstrSpan is constructed.
+class MachineInstrSpan {
+  MachineBasicBlock &MBB;
+  MachineBasicBlock::iterator I, B, E;
+public:
+  MachineInstrSpan(MachineBasicBlock::iterator I)
+    : MBB(*I->getParent()),
+      I(I),
+      B(I == MBB.begin() ? MBB.end() : std::prev(I)),
+      E(std::next(I)) {}
+
+  MachineBasicBlock::iterator begin() {
+    return B == MBB.end() ? MBB.begin() : std::next(B);
+  }
+  MachineBasicBlock::iterator end() { return E; }
+  bool empty() { return begin() == end(); }
+
+  MachineBasicBlock::iterator getInitial() { return I; }
 };
 
 } // End llvm namespace

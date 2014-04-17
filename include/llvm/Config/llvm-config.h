@@ -21,7 +21,7 @@
 #define LLVM_BINDIR "/usr/local/bin"
 
 /* Time at which LLVM was configured */
-#define LLVM_CONFIGTIME "Sun Sep 15 15:25:55 PDT 2013"
+#define LLVM_CONFIGTIME "Thu Apr 17 10:20:22 PDT 2014"
 
 /* Installation directory for data files */
 #define LLVM_DATADIR "/usr/local/share/llvm"
@@ -49,9 +49,6 @@
 
 /* Installation directory for .info files */
 #define LLVM_INFODIR "/usr/local/info"
-
-/* Installation directory for libraries */
-#define LLVM_LIBDIR "/usr/local/lib"
 
 /* Installation directory for man pages */
 #define LLVM_MANDIR "/usr/local/man"
@@ -123,6 +120,6 @@
 #define LLVM_VERSION_MAJOR 3
 
 /* Minor version of the LLVM API */
-#define LLVM_VERSION_MINOR 3
+#define LLVM_VERSION_MINOR 5
 
 #endif

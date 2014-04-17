@@ -88,6 +88,11 @@ public:
   ///
   int getOffsetOfLocalArea() const { return LocalAreaOffset; }
 
+  /// isFPCloseToIncomingSP - Return true if the frame pointer is close to
+  /// the incoming stack pointer, false if it is close to the post-prologue
+  /// stack pointer.
+  virtual bool isFPCloseToIncomingSP() const { return true; }
+
   /// getCalleeSavedSpillSlots - This method returns a pointer to an array of
   /// pairs, that contains an entry for each callee saved register that must be
   /// spilled to a particular stack location if it is spilled.
@@ -100,7 +105,7 @@ public:
   virtual const SpillSlot *
   getCalleeSavedSpillSlots(unsigned &NumEntries) const {
     NumEntries = 0;
-    return 0;
+    return nullptr;
   }
 
   /// targetHandlesStackFrameRounding - Returns true if the target is
@@ -185,7 +190,7 @@ public:
   /// before PrologEpilogInserter scans the physical registers used to determine
   /// what callee saved registers should be spilled. This method is optional.
   virtual void processFunctionBeforeCalleeSavedScan(MachineFunction &MF,
-                                                RegScavenger *RS = NULL) const {
+                                             RegScavenger *RS = nullptr) const {
 
   }
 
@@ -195,7 +200,7 @@ public:
   /// replaced with direct constants.  This method is optional.
   ///
   virtual void processFunctionBeforeFrameFinalized(MachineFunction &MF,
-                                               RegScavenger *RS = NULL) const {
+                                             RegScavenger *RS = nullptr) const {
   }
 
   /// eliminateCallFramePseudoInstr - This method is called during prolog/epilog

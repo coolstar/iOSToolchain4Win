@@ -194,9 +194,9 @@ public:
 
   const char *getCommentKindName() const;
 
-  LLVM_ATTRIBUTE_USED void dump() const;
-  LLVM_ATTRIBUTE_USED void dumpColor() const;
-  LLVM_ATTRIBUTE_USED void dump(const ASTContext &Context) const;
+  void dump() const;
+  void dumpColor() const;
+  void dump(const ASTContext &Context) const;
   void dump(raw_ostream &OS, const CommandTraits *Traits,
             const SourceManager *SM) const;
 
@@ -699,7 +699,10 @@ private:
   unsigned ParamIndex;
 
 public:
-  enum { InvalidParamIndex = ~0U };
+  enum : unsigned {
+    InvalidParamIndex = ~0U,
+    VarArgParamIndex = ~0U/*InvalidParamIndex*/ - 1U
+  };
 
   ParamCommandComment(SourceLocation LocBegin,
                       SourceLocation LocEnd,
@@ -755,14 +758,25 @@ public:
     return ParamIndex != InvalidParamIndex;
   }
 
+  bool isVarArgParam() const LLVM_READONLY {
+    return ParamIndex == VarArgParamIndex;
+  }
+
+  void setIsVarArgParam() {
+    ParamIndex = VarArgParamIndex;
+    assert(isParamIndexValid());
+  }
+
   unsigned getParamIndex() const LLVM_READONLY {
     assert(isParamIndexValid());
+    assert(!isVarArgParam());
     return ParamIndex;
   }
 
   void setParamIndex(unsigned Index) {
     ParamIndex = Index;
     assert(isParamIndexValid());
+    assert(!isVarArgParam());
   }
 };
 
@@ -967,9 +981,9 @@ struct DeclInfo {
   /// that we consider a "function".
   ArrayRef<const ParmVarDecl *> ParamVars;
 
-  /// Function result type if \c CommentDecl is something that we consider
+  /// Function return type if \c CommentDecl is something that we consider
   /// a "function".
-  QualType ResultType;
+  QualType ReturnType;
 
   /// Template parameters that can be referenced by \\tparam if \c CommentDecl is
   /// a template (\c IsTemplateDecl or \c IsTemplatePartialSpecialization is
@@ -1094,10 +1108,6 @@ public:
   const DeclInfo *getDeclInfo() const LLVM_READONLY {
     if (!ThisDeclInfo->IsFilled)
       ThisDeclInfo->fill();
-    return ThisDeclInfo;
-  }
-  
-  DeclInfo *getThisDeclInfo() const LLVM_READONLY {
     return ThisDeclInfo;
   }
   

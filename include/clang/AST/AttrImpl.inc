@@ -6,6 +6,130 @@
 |*                                                                            *|
 \*===----------------------------------------------------------------------===*/
 
+ARMInterruptAttr *ARMInterruptAttr::clone(ASTContext &C) const {
+  return new (C) ARMInterruptAttr(getLocation(), C, interrupt, getSpellingListIndex());
+}
+
+void ARMInterruptAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((interrupt(" << getInterrupt() << ")))";
+    break;
+  }
+}
+}
+
+const char *ARMInterruptAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "interrupt";
+  }
+}
+
+AcquireCapabilityAttr *AcquireCapabilityAttr::clone(ASTContext &C) const {
+  return new (C) AcquireCapabilityAttr(getLocation(), C, args, argsSize, getSpellingListIndex());
+}
+
+void AcquireCapabilityAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((acquire_capability(";
+  bool isFirst = true;
+  for (AcquireCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+  case 1 : {
+    OS << " [[clang::acquire_capability(";
+  bool isFirst = true;
+  for (AcquireCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")]]";
+    break;
+  }
+  case 2 : {
+    OS << " __attribute__((acquire_shared_capability(";
+  bool isFirst = true;
+  for (AcquireCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+  case 3 : {
+    OS << " [[clang::acquire_shared_capability(";
+  bool isFirst = true;
+  for (AcquireCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")]]";
+    break;
+  }
+  case 4 : {
+    OS << " __attribute__((exclusive_lock_function(";
+  bool isFirst = true;
+  for (AcquireCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+  case 5 : {
+    OS << " __attribute__((shared_lock_function(";
+  bool isFirst = true;
+  for (AcquireCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+}
+}
+
+const char *AcquireCapabilityAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "acquire_capability";
+  case 1:
+    return "acquire_capability";
+  case 2:
+    return "acquire_shared_capability";
+  case 3:
+    return "acquire_shared_capability";
+  case 4:
+    return "exclusive_lock_function";
+  case 5:
+    return "shared_lock_function";
+  }
+}
+
 AcquiredAfterAttr *AcquiredAfterAttr::clone(ASTContext &C) const {
   return new (C) AcquiredAfterAttr(getLocation(), C, args, argsSize, getSpellingListIndex());
 }
@@ -27,6 +151,16 @@ void AcquiredAfterAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Polic
     break;
   }
 }
+}
+
+const char *AcquiredAfterAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "acquired_after";
+  }
 }
 
 AcquiredBeforeAttr *AcquiredBeforeAttr::clone(ASTContext &C) const {
@@ -52,6 +186,16 @@ void AcquiredBeforeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Poli
 }
 }
 
+const char *AcquiredBeforeAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "acquired_before";
+  }
+}
+
 AliasAttr *AliasAttr::clone(ASTContext &C) const {
   return new (C) AliasAttr(getLocation(), C, getAliasee(), getSpellingListIndex());
 }
@@ -72,11 +216,27 @@ void AliasAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const
 }
 }
 
+const char *AliasAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "alias";
+  case 1:
+    return "alias";
+  }
+}
+
 AlignMac68kAttr *AlignMac68kAttr::clone(ASTContext &C) const {
   return new (C) AlignMac68kAttr(getLocation(), C, getSpellingListIndex());
 }
 
 void AlignMac68kAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+}
+
+const char *AlignMac68kAttr::getSpelling() const {
+  return "(No spelling)";
 }
 
 bool AlignedAttr::isAlignmentDependent() const {
@@ -108,15 +268,15 @@ void AlignedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) con
     break;
   }
   case 1 : {
-    OS << " __declspec(align(";
-  alignmentExpr->printPretty(OS, 0, Policy);
-  OS << "))";
-    break;
-  }
-  case 2 : {
     OS << " [[gnu::aligned(";
   alignmentExpr->printPretty(OS, 0, Policy);
   OS << ")]]";
+    break;
+  }
+  case 2 : {
+    OS << " __declspec(align(";
+  alignmentExpr->printPretty(OS, 0, Policy);
+  OS << "))";
     break;
   }
   case 3 : {
@@ -134,38 +294,22 @@ void AlignedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) con
 }
 }
 
-AllocSizeAttr *AllocSizeAttr::clone(ASTContext &C) const {
-  return new (C) AllocSizeAttr(getLocation(), C, args, argsSize, getSpellingListIndex());
-}
-
-void AllocSizeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+const char *AlignedAttr::getSpelling() const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __attribute__((alloc_size(";
-  bool isFirst = true;
-  for (AllocSizeAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
-    if (isFirst) isFirst = false;
-    else OS << ", ";
-    OS << *i;
+    return "(No spelling)";
+  case 0:
+    return "aligned";
+  case 1:
+    return "aligned";
+  case 2:
+    return "align";
+  case 3:
+    return "alignas";
+  case 4:
+    return "_Alignas";
   }
-  OS << ")))";
-    break;
-  }
-  case 1 : {
-    OS << " [[gnu::alloc_size(";
-  bool isFirst = true;
-  for (AllocSizeAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
-    if (isFirst) isFirst = false;
-    else OS << ", ";
-    OS << *i;
-  }
-  OS << ")]]";
-    break;
-  }
-}
 }
 
 AlwaysInlineAttr *AlwaysInlineAttr::clone(ASTContext &C) const {
@@ -185,7 +329,25 @@ void AlwaysInlineAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy
     OS << " [[gnu::always_inline]]";
     break;
   }
+  case 2 : {
+    OS << " __forceinline";
+    break;
+  }
 }
+}
+
+const char *AlwaysInlineAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "always_inline";
+  case 1:
+    return "always_inline";
+  case 2:
+    return "__forceinline";
+  }
 }
 
 AnalyzerNoReturnAttr *AnalyzerNoReturnAttr::clone(ASTContext &C) const {
@@ -204,6 +366,16 @@ void AnalyzerNoReturnAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Po
 }
 }
 
+const char *AnalyzerNoReturnAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "analyzer_noreturn";
+  }
+}
+
 AnnotateAttr *AnnotateAttr::clone(ASTContext &C) const {
   return new (C) AnnotateAttr(getLocation(), C, getAnnotation(), getSpellingListIndex());
 }
@@ -220,6 +392,16 @@ void AnnotateAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
 }
 }
 
+const char *AnnotateAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "annotate";
+  }
+}
+
 ArcWeakrefUnavailableAttr *ArcWeakrefUnavailableAttr::clone(ASTContext &C) const {
   return new (C) ArcWeakrefUnavailableAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -234,6 +416,16 @@ void ArcWeakrefUnavailableAttr::printPretty(raw_ostream &OS, const PrintingPolic
     break;
   }
 }
+}
+
+const char *ArcWeakrefUnavailableAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_arc_weak_reference_unavailable";
+  }
 }
 
 ArgumentWithTypeTagAttr *ArgumentWithTypeTagAttr::clone(ASTContext &C) const {
@@ -256,11 +448,158 @@ void ArgumentWithTypeTagAttr::printPretty(raw_ostream &OS, const PrintingPolicy 
 }
 }
 
+const char *ArgumentWithTypeTagAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "argument_with_type_tag";
+  case 1:
+    return "pointer_with_type_tag";
+  }
+}
+
 AsmLabelAttr *AsmLabelAttr::clone(ASTContext &C) const {
   return new (C) AsmLabelAttr(getLocation(), C, getLabel(), getSpellingListIndex());
 }
 
 void AsmLabelAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " asm(\"" << getLabel() << "\")";
+    break;
+  }
+  case 1 : {
+    OS << " __asm__(\"" << getLabel() << "\")";
+    break;
+  }
+}
+}
+
+const char *AsmLabelAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "asm";
+  case 1:
+    return "__asm__";
+  }
+}
+
+AssertCapabilityAttr *AssertCapabilityAttr::clone(ASTContext &C) const {
+  return new (C) AssertCapabilityAttr(getLocation(), C, expr, getSpellingListIndex());
+}
+
+void AssertCapabilityAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((assert_capability(" << getExpr() << ")))";
+    break;
+  }
+  case 1 : {
+    OS << " [[clang::assert_capability(" << getExpr() << ")]]";
+    break;
+  }
+  case 2 : {
+    OS << " __attribute__((assert_shared_capability(" << getExpr() << ")))";
+    break;
+  }
+  case 3 : {
+    OS << " [[clang::assert_shared_capability(" << getExpr() << ")]]";
+    break;
+  }
+}
+}
+
+const char *AssertCapabilityAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "assert_capability";
+  case 1:
+    return "assert_capability";
+  case 2:
+    return "assert_shared_capability";
+  case 3:
+    return "assert_shared_capability";
+  }
+}
+
+AssertExclusiveLockAttr *AssertExclusiveLockAttr::clone(ASTContext &C) const {
+  return new (C) AssertExclusiveLockAttr(getLocation(), C, args, argsSize, getSpellingListIndex());
+}
+
+void AssertExclusiveLockAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((assert_exclusive_lock(";
+  bool isFirst = true;
+  for (AssertExclusiveLockAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+}
+}
+
+const char *AssertExclusiveLockAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "assert_exclusive_lock";
+  }
+}
+
+AssertSharedLockAttr *AssertSharedLockAttr::clone(ASTContext &C) const {
+  return new (C) AssertSharedLockAttr(getLocation(), C, args, argsSize, getSpellingListIndex());
+}
+
+void AssertSharedLockAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((assert_shared_lock(";
+  bool isFirst = true;
+  for (AssertSharedLockAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+}
+}
+
+const char *AssertSharedLockAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "assert_shared_lock";
+  }
 }
 
 AvailabilityAttr *AvailabilityAttr::clone(ASTContext &C) const {
@@ -284,6 +623,16 @@ void AvailabilityAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy
 }
 }
 
+const char *AvailabilityAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "availability";
+  }
+}
+
 BlocksAttr *BlocksAttr::clone(ASTContext &C) const {
   return new (C) BlocksAttr(getLocation(), C, type, getSpellingListIndex());
 }
@@ -300,6 +649,16 @@ void BlocksAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) cons
 }
 }
 
+const char *BlocksAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "blocks";
+  }
+}
+
 C11NoReturnAttr *C11NoReturnAttr::clone(ASTContext &C) const {
   return new (C) C11NoReturnAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -314,6 +673,16 @@ void C11NoReturnAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy)
     break;
   }
 }
+}
+
+const char *C11NoReturnAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "_Noreturn";
+  }
 }
 
 CDeclAttr *CDeclAttr::clone(ASTContext &C) const {
@@ -344,6 +713,22 @@ void CDeclAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const
 }
 }
 
+const char *CDeclAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "cdecl";
+  case 1:
+    return "cdecl";
+  case 2:
+    return "__cdecl";
+  case 3:
+    return "_cdecl";
+  }
+}
+
 CFAuditedTransferAttr *CFAuditedTransferAttr::clone(ASTContext &C) const {
   return new (C) CFAuditedTransferAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -358,6 +743,16 @@ void CFAuditedTransferAttr::printPretty(raw_ostream &OS, const PrintingPolicy &P
     break;
   }
 }
+}
+
+const char *CFAuditedTransferAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "cf_audited_transfer";
+  }
 }
 
 CFConsumedAttr *CFConsumedAttr::clone(ASTContext &C) const {
@@ -376,6 +771,16 @@ void CFConsumedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
 }
 }
 
+const char *CFConsumedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "cf_consumed";
+  }
+}
+
 CFReturnsNotRetainedAttr *CFReturnsNotRetainedAttr::clone(ASTContext &C) const {
   return new (C) CFReturnsNotRetainedAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -390,6 +795,16 @@ void CFReturnsNotRetainedAttr::printPretty(raw_ostream &OS, const PrintingPolicy
     break;
   }
 }
+}
+
+const char *CFReturnsNotRetainedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "cf_returns_not_retained";
+  }
 }
 
 CFReturnsRetainedAttr *CFReturnsRetainedAttr::clone(ASTContext &C) const {
@@ -408,6 +823,16 @@ void CFReturnsRetainedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &P
 }
 }
 
+const char *CFReturnsRetainedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "cf_returns_retained";
+  }
+}
+
 CFUnknownTransferAttr *CFUnknownTransferAttr::clone(ASTContext &C) const {
   return new (C) CFUnknownTransferAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -422,6 +847,16 @@ void CFUnknownTransferAttr::printPretty(raw_ostream &OS, const PrintingPolicy &P
     break;
   }
 }
+}
+
+const char *CFUnknownTransferAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "cf_unknown_transfer";
+  }
 }
 
 CUDAConstantAttr *CUDAConstantAttr::clone(ASTContext &C) const {
@@ -440,6 +875,16 @@ void CUDAConstantAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy
 }
 }
 
+const char *CUDAConstantAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "constant";
+  }
+}
+
 CUDADeviceAttr *CUDADeviceAttr::clone(ASTContext &C) const {
   return new (C) CUDADeviceAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -454,6 +899,16 @@ void CUDADeviceAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
     break;
   }
 }
+}
+
+const char *CUDADeviceAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "device";
+  }
 }
 
 CUDAGlobalAttr *CUDAGlobalAttr::clone(ASTContext &C) const {
@@ -472,6 +927,16 @@ void CUDAGlobalAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
 }
 }
 
+const char *CUDAGlobalAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "global";
+  }
+}
+
 CUDAHostAttr *CUDAHostAttr::clone(ASTContext &C) const {
   return new (C) CUDAHostAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -486,6 +951,16 @@ void CUDAHostAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
     break;
   }
 }
+}
+
+const char *CUDAHostAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "host";
+  }
 }
 
 CUDALaunchBoundsAttr *CUDALaunchBoundsAttr::clone(ASTContext &C) const {
@@ -504,6 +979,16 @@ void CUDALaunchBoundsAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Po
 }
 }
 
+const char *CUDALaunchBoundsAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "launch_bounds";
+  }
+}
+
 CUDASharedAttr *CUDASharedAttr::clone(ASTContext &C) const {
   return new (C) CUDASharedAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -520,6 +1005,16 @@ void CUDASharedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
 }
 }
 
+const char *CUDASharedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "shared";
+  }
+}
+
 CXX11NoReturnAttr *CXX11NoReturnAttr::clone(ASTContext &C) const {
   return new (C) CXX11NoReturnAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -533,11 +1028,94 @@ void CXX11NoReturnAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Polic
     OS << " [[noreturn]]";
     break;
   }
-  case 1 : {
-    OS << " [[std::noreturn]]";
+}
+}
+
+const char *CXX11NoReturnAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "noreturn";
+  }
+}
+
+CallableWhenAttr *CallableWhenAttr::clone(ASTContext &C) const {
+  return new (C) CallableWhenAttr(getLocation(), C, callableState, callableStateSize, getSpellingListIndex());
+}
+
+void CallableWhenAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((callable_when(";
+  bool isFirst = true;
+  for (CallableWhenAttr::callableState_iterator i = callableState_begin(), e = callableState_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
     break;
   }
 }
+}
+
+const char *CallableWhenAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "callable_when";
+  }
+}
+
+CapabilityAttr *CapabilityAttr::clone(ASTContext &C) const {
+  return new (C) CapabilityAttr(getLocation(), C, getName(), getSpellingListIndex());
+}
+
+void CapabilityAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((capability(\"" << getName() << "\")))";
+    break;
+  }
+  case 1 : {
+    OS << " [[clang::capability(\"" << getName() << "\")]]";
+    break;
+  }
+  case 2 : {
+    OS << " __attribute__((shared_capability(\"" << getName() << "\")))";
+    break;
+  }
+  case 3 : {
+    OS << " [[clang::shared_capability(\"" << getName() << "\")]]";
+    break;
+  }
+}
+}
+
+const char *CapabilityAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "capability";
+  case 1:
+    return "capability";
+  case 2:
+    return "shared_capability";
+  case 3:
+    return "shared_capability";
+  }
 }
 
 CarriesDependencyAttr *CarriesDependencyAttr::clone(ASTContext &C) const {
@@ -557,11 +1135,19 @@ void CarriesDependencyAttr::printPretty(raw_ostream &OS, const PrintingPolicy &P
     OS << " [[carries_dependency]]";
     break;
   }
-  case 2 : {
-    OS << " [[std::carries_dependency]]";
-    break;
-  }
 }
+}
+
+const char *CarriesDependencyAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "carries_dependency";
+  case 1:
+    return "carries_dependency";
+  }
 }
 
 CleanupAttr *CleanupAttr::clone(ASTContext &C) const {
@@ -584,6 +1170,18 @@ void CleanupAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) con
 }
 }
 
+const char *CleanupAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "cleanup";
+  case 1:
+    return "cleanup";
+  }
+}
+
 ColdAttr *ColdAttr::clone(ASTContext &C) const {
   return new (C) ColdAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -602,6 +1200,18 @@ void ColdAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const 
     break;
   }
 }
+}
+
+const char *ColdAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "cold";
+  case 1:
+    return "cold";
+  }
 }
 
 CommonAttr *CommonAttr::clone(ASTContext &C) const {
@@ -624,6 +1234,18 @@ void CommonAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) cons
 }
 }
 
+const char *CommonAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "common";
+  case 1:
+    return "common";
+  }
+}
+
 ConstAttr *ConstAttr::clone(ASTContext &C) const {
   return new (C) ConstAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -638,14 +1260,34 @@ void ConstAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const
     break;
   }
   case 1 : {
-    OS << " __attribute__((__const))";
-    break;
-  }
-  case 2 : {
     OS << " [[gnu::const]]";
     break;
   }
+  case 2 : {
+    OS << " __attribute__((__const))";
+    break;
+  }
+  case 3 : {
+    OS << " [[gnu::__const]]";
+    break;
+  }
 }
+}
+
+const char *ConstAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "const";
+  case 1:
+    return "const";
+  case 2:
+    return "__const";
+  case 3:
+    return "__const";
+  }
 }
 
 ConstructorAttr *ConstructorAttr::clone(ASTContext &C) const {
@@ -668,6 +1310,96 @@ void ConstructorAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy)
 }
 }
 
+const char *ConstructorAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "constructor";
+  case 1:
+    return "constructor";
+  }
+}
+
+ConsumableAttr *ConsumableAttr::clone(ASTContext &C) const {
+  return new (C) ConsumableAttr(getLocation(), C, defaultState, getSpellingListIndex());
+}
+
+void ConsumableAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((consumable(" << getDefaultState() << ")))";
+    break;
+  }
+}
+}
+
+const char *ConsumableAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "consumable";
+  }
+}
+
+ConsumableAutoCastAttr *ConsumableAutoCastAttr::clone(ASTContext &C) const {
+  return new (C) ConsumableAutoCastAttr(getLocation(), C, getSpellingListIndex());
+}
+
+void ConsumableAutoCastAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((consumable_auto_cast_state))";
+    break;
+  }
+}
+}
+
+const char *ConsumableAutoCastAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "consumable_auto_cast_state";
+  }
+}
+
+ConsumableSetOnReadAttr *ConsumableSetOnReadAttr::clone(ASTContext &C) const {
+  return new (C) ConsumableSetOnReadAttr(getLocation(), C, getSpellingListIndex());
+}
+
+void ConsumableSetOnReadAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((consumable_set_state_on_read))";
+    break;
+  }
+}
+}
+
+const char *ConsumableSetOnReadAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "consumable_set_state_on_read";
+  }
+}
+
 DLLExportAttr *DLLExportAttr::clone(ASTContext &C) const {
   return new (C) DLLExportAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -681,7 +1413,29 @@ void DLLExportAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) c
     OS << " __declspec(dllexport)";
     break;
   }
+  case 1 : {
+    OS << " __attribute__((dllexport))";
+    break;
+  }
+  case 2 : {
+    OS << " [[gnu::dllexport]]";
+    break;
+  }
 }
+}
+
+const char *DLLExportAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "dllexport";
+  case 1:
+    return "dllexport";
+  case 2:
+    return "dllexport";
+  }
 }
 
 DLLImportAttr *DLLImportAttr::clone(ASTContext &C) const {
@@ -697,7 +1451,29 @@ void DLLImportAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) c
     OS << " __declspec(dllimport)";
     break;
   }
+  case 1 : {
+    OS << " __attribute__((dllimport))";
+    break;
+  }
+  case 2 : {
+    OS << " [[gnu::dllimport]]";
+    break;
+  }
 }
+}
+
+const char *DLLImportAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "dllimport";
+  case 1:
+    return "dllimport";
+  case 2:
+    return "dllimport";
+  }
 }
 
 DeprecatedAttr *DeprecatedAttr::clone(ASTContext &C) const {
@@ -717,7 +1493,31 @@ void DeprecatedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
     OS << " [[gnu::deprecated(\"" << getMessage() << "\")]]";
     break;
   }
+  case 2 : {
+    OS << " __declspec(deprecated(\"" << getMessage() << "\"))";
+    break;
+  }
+  case 3 : {
+    OS << " [[deprecated(\"" << getMessage() << "\")]]";
+    break;
+  }
 }
+}
+
+const char *DeprecatedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "deprecated";
+  case 1:
+    return "deprecated";
+  case 2:
+    return "deprecated";
+  case 3:
+    return "deprecated";
+  }
 }
 
 DestructorAttr *DestructorAttr::clone(ASTContext &C) const {
@@ -740,66 +1540,42 @@ void DestructorAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
 }
 }
 
-EndianAttr *EndianAttr::clone(ASTContext &C) const {
-  return new (C) EndianAttr(getLocation(), C, platform, getSpellingListIndex());
+const char *DestructorAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "destructor";
+  case 1:
+    return "destructor";
+  }
 }
 
-void EndianAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+EnableIfAttr *EnableIfAttr::clone(ASTContext &C) const {
+  return new (C) EnableIfAttr(getLocation(), C, cond, getMessage(), getSpellingListIndex());
+}
+
+void EnableIfAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((endian(" << getPlatform()->getName() << ")))";
+    OS << " __attribute__((enable_if(" << getCond() << ", \"" << getMessage() << "\")))";
     break;
   }
 }
 }
 
-ExclusiveLockFunctionAttr *ExclusiveLockFunctionAttr::clone(ASTContext &C) const {
-  return new (C) ExclusiveLockFunctionAttr(getLocation(), C, args, argsSize, getSpellingListIndex());
-}
-
-void ExclusiveLockFunctionAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+const char *EnableIfAttr::getSpelling() const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __attribute__((exclusive_lock_function(";
-  bool isFirst = true;
-  for (ExclusiveLockFunctionAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
-    if (isFirst) isFirst = false;
-    else OS << ", ";
-    OS << *i;
+    return "(No spelling)";
+  case 0:
+    return "enable_if";
   }
-  OS << ")))";
-    break;
-  }
-}
-}
-
-ExclusiveLocksRequiredAttr *ExclusiveLocksRequiredAttr::clone(ASTContext &C) const {
-  return new (C) ExclusiveLocksRequiredAttr(getLocation(), C, args, argsSize, getSpellingListIndex());
-}
-
-void ExclusiveLocksRequiredAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __attribute__((exclusive_locks_required(";
-  bool isFirst = true;
-  for (ExclusiveLocksRequiredAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
-    if (isFirst) isFirst = false;
-    else OS << ", ";
-    OS << *i;
-  }
-  OS << ")))";
-    break;
-  }
-}
 }
 
 ExclusiveTrylockFunctionAttr *ExclusiveTrylockFunctionAttr::clone(ASTContext &C) const {
@@ -825,6 +1601,16 @@ void ExclusiveTrylockFunctionAttr::printPretty(raw_ostream &OS, const PrintingPo
 }
 }
 
+const char *ExclusiveTrylockFunctionAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "exclusive_trylock_function";
+  }
+}
+
 FallThroughAttr *FallThroughAttr::clone(ASTContext &C) const {
   return new (C) FallThroughAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -839,6 +1625,16 @@ void FallThroughAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy)
     break;
   }
 }
+}
+
+const char *FallThroughAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "fallthrough";
+  }
 }
 
 FastCallAttr *FastCallAttr::clone(ASTContext &C) const {
@@ -869,31 +1665,56 @@ void FastCallAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
 }
 }
 
+const char *FastCallAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "fastcall";
+  case 1:
+    return "fastcall";
+  case 2:
+    return "__fastcall";
+  case 3:
+    return "_fastcall";
+  }
+}
+
 FinalAttr *FinalAttr::clone(ASTContext &C) const {
   return new (C) FinalAttr(getLocation(), C, getSpellingListIndex());
 }
 
 void FinalAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
-}
-
-ForceInlineAttr *ForceInlineAttr::clone(ASTContext &C) const {
-  return new (C) ForceInlineAttr(getLocation(), C, getSpellingListIndex());
-}
-
-void ForceInlineAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __forceinline";
+    OS << " final";
+    break;
+  }
+  case 1 : {
+    OS << " sealed";
     break;
   }
 }
 }
 
+const char *FinalAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "final";
+  case 1:
+    return "sealed";
+  }
+}
+
 FormatAttr *FormatAttr::clone(ASTContext &C) const {
-  return new (C) FormatAttr(getLocation(), C, getType(), formatIdx, firstArg, getSpellingListIndex());
+  return new (C) FormatAttr(getLocation(), C, type, formatIdx, firstArg, getSpellingListIndex());
 }
 
 void FormatAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
@@ -902,14 +1723,26 @@ void FormatAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) cons
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((format(\"" << getType() << "\", " << getFormatIdx() << ", " << getFirstArg() << ")))";
+    OS << " __attribute__((format(" << getType()->getName() << ", " << getFormatIdx() << ", " << getFirstArg() << ")))";
     break;
   }
   case 1 : {
-    OS << " [[gnu::format(\"" << getType() << "\", " << getFormatIdx() << ", " << getFirstArg() << ")]]";
+    OS << " [[gnu::format(" << getType()->getName() << ", " << getFormatIdx() << ", " << getFirstArg() << ")]]";
     break;
   }
 }
+}
+
+const char *FormatAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "format";
+  case 1:
+    return "format";
+  }
 }
 
 FormatArgAttr *FormatArgAttr::clone(ASTContext &C) const {
@@ -932,6 +1765,18 @@ void FormatArgAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) c
 }
 }
 
+const char *FormatArgAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "format_arg";
+  case 1:
+    return "format_arg";
+  }
+}
+
 GNUInlineAttr *GNUInlineAttr::clone(ASTContext &C) const {
   return new (C) GNUInlineAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -952,6 +1797,18 @@ void GNUInlineAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) c
 }
 }
 
+const char *GNUInlineAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "gnu_inline";
+  case 1:
+    return "gnu_inline";
+  }
+}
+
 GuardedByAttr *GuardedByAttr::clone(ASTContext &C) const {
   return new (C) GuardedByAttr(getLocation(), C, arg, getSpellingListIndex());
 }
@@ -968,6 +1825,16 @@ void GuardedByAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) c
 }
 }
 
+const char *GuardedByAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "guarded_by";
+  }
+}
+
 GuardedVarAttr *GuardedVarAttr::clone(ASTContext &C) const {
   return new (C) GuardedVarAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -982,6 +1849,16 @@ void GuardedVarAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
     break;
   }
 }
+}
+
+const char *GuardedVarAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "guarded_var";
+  }
 }
 
 HotAttr *HotAttr::clone(ASTContext &C) const {
@@ -1004,6 +1881,18 @@ void HotAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
 }
 }
 
+const char *HotAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "hot";
+  case 1:
+    return "hot";
+  }
+}
+
 IBActionAttr *IBActionAttr::clone(ASTContext &C) const {
   return new (C) IBActionAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1018,6 +1907,16 @@ void IBActionAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
     break;
   }
 }
+}
+
+const char *IBActionAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "ibaction";
+  }
 }
 
 IBOutletAttr *IBOutletAttr::clone(ASTContext &C) const {
@@ -1036,8 +1935,18 @@ void IBOutletAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
 }
 }
 
+const char *IBOutletAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "iboutlet";
+  }
+}
+
 IBOutletCollectionAttr *IBOutletCollectionAttr::clone(ASTContext &C) const {
-  return new (C) IBOutletCollectionAttr(getLocation(), C, interface, interfaceLoc, getSpellingListIndex());
+  return new (C) IBOutletCollectionAttr(getLocation(), C, interface, getSpellingListIndex());
 }
 
 void IBOutletCollectionAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
@@ -1046,10 +1955,20 @@ void IBOutletCollectionAttr::printPretty(raw_ostream &OS, const PrintingPolicy &
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((iboutletcollection(" << getInterface().getAsString() << ", " << getInterfaceLoc().getRawEncoding() << ")))";
+    OS << " __attribute__((iboutletcollection(" << getInterface().getAsString() << ")))";
     break;
   }
 }
+}
+
+const char *IBOutletCollectionAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "iboutletcollection";
+  }
 }
 
 InitPriorityAttr *InitPriorityAttr::clone(ASTContext &C) const {
@@ -1068,6 +1987,16 @@ void InitPriorityAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy
 }
 }
 
+const char *InitPriorityAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "init_priority";
+  }
+}
+
 IntelOclBiccAttr *IntelOclBiccAttr::clone(ASTContext &C) const {
   return new (C) IntelOclBiccAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1082,6 +2011,16 @@ void IntelOclBiccAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy
     break;
   }
 }
+}
+
+const char *IntelOclBiccAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "intel_ocl_bicc";
+  }
 }
 
 LockReturnedAttr *LockReturnedAttr::clone(ASTContext &C) const {
@@ -1100,20 +2039,14 @@ void LockReturnedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy
 }
 }
 
-LockableAttr *LockableAttr::clone(ASTContext &C) const {
-  return new (C) LockableAttr(getLocation(), C, getSpellingListIndex());
-}
-
-void LockableAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+const char *LockReturnedAttr::getSpelling() const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __attribute__((lockable))";
-    break;
+    return "(No spelling)";
+  case 0:
+    return "lock_returned";
   }
-}
 }
 
 LocksExcludedAttr *LocksExcludedAttr::clone(ASTContext &C) const {
@@ -1139,18 +2072,90 @@ void LocksExcludedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Polic
 }
 }
 
-MBlazeInterruptHandlerAttr *MBlazeInterruptHandlerAttr::clone(ASTContext &C) const {
-  return new (C) MBlazeInterruptHandlerAttr(getLocation(), C, getSpellingListIndex());
+const char *LocksExcludedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "locks_excluded";
+  }
 }
 
-void MBlazeInterruptHandlerAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+MSABIAttr *MSABIAttr::clone(ASTContext &C) const {
+  return new (C) MSABIAttr(getLocation(), C, getSpellingListIndex());
 }
 
-MBlazeSaveVolatilesAttr *MBlazeSaveVolatilesAttr::clone(ASTContext &C) const {
-  return new (C) MBlazeSaveVolatilesAttr(getLocation(), C, getSpellingListIndex());
+void MSABIAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((ms_abi))";
+    break;
+  }
+  case 1 : {
+    OS << " [[gnu::ms_abi]]";
+    break;
+  }
+}
 }
 
-void MBlazeSaveVolatilesAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+const char *MSABIAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "ms_abi";
+  case 1:
+    return "ms_abi";
+  }
+}
+
+MSInheritanceAttr *MSInheritanceAttr::clone(ASTContext &C) const {
+  return new (C) MSInheritanceAttr(getLocation(), C, bestCase, getSpellingListIndex());
+}
+
+void MSInheritanceAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __single_inheritance(" << getBestCase() << ")";
+    break;
+  }
+  case 1 : {
+    OS << " __multiple_inheritance(" << getBestCase() << ")";
+    break;
+  }
+  case 2 : {
+    OS << " __virtual_inheritance(" << getBestCase() << ")";
+    break;
+  }
+  case 3 : {
+    OS << " __unspecified_inheritance(" << getBestCase() << ")";
+    break;
+  }
+}
+}
+
+const char *MSInheritanceAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "__single_inheritance";
+  case 1:
+    return "__multiple_inheritance";
+  case 2:
+    return "__virtual_inheritance";
+  case 3:
+    return "__unspecified_inheritance";
+  }
 }
 
 MSP430InterruptAttr *MSP430InterruptAttr::clone(ASTContext &C) const {
@@ -1158,6 +2163,36 @@ MSP430InterruptAttr *MSP430InterruptAttr::clone(ASTContext &C) const {
 }
 
 void MSP430InterruptAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((interrupt(" << getNumber() << ")))";
+    break;
+  }
+}
+}
+
+const char *MSP430InterruptAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "interrupt";
+  }
+}
+
+MSVtorDispAttr *MSVtorDispAttr::clone(ASTContext &C) const {
+  return new (C) MSVtorDispAttr(getLocation(), C, vdm, getSpellingListIndex());
+}
+
+void MSVtorDispAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+}
+
+const char *MSVtorDispAttr::getSpelling() const {
+  return "(No spelling)";
 }
 
 MallocAttr *MallocAttr::clone(ASTContext &C) const {
@@ -1180,11 +2215,27 @@ void MallocAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) cons
 }
 }
 
+const char *MallocAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "malloc";
+  case 1:
+    return "malloc";
+  }
+}
+
 MaxFieldAlignmentAttr *MaxFieldAlignmentAttr::clone(ASTContext &C) const {
   return new (C) MaxFieldAlignmentAttr(getLocation(), C, alignment, getSpellingListIndex());
 }
 
 void MaxFieldAlignmentAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+}
+
+const char *MaxFieldAlignmentAttr::getSpelling() const {
+  return "(No spelling)";
 }
 
 MayAliasAttr *MayAliasAttr::clone(ASTContext &C) const {
@@ -1207,6 +2258,18 @@ void MayAliasAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
 }
 }
 
+const char *MayAliasAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "may_alias";
+  case 1:
+    return "may_alias";
+  }
+}
+
 MinSizeAttr *MinSizeAttr::clone(ASTContext &C) const {
   return new (C) MinSizeAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1221,6 +2284,16 @@ void MinSizeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) con
     break;
   }
 }
+}
+
+const char *MinSizeAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "minsize";
+  }
 }
 
 Mips16Attr *Mips16Attr::clone(ASTContext &C) const {
@@ -1243,20 +2316,48 @@ void Mips16Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) cons
 }
 }
 
-MsPropertyAttr *MsPropertyAttr::clone(ASTContext &C) const {
-  return new (C) MsPropertyAttr(getLocation(), C, getSpellingListIndex());
+const char *Mips16Attr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "mips16";
+  case 1:
+    return "mips16";
+  }
 }
 
-void MsPropertyAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+ModeAttr *ModeAttr::clone(ASTContext &C) const {
+  return new (C) ModeAttr(getLocation(), C, mode, getSpellingListIndex());
+}
+
+void ModeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __declspec(property)";
+    OS << " __attribute__((mode(" << getMode()->getName() << ")))";
+    break;
+  }
+  case 1 : {
+    OS << " [[gnu::mode(" << getMode()->getName() << ")]]";
     break;
   }
 }
+}
+
+const char *ModeAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "mode";
+  case 1:
+    return "mode";
+  }
 }
 
 MsStructAttr *MsStructAttr::clone(ASTContext &C) const {
@@ -1269,42 +2370,26 @@ void MsStructAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __declspec(ms_struct)";
+    OS << " __attribute__((ms_struct))";
+    break;
+  }
+  case 1 : {
+    OS << " [[gnu::ms_struct]]";
     break;
   }
 }
 }
 
-MultipleInheritanceAttr *MultipleInheritanceAttr::clone(ASTContext &C) const {
-  return new (C) MultipleInheritanceAttr(getLocation(), C, getSpellingListIndex());
-}
-
-void MultipleInheritanceAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+const char *MsStructAttr::getSpelling() const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __multiple_inheritance";
-    break;
+    return "(No spelling)";
+  case 0:
+    return "ms_struct";
+  case 1:
+    return "ms_struct";
   }
-}
-}
-
-NSBridgedAttr *NSBridgedAttr::clone(ASTContext &C) const {
-  return new (C) NSBridgedAttr(getLocation(), C, bridgedType, getSpellingListIndex());
-}
-
-void NSBridgedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __attribute__((ns_bridged(" << getBridgedType()->getName() << ")))";
-    break;
-  }
-}
 }
 
 NSConsumedAttr *NSConsumedAttr::clone(ASTContext &C) const {
@@ -1323,6 +2408,16 @@ void NSConsumedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
 }
 }
 
+const char *NSConsumedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "ns_consumed";
+  }
+}
+
 NSConsumesSelfAttr *NSConsumesSelfAttr::clone(ASTContext &C) const {
   return new (C) NSConsumesSelfAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1337,6 +2432,16 @@ void NSConsumesSelfAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Poli
     break;
   }
 }
+}
+
+const char *NSConsumesSelfAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "ns_consumes_self";
+  }
 }
 
 NSReturnsAutoreleasedAttr *NSReturnsAutoreleasedAttr::clone(ASTContext &C) const {
@@ -1355,6 +2460,16 @@ void NSReturnsAutoreleasedAttr::printPretty(raw_ostream &OS, const PrintingPolic
 }
 }
 
+const char *NSReturnsAutoreleasedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "ns_returns_autoreleased";
+  }
+}
+
 NSReturnsNotRetainedAttr *NSReturnsNotRetainedAttr::clone(ASTContext &C) const {
   return new (C) NSReturnsNotRetainedAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1371,6 +2486,16 @@ void NSReturnsNotRetainedAttr::printPretty(raw_ostream &OS, const PrintingPolicy
 }
 }
 
+const char *NSReturnsNotRetainedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "ns_returns_not_retained";
+  }
+}
+
 NSReturnsRetainedAttr *NSReturnsRetainedAttr::clone(ASTContext &C) const {
   return new (C) NSReturnsRetainedAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1385,6 +2510,16 @@ void NSReturnsRetainedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &P
     break;
   }
 }
+}
+
+const char *NSReturnsRetainedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "ns_returns_retained";
+  }
 }
 
 NakedAttr *NakedAttr::clone(ASTContext &C) const {
@@ -1404,7 +2539,25 @@ void NakedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const
     OS << " [[gnu::naked]]";
     break;
   }
+  case 2 : {
+    OS << " __declspec(naked)";
+    break;
+  }
 }
+}
+
+const char *NakedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "naked";
+  case 1:
+    return "naked";
+  case 2:
+    return "naked";
+  }
 }
 
 NoCommonAttr *NoCommonAttr::clone(ASTContext &C) const {
@@ -1427,6 +2580,18 @@ void NoCommonAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
 }
 }
 
+const char *NoCommonAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "nocommon";
+  case 1:
+    return "nocommon";
+  }
+}
+
 NoDebugAttr *NoDebugAttr::clone(ASTContext &C) const {
   return new (C) NoDebugAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1441,6 +2606,48 @@ void NoDebugAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) con
     break;
   }
 }
+}
+
+const char *NoDebugAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "nodebug";
+  }
+}
+
+NoDuplicateAttr *NoDuplicateAttr::clone(ASTContext &C) const {
+  return new (C) NoDuplicateAttr(getLocation(), C, getSpellingListIndex());
+}
+
+void NoDuplicateAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((noduplicate))";
+    break;
+  }
+  case 1 : {
+    OS << " [[clang::noduplicate]]";
+    break;
+  }
+}
+}
+
+const char *NoDuplicateAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "noduplicate";
+  case 1:
+    return "noduplicate";
+  }
 }
 
 NoInlineAttr *NoInlineAttr::clone(ASTContext &C) const {
@@ -1460,7 +2667,25 @@ void NoInlineAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
     OS << " [[gnu::noinline]]";
     break;
   }
+  case 2 : {
+    OS << " __declspec(noinline)";
+    break;
+  }
 }
+}
+
+const char *NoInlineAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "noinline";
+  case 1:
+    return "noinline";
+  case 2:
+    return "noinline";
+  }
 }
 
 NoInstrumentFunctionAttr *NoInstrumentFunctionAttr::clone(ASTContext &C) const {
@@ -1483,6 +2708,18 @@ void NoInstrumentFunctionAttr::printPretty(raw_ostream &OS, const PrintingPolicy
 }
 }
 
+const char *NoInstrumentFunctionAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "no_instrument_function";
+  case 1:
+    return "no_instrument_function";
+  }
+}
+
 NoMips16Attr *NoMips16Attr::clone(ASTContext &C) const {
   return new (C) NoMips16Attr(getLocation(), C, getSpellingListIndex());
 }
@@ -1503,6 +2740,18 @@ void NoMips16Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
 }
 }
 
+const char *NoMips16Attr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "nomips16";
+  case 1:
+    return "nomips16";
+  }
+}
+
 NoReturnAttr *NoReturnAttr::clone(ASTContext &C) const {
   return new (C) NoReturnAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1520,7 +2769,25 @@ void NoReturnAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
     OS << " [[gnu::noreturn]]";
     break;
   }
+  case 2 : {
+    OS << " __declspec(noreturn)";
+    break;
+  }
 }
+}
+
+const char *NoReturnAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "noreturn";
+  case 1:
+    return "noreturn";
+  case 2:
+    return "noreturn";
+  }
 }
 
 NoSanitizeAddressAttr *NoSanitizeAddressAttr::clone(ASTContext &C) const {
@@ -1537,10 +2804,34 @@ void NoSanitizeAddressAttr::printPretty(raw_ostream &OS, const PrintingPolicy &P
     break;
   }
   case 1 : {
+    OS << " [[gnu::no_address_safety_analysis]]";
+    break;
+  }
+  case 2 : {
     OS << " __attribute__((no_sanitize_address))";
     break;
   }
+  case 3 : {
+    OS << " [[gnu::no_sanitize_address]]";
+    break;
+  }
 }
+}
+
+const char *NoSanitizeAddressAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "no_address_safety_analysis";
+  case 1:
+    return "no_address_safety_analysis";
+  case 2:
+    return "no_sanitize_address";
+  case 3:
+    return "no_sanitize_address";
+  }
 }
 
 NoSanitizeMemoryAttr *NoSanitizeMemoryAttr::clone(ASTContext &C) const {
@@ -1559,6 +2850,16 @@ void NoSanitizeMemoryAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Po
 }
 }
 
+const char *NoSanitizeMemoryAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "no_sanitize_memory";
+  }
+}
+
 NoSanitizeThreadAttr *NoSanitizeThreadAttr::clone(ASTContext &C) const {
   return new (C) NoSanitizeThreadAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1575,6 +2876,16 @@ void NoSanitizeThreadAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Po
 }
 }
 
+const char *NoSanitizeThreadAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "no_sanitize_thread";
+  }
+}
+
 NoThreadSafetyAnalysisAttr *NoThreadSafetyAnalysisAttr::clone(ASTContext &C) const {
   return new (C) NoThreadSafetyAnalysisAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1589,6 +2900,16 @@ void NoThreadSafetyAnalysisAttr::printPretty(raw_ostream &OS, const PrintingPoli
     break;
   }
 }
+}
+
+const char *NoThreadSafetyAnalysisAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "no_thread_safety_analysis";
+  }
 }
 
 NoThrowAttr *NoThrowAttr::clone(ASTContext &C) const {
@@ -1608,7 +2929,25 @@ void NoThrowAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) con
     OS << " [[gnu::nothrow]]";
     break;
   }
+  case 2 : {
+    OS << " __declspec(nothrow)";
+    break;
+  }
 }
+}
+
+const char *NoThrowAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "nothrow";
+  case 1:
+    return "nothrow";
+  case 2:
+    return "nothrow";
+  }
 }
 
 NonNullAttr *NonNullAttr::clone(ASTContext &C) const {
@@ -1645,6 +2984,122 @@ void NonNullAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) con
 }
 }
 
+const char *NonNullAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "nonnull";
+  case 1:
+    return "nonnull";
+  }
+}
+
+ObjCBridgeAttr *ObjCBridgeAttr::clone(ASTContext &C) const {
+  return new (C) ObjCBridgeAttr(getLocation(), C, bridgedType, getSpellingListIndex());
+}
+
+void ObjCBridgeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((objc_bridge(" << getBridgedType()->getName() << ")))";
+    break;
+  }
+}
+}
+
+const char *ObjCBridgeAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_bridge";
+  }
+}
+
+ObjCBridgeMutableAttr *ObjCBridgeMutableAttr::clone(ASTContext &C) const {
+  return new (C) ObjCBridgeMutableAttr(getLocation(), C, bridgedType, getSpellingListIndex());
+}
+
+void ObjCBridgeMutableAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((objc_bridge_mutable(" << getBridgedType()->getName() << ")))";
+    break;
+  }
+}
+}
+
+const char *ObjCBridgeMutableAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_bridge_mutable";
+  }
+}
+
+ObjCBridgeRelatedAttr *ObjCBridgeRelatedAttr::clone(ASTContext &C) const {
+  return new (C) ObjCBridgeRelatedAttr(getLocation(), C, relatedClass, classMethod, instanceMethod, getSpellingListIndex());
+}
+
+void ObjCBridgeRelatedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((objc_bridge_related(" << getRelatedClass()->getName() << ", " << getClassMethod()->getName() << ", " << getInstanceMethod()->getName() << ")))";
+    break;
+  }
+}
+}
+
+const char *ObjCBridgeRelatedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_bridge_related";
+  }
+}
+
+ObjCDesignatedInitializerAttr *ObjCDesignatedInitializerAttr::clone(ASTContext &C) const {
+  return new (C) ObjCDesignatedInitializerAttr(getLocation(), C, getSpellingListIndex());
+}
+
+void ObjCDesignatedInitializerAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((objc_designated_initializer))";
+    break;
+  }
+}
+}
+
+const char *ObjCDesignatedInitializerAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_designated_initializer";
+  }
+}
+
 ObjCExceptionAttr *ObjCExceptionAttr::clone(ASTContext &C) const {
   return new (C) ObjCExceptionAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1659,6 +3114,42 @@ void ObjCExceptionAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Polic
     break;
   }
 }
+}
+
+const char *ObjCExceptionAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_exception";
+  }
+}
+
+ObjCExplicitProtocolImplAttr *ObjCExplicitProtocolImplAttr::clone(ASTContext &C) const {
+  return new (C) ObjCExplicitProtocolImplAttr(getLocation(), C, getSpellingListIndex());
+}
+
+void ObjCExplicitProtocolImplAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((objc_protocol_requires_explicit_implementation))";
+    break;
+  }
+}
+}
+
+const char *ObjCExplicitProtocolImplAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_protocol_requires_explicit_implementation";
+  }
 }
 
 ObjCMethodFamilyAttr *ObjCMethodFamilyAttr::clone(ASTContext &C) const {
@@ -1677,6 +3168,16 @@ void ObjCMethodFamilyAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Po
 }
 }
 
+const char *ObjCMethodFamilyAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_method_family";
+  }
+}
+
 ObjCNSObjectAttr *ObjCNSObjectAttr::clone(ASTContext &C) const {
   return new (C) ObjCNSObjectAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1691,6 +3192,16 @@ void ObjCNSObjectAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy
     break;
   }
 }
+}
+
+const char *ObjCNSObjectAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "NSObject";
+  }
 }
 
 ObjCPreciseLifetimeAttr *ObjCPreciseLifetimeAttr::clone(ASTContext &C) const {
@@ -1709,6 +3220,16 @@ void ObjCPreciseLifetimeAttr::printPretty(raw_ostream &OS, const PrintingPolicy 
 }
 }
 
+const char *ObjCPreciseLifetimeAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_precise_lifetime";
+  }
+}
+
 ObjCRequiresPropertyDefsAttr *ObjCRequiresPropertyDefsAttr::clone(ASTContext &C) const {
   return new (C) ObjCRequiresPropertyDefsAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1723,6 +3244,16 @@ void ObjCRequiresPropertyDefsAttr::printPretty(raw_ostream &OS, const PrintingPo
     break;
   }
 }
+}
+
+const char *ObjCRequiresPropertyDefsAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_requires_property_definitions";
+  }
 }
 
 ObjCRequiresSuperAttr *ObjCRequiresSuperAttr::clone(ASTContext &C) const {
@@ -1741,6 +3272,16 @@ void ObjCRequiresSuperAttr::printPretty(raw_ostream &OS, const PrintingPolicy &P
 }
 }
 
+const char *ObjCRequiresSuperAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_requires_super";
+  }
+}
+
 ObjCReturnsInnerPointerAttr *ObjCReturnsInnerPointerAttr::clone(ASTContext &C) const {
   return new (C) ObjCReturnsInnerPointerAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1755,6 +3296,16 @@ void ObjCReturnsInnerPointerAttr::printPretty(raw_ostream &OS, const PrintingPol
     break;
   }
 }
+}
+
+const char *ObjCReturnsInnerPointerAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_returns_inner_pointer";
+  }
 }
 
 ObjCRootClassAttr *ObjCRootClassAttr::clone(ASTContext &C) const {
@@ -1773,8 +3324,18 @@ void ObjCRootClassAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Polic
 }
 }
 
+const char *ObjCRootClassAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_root_class";
+  }
+}
+
 OpenCLImageAccessAttr *OpenCLImageAccessAttr::clone(ASTContext &C) const {
-  return new (C) OpenCLImageAccessAttr(getLocation(), C, access, getSpellingListIndex());
+  return new (C) OpenCLImageAccessAttr(getLocation(), C, getSpellingListIndex());
 }
 
 void OpenCLImageAccessAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
@@ -1783,10 +3344,50 @@ void OpenCLImageAccessAttr::printPretty(raw_ostream &OS, const PrintingPolicy &P
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((opencl_image_access(" << getAccess() << ")))";
+    OS << " __read_only";
+    break;
+  }
+  case 1 : {
+    OS << " read_only";
+    break;
+  }
+  case 2 : {
+    OS << " __write_only";
+    break;
+  }
+  case 3 : {
+    OS << " write_only";
+    break;
+  }
+  case 4 : {
+    OS << " __read_write";
+    break;
+  }
+  case 5 : {
+    OS << " read_write";
     break;
   }
 }
+}
+
+const char *OpenCLImageAccessAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "__read_only";
+  case 1:
+    return "read_only";
+  case 2:
+    return "__write_only";
+  case 3:
+    return "write_only";
+  case 4:
+    return "__read_write";
+  case 5:
+    return "read_write";
+  }
 }
 
 OpenCLKernelAttr *OpenCLKernelAttr::clone(ASTContext &C) const {
@@ -1809,6 +3410,50 @@ void OpenCLKernelAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy
 }
 }
 
+const char *OpenCLKernelAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "__kernel";
+  case 1:
+    return "kernel";
+  }
+}
+
+OptimizeNoneAttr *OptimizeNoneAttr::clone(ASTContext &C) const {
+  return new (C) OptimizeNoneAttr(getLocation(), C, getSpellingListIndex());
+}
+
+void OptimizeNoneAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((optnone))";
+    break;
+  }
+  case 1 : {
+    OS << " [[clang::optnone]]";
+    break;
+  }
+}
+}
+
+const char *OptimizeNoneAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "optnone";
+  case 1:
+    return "optnone";
+  }
+}
+
 OverloadableAttr *OverloadableAttr::clone(ASTContext &C) const {
   return new (C) OverloadableAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1825,15 +3470,44 @@ void OverloadableAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy
 }
 }
 
+const char *OverloadableAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "overloadable";
+  }
+}
+
 OverrideAttr *OverrideAttr::clone(ASTContext &C) const {
   return new (C) OverrideAttr(getLocation(), C, getSpellingListIndex());
 }
 
 void OverrideAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " override";
+    break;
+  }
+}
+}
+
+const char *OverrideAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "override";
+  }
 }
 
 OwnershipAttr *OwnershipAttr::clone(ASTContext &C) const {
-  return new (C) OwnershipAttr(getLocation(), C, ownKind, getModule(), args, argsSize, getSpellingListIndex());
+  return new (C) OwnershipAttr(getLocation(), C, module, args, argsSize, getSpellingListIndex());
 }
 
 void OwnershipAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
@@ -1842,7 +3516,7 @@ void OwnershipAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) c
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((ownership_holds(" << getOwnKind() << ", \"" << getModule() << "\", ";
+    OS << " __attribute__((ownership_holds(" << getModule()->getName() << ", ";
   bool isFirst = true;
   for (OwnershipAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
     if (isFirst) isFirst = false;
@@ -1853,7 +3527,7 @@ void OwnershipAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) c
     break;
   }
   case 1 : {
-    OS << " __attribute__((ownership_returns(" << getOwnKind() << ", \"" << getModule() << "\", ";
+    OS << " __attribute__((ownership_returns(" << getModule()->getName() << ", ";
   bool isFirst = true;
   for (OwnershipAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
     if (isFirst) isFirst = false;
@@ -1864,7 +3538,7 @@ void OwnershipAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) c
     break;
   }
   case 2 : {
-    OS << " __attribute__((ownership_takes(" << getOwnKind() << ", \"" << getModule() << "\", ";
+    OS << " __attribute__((ownership_takes(" << getModule()->getName() << ", ";
   bool isFirst = true;
   for (OwnershipAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
     if (isFirst) isFirst = false;
@@ -1875,6 +3549,20 @@ void OwnershipAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) c
     break;
   }
 }
+}
+
+const char *OwnershipAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "ownership_holds";
+  case 1:
+    return "ownership_returns";
+  case 2:
+    return "ownership_takes";
+  }
 }
 
 PackedAttr *PackedAttr::clone(ASTContext &C) const {
@@ -1895,6 +3583,44 @@ void PackedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) cons
     break;
   }
 }
+}
+
+const char *PackedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "packed";
+  case 1:
+    return "packed";
+  }
+}
+
+ParamTypestateAttr *ParamTypestateAttr::clone(ASTContext &C) const {
+  return new (C) ParamTypestateAttr(getLocation(), C, paramState, getSpellingListIndex());
+}
+
+void ParamTypestateAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((param_typestate(" << getParamState() << ")))";
+    break;
+  }
+}
+}
+
+const char *ParamTypestateAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "param_typestate";
+  }
 }
 
 PascalAttr *PascalAttr::clone(ASTContext &C) const {
@@ -1921,6 +3647,20 @@ void PascalAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) cons
 }
 }
 
+const char *PascalAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "pascal";
+  case 1:
+    return "__pascal";
+  case 2:
+    return "_pascal";
+  }
+}
+
 PcsAttr *PcsAttr::clone(ASTContext &C) const {
   return new (C) PcsAttr(getLocation(), C, pCS, getSpellingListIndex());
 }
@@ -1941,6 +3681,18 @@ void PcsAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
 }
 }
 
+const char *PcsAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "pcs";
+  case 1:
+    return "pcs";
+  }
+}
+
 PnaclCallAttr *PnaclCallAttr::clone(ASTContext &C) const {
   return new (C) PnaclCallAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1955,6 +3707,16 @@ void PnaclCallAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) c
     break;
   }
 }
+}
+
+const char *PnaclCallAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "pnaclcall";
+  }
 }
 
 PtGuardedByAttr *PtGuardedByAttr::clone(ASTContext &C) const {
@@ -1973,6 +3735,16 @@ void PtGuardedByAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy)
 }
 }
 
+const char *PtGuardedByAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "pt_guarded_by";
+  }
+}
+
 PtGuardedVarAttr *PtGuardedVarAttr::clone(ASTContext &C) const {
   return new (C) PtGuardedVarAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1989,36 +3761,14 @@ void PtGuardedVarAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy
 }
 }
 
-Ptr32Attr *Ptr32Attr::clone(ASTContext &C) const {
-  return new (C) Ptr32Attr(getLocation(), C, getSpellingListIndex());
-}
-
-void Ptr32Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+const char *PtGuardedVarAttr::getSpelling() const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __ptr32";
-    break;
+    return "(No spelling)";
+  case 0:
+    return "pt_guarded_var";
   }
-}
-}
-
-Ptr64Attr *Ptr64Attr::clone(ASTContext &C) const {
-  return new (C) Ptr64Attr(getLocation(), C, getSpellingListIndex());
-}
-
-void Ptr64Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __ptr64";
-    break;
-  }
-}
 }
 
 PureAttr *PureAttr::clone(ASTContext &C) const {
@@ -2041,24 +3791,127 @@ void PureAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const 
 }
 }
 
-RegparmAttr *RegparmAttr::clone(ASTContext &C) const {
-  return new (C) RegparmAttr(getLocation(), C, numParams, getSpellingListIndex());
+const char *PureAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "pure";
+  case 1:
+    return "pure";
+  }
 }
 
-void RegparmAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+ReleaseCapabilityAttr *ReleaseCapabilityAttr::clone(ASTContext &C) const {
+  return new (C) ReleaseCapabilityAttr(getLocation(), C, args, argsSize, getSpellingListIndex());
+}
+
+void ReleaseCapabilityAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((regparm(" << getNumParams() << ")))";
+    OS << " __attribute__((release_capability(";
+  bool isFirst = true;
+  for (ReleaseCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
     break;
   }
   case 1 : {
-    OS << " [[gnu::regparm(" << getNumParams() << ")]]";
+    OS << " [[clang::release_capability(";
+  bool isFirst = true;
+  for (ReleaseCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")]]";
+    break;
+  }
+  case 2 : {
+    OS << " __attribute__((release_shared_capability(";
+  bool isFirst = true;
+  for (ReleaseCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+  case 3 : {
+    OS << " [[clang::release_shared_capability(";
+  bool isFirst = true;
+  for (ReleaseCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")]]";
+    break;
+  }
+  case 4 : {
+    OS << " __attribute__((release_generic_capability(";
+  bool isFirst = true;
+  for (ReleaseCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+  case 5 : {
+    OS << " [[clang::release_generic_capability(";
+  bool isFirst = true;
+  for (ReleaseCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")]]";
+    break;
+  }
+  case 6 : {
+    OS << " __attribute__((unlock_function(";
+  bool isFirst = true;
+  for (ReleaseCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
     break;
   }
 }
+}
+
+const char *ReleaseCapabilityAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "release_capability";
+  case 1:
+    return "release_capability";
+  case 2:
+    return "release_shared_capability";
+  case 3:
+    return "release_shared_capability";
+  case 4:
+    return "release_generic_capability";
+  case 5:
+    return "release_generic_capability";
+  case 6:
+    return "unlock_function";
+  }
 }
 
 ReqdWorkGroupSizeAttr *ReqdWorkGroupSizeAttr::clone(ASTContext &C) const {
@@ -2075,6 +3928,172 @@ void ReqdWorkGroupSizeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &P
     break;
   }
 }
+}
+
+const char *ReqdWorkGroupSizeAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "reqd_work_group_size";
+  }
+}
+
+RequiresCapabilityAttr *RequiresCapabilityAttr::clone(ASTContext &C) const {
+  return new (C) RequiresCapabilityAttr(getLocation(), C, args, argsSize, getSpellingListIndex());
+}
+
+void RequiresCapabilityAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((requires_capability(";
+  bool isFirst = true;
+  for (RequiresCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+  case 1 : {
+    OS << " [[clang::requires_capability(";
+  bool isFirst = true;
+  for (RequiresCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")]]";
+    break;
+  }
+  case 2 : {
+    OS << " __attribute__((exclusive_locks_required(";
+  bool isFirst = true;
+  for (RequiresCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+  case 3 : {
+    OS << " __attribute__((requires_shared_capability(";
+  bool isFirst = true;
+  for (RequiresCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+  case 4 : {
+    OS << " [[clang::requires_shared_capability(";
+  bool isFirst = true;
+  for (RequiresCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")]]";
+    break;
+  }
+  case 5 : {
+    OS << " __attribute__((shared_locks_required(";
+  bool isFirst = true;
+  for (RequiresCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+}
+}
+
+const char *RequiresCapabilityAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "requires_capability";
+  case 1:
+    return "requires_capability";
+  case 2:
+    return "exclusive_locks_required";
+  case 3:
+    return "requires_shared_capability";
+  case 4:
+    return "requires_shared_capability";
+  case 5:
+    return "shared_locks_required";
+  }
+}
+
+ReturnTypestateAttr *ReturnTypestateAttr::clone(ASTContext &C) const {
+  return new (C) ReturnTypestateAttr(getLocation(), C, state, getSpellingListIndex());
+}
+
+void ReturnTypestateAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((return_typestate(" << getState() << ")))";
+    break;
+  }
+}
+}
+
+const char *ReturnTypestateAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "return_typestate";
+  }
+}
+
+ReturnsNonNullAttr *ReturnsNonNullAttr::clone(ASTContext &C) const {
+  return new (C) ReturnsNonNullAttr(getLocation(), C, getSpellingListIndex());
+}
+
+void ReturnsNonNullAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((returns_nonnull))";
+    break;
+  }
+  case 1 : {
+    OS << " [[gnu::returns_nonnull]]";
+    break;
+  }
+}
+}
+
+const char *ReturnsNonNullAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "returns_nonnull";
+  case 1:
+    return "returns_nonnull";
+  }
 }
 
 ReturnsTwiceAttr *ReturnsTwiceAttr::clone(ASTContext &C) const {
@@ -2097,6 +4116,18 @@ void ReturnsTwiceAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy
 }
 }
 
+const char *ReturnsTwiceAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "returns_twice";
+  case 1:
+    return "returns_twice";
+  }
+}
+
 ScopedLockableAttr *ScopedLockableAttr::clone(ASTContext &C) const {
   return new (C) ScopedLockableAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -2111,6 +4142,16 @@ void ScopedLockableAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Poli
     break;
   }
 }
+}
+
+const char *ScopedLockableAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "scoped_lockable";
+  }
 }
 
 SectionAttr *SectionAttr::clone(ASTContext &C) const {
@@ -2130,7 +4171,51 @@ void SectionAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) con
     OS << " [[gnu::section(\"" << getName() << "\")]]";
     break;
   }
+  case 2 : {
+    OS << " __declspec(allocate(\"" << getName() << "\"))";
+    break;
+  }
 }
+}
+
+const char *SectionAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "section";
+  case 1:
+    return "section";
+  case 2:
+    return "allocate";
+  }
+}
+
+SelectAnyAttr *SelectAnyAttr::clone(ASTContext &C) const {
+  return new (C) SelectAnyAttr(getLocation(), C, getSpellingListIndex());
+}
+
+void SelectAnyAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __declspec(selectany)";
+    break;
+  }
+}
+}
+
+const char *SelectAnyAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "selectany";
+  }
 }
 
 SentinelAttr *SentinelAttr::clone(ASTContext &C) const {
@@ -2153,50 +4238,42 @@ void SentinelAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
 }
 }
 
-SharedLockFunctionAttr *SharedLockFunctionAttr::clone(ASTContext &C) const {
-  return new (C) SharedLockFunctionAttr(getLocation(), C, args, argsSize, getSpellingListIndex());
+const char *SentinelAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "sentinel";
+  case 1:
+    return "sentinel";
+  }
 }
 
-void SharedLockFunctionAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+SetTypestateAttr *SetTypestateAttr::clone(ASTContext &C) const {
+  return new (C) SetTypestateAttr(getLocation(), C, newState, getSpellingListIndex());
+}
+
+void SetTypestateAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((shared_lock_function(";
-  bool isFirst = true;
-  for (SharedLockFunctionAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
-    if (isFirst) isFirst = false;
-    else OS << ", ";
-    OS << *i;
-  }
-  OS << ")))";
+    OS << " __attribute__((set_typestate(" << getNewState() << ")))";
     break;
   }
 }
 }
 
-SharedLocksRequiredAttr *SharedLocksRequiredAttr::clone(ASTContext &C) const {
-  return new (C) SharedLocksRequiredAttr(getLocation(), C, args, argsSize, getSpellingListIndex());
-}
-
-void SharedLocksRequiredAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+const char *SetTypestateAttr::getSpelling() const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __attribute__((shared_locks_required(";
-  bool isFirst = true;
-  for (SharedLocksRequiredAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
-    if (isFirst) isFirst = false;
-    else OS << ", ";
-    OS << *i;
+    return "(No spelling)";
+  case 0:
+    return "set_typestate";
   }
-  OS << ")))";
-    break;
-  }
-}
 }
 
 SharedTrylockFunctionAttr *SharedTrylockFunctionAttr::clone(ASTContext &C) const {
@@ -2222,20 +4299,14 @@ void SharedTrylockFunctionAttr::printPretty(raw_ostream &OS, const PrintingPolic
 }
 }
 
-SingleInheritanceAttr *SingleInheritanceAttr::clone(ASTContext &C) const {
-  return new (C) SingleInheritanceAttr(getLocation(), C, getSpellingListIndex());
-}
-
-void SingleInheritanceAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+const char *SharedTrylockFunctionAttr::getSpelling() const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __single_inheritance";
-    break;
+    return "(No spelling)";
+  case 0:
+    return "shared_trylock_function";
   }
-}
 }
 
 StdCallAttr *StdCallAttr::clone(ASTContext &C) const {
@@ -2266,6 +4337,54 @@ void StdCallAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) con
 }
 }
 
+const char *StdCallAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "stdcall";
+  case 1:
+    return "stdcall";
+  case 2:
+    return "__stdcall";
+  case 3:
+    return "_stdcall";
+  }
+}
+
+SysVABIAttr *SysVABIAttr::clone(ASTContext &C) const {
+  return new (C) SysVABIAttr(getLocation(), C, getSpellingListIndex());
+}
+
+void SysVABIAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((sysv_abi))";
+    break;
+  }
+  case 1 : {
+    OS << " [[gnu::sysv_abi]]";
+    break;
+  }
+}
+}
+
+const char *SysVABIAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "sysv_abi";
+  case 1:
+    return "sysv_abi";
+  }
+}
+
 TLSModelAttr *TLSModelAttr::clone(ASTContext &C) const {
   return new (C) TLSModelAttr(getLocation(), C, getModel(), getSpellingListIndex());
 }
@@ -2284,6 +4403,44 @@ void TLSModelAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
     break;
   }
 }
+}
+
+const char *TLSModelAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "tls_model";
+  case 1:
+    return "tls_model";
+  }
+}
+
+TestTypestateAttr *TestTypestateAttr::clone(ASTContext &C) const {
+  return new (C) TestTypestateAttr(getLocation(), C, testState, getSpellingListIndex());
+}
+
+void TestTypestateAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((test_typestate(" << getTestState() << ")))";
+    break;
+  }
+}
+}
+
+const char *TestTypestateAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "test_typestate";
+  }
 }
 
 ThisCallAttr *ThisCallAttr::clone(ASTContext &C) const {
@@ -2314,6 +4471,22 @@ void ThisCallAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
 }
 }
 
+const char *ThisCallAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "thiscall";
+  case 1:
+    return "thiscall";
+  case 2:
+    return "__thiscall";
+  case 3:
+    return "_thiscall";
+  }
+}
+
 TransparentUnionAttr *TransparentUnionAttr::clone(ASTContext &C) const {
   return new (C) TransparentUnionAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -2334,6 +4507,90 @@ void TransparentUnionAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Po
 }
 }
 
+const char *TransparentUnionAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "transparent_union";
+  case 1:
+    return "transparent_union";
+  }
+}
+
+TryAcquireCapabilityAttr *TryAcquireCapabilityAttr::clone(ASTContext &C) const {
+  return new (C) TryAcquireCapabilityAttr(getLocation(), C, successValue, args, argsSize, getSpellingListIndex());
+}
+
+void TryAcquireCapabilityAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((try_acquire_capability(" << getSuccessValue() << ", ";
+  bool isFirst = true;
+  for (TryAcquireCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+  case 1 : {
+    OS << " [[clang::try_acquire_capability(" << getSuccessValue() << ", ";
+  bool isFirst = true;
+  for (TryAcquireCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")]]";
+    break;
+  }
+  case 2 : {
+    OS << " __attribute__((try_acquire_shared_capability(" << getSuccessValue() << ", ";
+  bool isFirst = true;
+  for (TryAcquireCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+  case 3 : {
+    OS << " [[clang::try_acquire_shared_capability(" << getSuccessValue() << ", ";
+  bool isFirst = true;
+  for (TryAcquireCapabilityAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")]]";
+    break;
+  }
+}
+}
+
+const char *TryAcquireCapabilityAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "try_acquire_capability";
+  case 1:
+    return "try_acquire_capability";
+  case 2:
+    return "try_acquire_shared_capability";
+  case 3:
+    return "try_acquire_shared_capability";
+  }
+}
+
 TypeTagForDatatypeAttr *TypeTagForDatatypeAttr::clone(ASTContext &C) const {
   return new (C) TypeTagForDatatypeAttr(getLocation(), C, argumentKind, matchingCType, layoutCompatible, mustBeNull, getSpellingListIndex());
 }
@@ -2348,6 +4605,16 @@ void TypeTagForDatatypeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &
     break;
   }
 }
+}
+
+const char *TypeTagForDatatypeAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "type_tag_for_datatype";
+  }
 }
 
 TypeVisibilityAttr *TypeVisibilityAttr::clone(ASTContext &C) const {
@@ -2370,6 +4637,18 @@ void TypeVisibilityAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Poli
 }
 }
 
+const char *TypeVisibilityAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "type_visibility";
+  case 1:
+    return "type_visibility";
+  }
+}
+
 UnavailableAttr *UnavailableAttr::clone(ASTContext &C) const {
   return new (C) UnavailableAttr(getLocation(), C, getMessage(), getSpellingListIndex());
 }
@@ -2386,34 +4665,14 @@ void UnavailableAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy)
 }
 }
 
-UnlockFunctionAttr *UnlockFunctionAttr::clone(ASTContext &C) const {
-  return new (C) UnlockFunctionAttr(getLocation(), C, args, argsSize, getSpellingListIndex());
-}
-
-void UnlockFunctionAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+const char *UnavailableAttr::getSpelling() const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __attribute__((unlock_function(";
-  bool isFirst = true;
-  for (UnlockFunctionAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
-    if (isFirst) isFirst = false;
-    else OS << ", ";
-    OS << *i;
+    return "(No spelling)";
+  case 0:
+    return "unavailable";
   }
-  OS << ")))";
-    break;
-  }
-}
-}
-
-UnspecifiedInheritanceAttr *UnspecifiedInheritanceAttr::clone(ASTContext &C) const {
-  return new (C) UnspecifiedInheritanceAttr(getLocation(), C, getSpellingListIndex());
-}
-
-void UnspecifiedInheritanceAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
 }
 
 UnusedAttr *UnusedAttr::clone(ASTContext &C) const {
@@ -2436,6 +4695,18 @@ void UnusedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) cons
 }
 }
 
+const char *UnusedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "unused";
+  case 1:
+    return "unused";
+  }
+}
+
 UsedAttr *UsedAttr::clone(ASTContext &C) const {
   return new (C) UsedAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -2456,6 +4727,18 @@ void UsedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const 
 }
 }
 
+const char *UsedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "used";
+  case 1:
+    return "used";
+  }
+}
+
 UuidAttr *UuidAttr::clone(ASTContext &C) const {
   return new (C) UuidAttr(getLocation(), C, getGuid(), getSpellingListIndex());
 }
@@ -2466,10 +4749,20 @@ void UuidAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const 
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((uuid(\"" << getGuid() << "\")))";
+    OS << " __declspec(uuid(\"" << getGuid() << "\"))";
     break;
   }
 }
+}
+
+const char *UuidAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "uuid";
+  }
 }
 
 VecReturnAttr *VecReturnAttr::clone(ASTContext &C) const {
@@ -2488,8 +4781,18 @@ void VecReturnAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) c
 }
 }
 
+const char *VecReturnAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "vecreturn";
+  }
+}
+
 VecTypeHintAttr *VecTypeHintAttr::clone(ASTContext &C) const {
-  return new (C) VecTypeHintAttr(getLocation(), C, typeHint, typeLoc, getSpellingListIndex());
+  return new (C) VecTypeHintAttr(getLocation(), C, typeHint, getSpellingListIndex());
 }
 
 void VecTypeHintAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
@@ -2498,26 +4801,20 @@ void VecTypeHintAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy)
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((vec_type_hint(" << getTypeHint().getAsString() << ", " << getTypeLoc().getRawEncoding() << ")))";
+    OS << " __attribute__((vec_type_hint(" << getTypeHint().getAsString() << ")))";
     break;
   }
 }
 }
 
-VirtualInheritanceAttr *VirtualInheritanceAttr::clone(ASTContext &C) const {
-  return new (C) VirtualInheritanceAttr(getLocation(), C, getSpellingListIndex());
-}
-
-void VirtualInheritanceAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+const char *VecTypeHintAttr::getSpelling() const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __virtual_inheritance";
-    break;
+    return "(No spelling)";
+  case 0:
+    return "vec_type_hint";
   }
-}
 }
 
 VisibilityAttr *VisibilityAttr::clone(ASTContext &C) const {
@@ -2540,6 +4837,44 @@ void VisibilityAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
 }
 }
 
+const char *VisibilityAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "visibility";
+  case 1:
+    return "visibility";
+  }
+}
+
+WarnUnusedAttr *WarnUnusedAttr::clone(ASTContext &C) const {
+  return new (C) WarnUnusedAttr(getLocation(), C, getSpellingListIndex());
+}
+
+void WarnUnusedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((warn_unused))";
+    break;
+  }
+}
+}
+
+const char *WarnUnusedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "warn_unused";
+  }
+}
+
 WarnUnusedResultAttr *WarnUnusedResultAttr::clone(ASTContext &C) const {
   return new (C) WarnUnusedResultAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -2554,14 +4889,28 @@ void WarnUnusedResultAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Po
     break;
   }
   case 1 : {
-    OS << " [[clang::warn_unused_result]]";
-    break;
-  }
-  case 2 : {
     OS << " [[gnu::warn_unused_result]]";
     break;
   }
+  case 2 : {
+    OS << " [[clang::warn_unused_result]]";
+    break;
+  }
 }
+}
+
+const char *WarnUnusedResultAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "warn_unused_result";
+  case 1:
+    return "warn_unused_result";
+  case 2:
+    return "warn_unused_result";
+  }
 }
 
 WeakAttr *WeakAttr::clone(ASTContext &C) const {
@@ -2584,6 +4933,18 @@ void WeakAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const 
 }
 }
 
+const char *WeakAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "weak";
+  case 1:
+    return "weak";
+  }
+}
+
 WeakImportAttr *WeakImportAttr::clone(ASTContext &C) const {
   return new (C) WeakImportAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -2600,8 +4961,18 @@ void WeakImportAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
 }
 }
 
+const char *WeakImportAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "weak_import";
+  }
+}
+
 WeakRefAttr *WeakRefAttr::clone(ASTContext &C) const {
-  return new (C) WeakRefAttr(getLocation(), C, getSpellingListIndex());
+  return new (C) WeakRefAttr(getLocation(), C, getAliasee(), getSpellingListIndex());
 }
 
 void WeakRefAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
@@ -2610,30 +4981,26 @@ void WeakRefAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) con
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((weakref))";
+    OS << " __attribute__((weakref(\"" << getAliasee() << "\")))";
     break;
   }
   case 1 : {
-    OS << " [[gnu::weakref]]";
+    OS << " [[gnu::weakref(\"" << getAliasee() << "\")]]";
     break;
   }
 }
 }
 
-Win64Attr *Win64Attr::clone(ASTContext &C) const {
-  return new (C) Win64Attr(getLocation(), C, getSpellingListIndex());
-}
-
-void Win64Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+const char *WeakRefAttr::getSpelling() const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __w64";
-    break;
+    return "(No spelling)";
+  case 0:
+    return "weakref";
+  case 1:
+    return "weakref";
   }
-}
 }
 
 WorkGroupSizeHintAttr *WorkGroupSizeHintAttr::clone(ASTContext &C) const {
@@ -2652,10 +5019,39 @@ void WorkGroupSizeHintAttr::printPretty(raw_ostream &OS, const PrintingPolicy &P
 }
 }
 
+const char *WorkGroupSizeHintAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "work_group_size_hint";
+  }
+}
+
 X86ForceAlignArgPointerAttr *X86ForceAlignArgPointerAttr::clone(ASTContext &C) const {
   return new (C) X86ForceAlignArgPointerAttr(getLocation(), C, getSpellingListIndex());
 }
 
 void X86ForceAlignArgPointerAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((force_align_arg_pointer))";
+    break;
+  }
+}
+}
+
+const char *X86ForceAlignArgPointerAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "force_align_arg_pointer";
+  }
 }
 

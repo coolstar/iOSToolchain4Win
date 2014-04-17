@@ -17,14 +17,20 @@
 #include "clang/Basic/Diagnostic.h"
 #include "llvm/ADT/IntrusiveRefCntPtr.h"
 #include "llvm/ADT/StringRef.h"
+#include "llvm/Option/OptSpecifier.h"
 
 namespace llvm {
 class raw_fd_ostream;
 class Triple;
+
+namespace opt {
+class ArgList;
+}
 }
 
 namespace clang {
 class ASTConsumer;
+class ASTReader;
 class CompilerInstance;
 class CompilerInvocation;
 class Decl;
@@ -67,10 +73,18 @@ void ProcessWarningOptions(DiagnosticsEngine &Diags,
 void DoPrintPreprocessedInput(Preprocessor &PP, raw_ostream* OS,
                               const PreprocessorOutputOptions &Opts);
 
-/// AttachDependencyFileGen - Create a dependency file generator, and attach
-/// it to the given preprocessor.  This takes ownership of the output stream.
-void AttachDependencyFileGen(Preprocessor &PP,
-                             const DependencyOutputOptions &Opts);
+/// Builds a depdenency file when attached to a Preprocessor (for includes) and
+/// ASTReader (for module imports), and writes it out at the end of processing
+/// a source file.  Users should attach to the ast reader whenever a module is
+/// loaded.
+class DependencyFileGenerator {
+  void *Impl; // Opaque implementation
+  DependencyFileGenerator(void *Impl);
+public:
+  static DependencyFileGenerator *CreateAndAttachToPreprocessor(
+    Preprocessor &PP, const DependencyOutputOptions &Opts);
+  void AttachToASTReader(ASTReader &R);
+};
 
 /// AttachDependencyGraphGen - Create a dependency graph generator, and attach
 /// it to the given preprocessor.
@@ -86,9 +100,11 @@ void AttachDependencyFileGen(Preprocessor &PP,
 /// the default behavior used by -H.
 /// \param OutputPath - If non-empty, a path to write the header include
 /// information to, instead of writing to stderr.
+/// \param ShowDepth - Whether to indent to show the nesting of the includes.
+/// \param MSStyle - Whether to print in cl.exe /showIncludes style.
 void AttachHeaderIncludeGen(Preprocessor &PP, bool ShowAllHeaders = false,
                             StringRef OutputPath = "",
-                            bool ShowDepth = true);
+                            bool ShowDepth = true, bool MSStyle = false);
 
 /// CacheTokens - Cache tokens for use with PCH. Note that this requires
 /// a seekable stream.
@@ -104,6 +120,34 @@ createInvocationFromCommandLine(ArrayRef<const char *> Args,
                             IntrusiveRefCntPtr<DiagnosticsEngine> Diags =
                                 IntrusiveRefCntPtr<DiagnosticsEngine>());
 
-}  // end namespace clang
+/// Return the value of the last argument as an integer, or a default. If Diags
+/// is non-null, emits an error if the argument is given, but non-integral.
+int getLastArgIntValue(const llvm::opt::ArgList &Args,
+                       llvm::opt::OptSpecifier Id, int Default,
+                       DiagnosticsEngine *Diags = 0);
+
+inline int getLastArgIntValue(const llvm::opt::ArgList &Args,
+                              llvm::opt::OptSpecifier Id, int Default,
+                              DiagnosticsEngine &Diags) {
+  return getLastArgIntValue(Args, Id, Default, &Diags);
+}
+
+uint64_t getLastArgUInt64Value(const llvm::opt::ArgList &Args,
+                               llvm::opt::OptSpecifier Id, uint64_t Default,
+                               DiagnosticsEngine *Diags = 0);
+
+inline uint64_t getLastArgUInt64Value(const llvm::opt::ArgList &Args,
+                                      llvm::opt::OptSpecifier Id,
+                                      uint64_t Default,
+                                      DiagnosticsEngine &Diags) {
+  return getLastArgUInt64Value(Args, Id, Default, &Diags);
+}
+
+// When Clang->getFrontendOpts().DisableFree is set we don't delete some of the
+// global objects, but we don't want LeakDetectors to complain, so we bury them
+// in a globally visible array.
+void BuryPointer(const void *Ptr);
+
+} // end namespace clang
 
 #endif

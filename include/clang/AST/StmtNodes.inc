@@ -165,12 +165,6 @@ STMT_RANGE(BinaryOperator, BinaryOperator, CompoundAssignOperator)
 
 #undef BINARYOPERATOR
 
-#ifndef BINARYTYPETRAITEXPR
-#  define BINARYTYPETRAITEXPR(Type, Base) EXPR(Type, Base)
-#endif
-BINARYTYPETRAITEXPR(BinaryTypeTraitExpr, Expr)
-#undef BINARYTYPETRAITEXPR
-
 #ifndef BLOCKEXPR
 #  define BLOCKEXPR(Type, Base) EXPR(Type, Base)
 #endif
@@ -256,6 +250,12 @@ CXXPSEUDODESTRUCTOREXPR(CXXPseudoDestructorExpr, Expr)
 #endif
 CXXSCALARVALUEINITEXPR(CXXScalarValueInitExpr, Expr)
 #undef CXXSCALARVALUEINITEXPR
+
+#ifndef CXXSTDINITIALIZERLISTEXPR
+#  define CXXSTDINITIALIZERLISTEXPR(Type, Base) EXPR(Type, Base)
+#endif
+CXXSTDINITIALIZERLISTEXPR(CXXStdInitializerListExpr, Expr)
+#undef CXXSTDINITIALIZERLISTEXPR
 
 #ifndef CXXTHISEXPR
 #  define CXXTHISEXPR(Type, Base) EXPR(Type, Base)
@@ -408,6 +408,12 @@ CHOOSEEXPR(ChooseExpr, Expr)
 #endif
 COMPOUNDLITERALEXPR(CompoundLiteralExpr, Expr)
 #undef COMPOUNDLITERALEXPR
+
+#ifndef CONVERTVECTOREXPR
+#  define CONVERTVECTOREXPR(Type, Base) EXPR(Type, Base)
+#endif
+CONVERTVECTOREXPR(ConvertVectorExpr, Expr)
+#undef CONVERTVECTOREXPR
 
 #ifndef DECLREFEXPR
 #  define DECLREFEXPR(Type, Base) EXPR(Type, Base)
@@ -717,12 +723,6 @@ UNARYEXPRORTYPETRAITEXPR(UnaryExprOrTypeTraitExpr, Expr)
 UNARYOPERATOR(UnaryOperator, Expr)
 #undef UNARYOPERATOR
 
-#ifndef UNARYTYPETRAITEXPR
-#  define UNARYTYPETRAITEXPR(Type, Base) EXPR(Type, Base)
-#endif
-UNARYTYPETRAITEXPR(UnaryTypeTraitExpr, Expr)
-#undef UNARYTYPETRAITEXPR
-
 #ifndef VAARGEXPR
 #  define VAARGEXPR(Type, Base) EXPR(Type, Base)
 #endif
@@ -774,6 +774,26 @@ MSDEPENDENTEXISTSSTMT(MSDependentExistsStmt, Stmt)
 #endif
 NULLSTMT(NullStmt, Stmt)
 #undef NULLSTMT
+
+#ifndef OMPEXECUTABLEDIRECTIVE
+#  define OMPEXECUTABLEDIRECTIVE(Type, Base) STMT(Type, Base)
+#endif
+ABSTRACT_STMT(OMPEXECUTABLEDIRECTIVE(OMPExecutableDirective, Stmt))
+#ifndef OMPPARALLELDIRECTIVE
+#  define OMPPARALLELDIRECTIVE(Type, Base) OMPEXECUTABLEDIRECTIVE(Type, Base)
+#endif
+OMPPARALLELDIRECTIVE(OMPParallelDirective, OMPExecutableDirective)
+#undef OMPPARALLELDIRECTIVE
+
+#ifndef OMPSIMDDIRECTIVE
+#  define OMPSIMDDIRECTIVE(Type, Base) OMPEXECUTABLEDIRECTIVE(Type, Base)
+#endif
+OMPSIMDDIRECTIVE(OMPSimdDirective, OMPExecutableDirective)
+#undef OMPSIMDDIRECTIVE
+
+STMT_RANGE(OMPExecutableDirective, OMPParallelDirective, OMPSimdDirective)
+
+#undef OMPEXECUTABLEDIRECTIVE
 
 #ifndef OBJCATCATCHSTMT
 #  define OBJCATCATCHSTMT(Type, Base) STMT(Type, Base)

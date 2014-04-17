@@ -14,7 +14,7 @@
 #define C_INCLUDE_DIRS ""
 
 /* Linker version detected at compile time. */
-#define HOST_LINK_VERSION "2.23.52.20130604"
+#define HOST_LINK_VERSION "2.24.51.20140326"
 
 /* Default <path> to all compiler invocations for --sysroot=<path>. */
 #define DEFAULT_SYSROOT ""

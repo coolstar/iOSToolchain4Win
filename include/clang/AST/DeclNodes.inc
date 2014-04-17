@@ -189,7 +189,13 @@ FUNCTIONTEMPLATE(FunctionTemplate, RedeclarableTemplateDecl)
 TYPEALIASTEMPLATE(TypeAliasTemplate, RedeclarableTemplateDecl)
 #undef TYPEALIASTEMPLATE
 
-DECL_RANGE(RedeclarableTemplate, ClassTemplate, TypeAliasTemplate)
+#ifndef VARTEMPLATE
+#  define VARTEMPLATE(Type, Base) REDECLARABLETEMPLATE(Type, Base)
+#endif
+VARTEMPLATE(VarTemplate, RedeclarableTemplateDecl)
+#undef VARTEMPLATE
+
+DECL_RANGE(RedeclarableTemplate, ClassTemplate, VarTemplate)
 
 #undef REDECLARABLETEMPLATE
 
@@ -395,11 +401,25 @@ IMPLICITPARAM(ImplicitParam, VarDecl)
 PARMVAR(ParmVar, VarDecl)
 #undef PARMVAR
 
-DECL_RANGE(Var, Var, ParmVar)
+#ifndef VARTEMPLATESPECIALIZATION
+#  define VARTEMPLATESPECIALIZATION(Type, Base) VAR(Type, Base)
+#endif
+VARTEMPLATESPECIALIZATION(VarTemplateSpecialization, VarDecl)
+#ifndef VARTEMPLATEPARTIALSPECIALIZATION
+#  define VARTEMPLATEPARTIALSPECIALIZATION(Type, Base) VARTEMPLATESPECIALIZATION(Type, Base)
+#endif
+VARTEMPLATEPARTIALSPECIALIZATION(VarTemplatePartialSpecialization, VarTemplateSpecializationDecl)
+#undef VARTEMPLATEPARTIALSPECIALIZATION
+
+DECL_RANGE(VarTemplateSpecialization, VarTemplateSpecialization, VarTemplatePartialSpecialization)
+
+#undef VARTEMPLATESPECIALIZATION
+
+DECL_RANGE(Var, Var, VarTemplatePartialSpecialization)
 
 #undef VAR
 
-DECL_RANGE(Declarator, Field, ParmVar)
+DECL_RANGE(Declarator, Field, VarTemplatePartialSpecialization)
 
 #undef DECLARATOR
 

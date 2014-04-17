@@ -39,7 +39,7 @@ public:
     unsigned Length, Size, Type;
 
     void clear() {
-      OpDecl = 0;
+      OpDecl = nullptr;
       IsVarDecl = false;
       Length = 1;
       Size = 0;
@@ -47,7 +47,7 @@ public:
     }
   } InlineAsmIdentifierInfo;
 
-  virtual ~MCAsmParserSemaCallback(); 
+  virtual ~MCAsmParserSemaCallback();
   virtual void *LookupInlineAsmIdentifier(StringRef &LineBuf,
                                           InlineAsmIdentifierInfo &Info,
                                           bool IsUnevaluatedContext) = 0;
@@ -117,6 +117,10 @@ public:
                                 const MCInstrInfo *MII,
                                 const MCInstPrinter *IP,
                                 MCAsmParserSemaCallback &SI) = 0;
+
+  /// Note - Emit a note at the location \p L, with the message \p Msg.
+  virtual void Note(SMLoc L, const Twine &Msg,
+                    ArrayRef<SMRange> Ranges = None) = 0;
 
   /// Warning - Emit a warning at the location \p L, with the message \p Msg.
   ///

@@ -160,16 +160,16 @@ public:
   ///
   /// \p Claim Whether the argument should be claimed, if it exists.
   bool hasArgNoClaim(OptSpecifier Id) const {
-    return getLastArgNoClaim(Id) != 0;
+    return getLastArgNoClaim(Id) != nullptr;
   }
   bool hasArg(OptSpecifier Id) const {
-    return getLastArg(Id) != 0;
+    return getLastArg(Id) != nullptr;
   }
   bool hasArg(OptSpecifier Id0, OptSpecifier Id1) const {
-    return getLastArg(Id0, Id1) != 0;
+    return getLastArg(Id0, Id1) != nullptr;
   }
   bool hasArg(OptSpecifier Id0, OptSpecifier Id1, OptSpecifier Id2) const {
-    return getLastArg(Id0, Id1, Id2) != 0;
+    return getLastArg(Id0, Id1, Id2) != nullptr;
   }
 
   /// getLastArg - Return the last argument matching \p Id, or null.
@@ -222,8 +222,17 @@ public:
   /// negation are present, the last one wins.
   bool hasFlag(OptSpecifier Pos, OptSpecifier Neg, bool Default=true) const;
 
+  /// hasFlag - Given an option \p Pos, an alias \p PosAlias and its negative
+  /// form \p Neg, return true if the option or its alias is present, false if
+  /// the negation is present, and \p Default if none of the options are
+  /// given. If multiple options are present, the last one wins.
+  bool hasFlag(OptSpecifier Pos, OptSpecifier PosAlias, OptSpecifier Neg,
+               bool Default = true) const;
+
   /// AddLastArg - Render only the last argument match \p Id0, if present.
   void AddLastArg(ArgStringList &Output, OptSpecifier Id0) const;
+  void AddLastArg(ArgStringList &Output, OptSpecifier Id0,
+                  OptSpecifier Id1) const;
 
   /// AddAllArgs - Render all arguments matching the given ids.
   void AddAllArgs(ArgStringList &Output, OptSpecifier Id0,
@@ -298,11 +307,11 @@ public:
   InputArgList(const char* const *ArgBegin, const char* const *ArgEnd);
   ~InputArgList();
 
-  virtual const char *getArgString(unsigned Index) const {
+  const char *getArgString(unsigned Index) const override {
     return ArgStrings[Index];
   }
 
-  virtual unsigned getNumInputArgStrings() const {
+  unsigned getNumInputArgStrings() const override {
     return NumInputArgStrings;
   }
 
@@ -314,7 +323,7 @@ public:
   unsigned MakeIndex(StringRef String0) const;
   unsigned MakeIndex(StringRef String0, StringRef String1) const;
 
-  virtual const char *MakeArgString(StringRef Str) const;
+  const char *MakeArgString(StringRef Str) const override;
 
   /// @}
 };
@@ -332,11 +341,11 @@ public:
   DerivedArgList(const InputArgList &BaseArgs);
   ~DerivedArgList();
 
-  virtual const char *getArgString(unsigned Index) const {
+  const char *getArgString(unsigned Index) const override {
     return BaseArgs.getArgString(Index);
   }
 
-  virtual unsigned getNumInputArgStrings() const {
+  unsigned getNumInputArgStrings() const override {
     return BaseArgs.getNumInputArgStrings();
   }
 
@@ -353,7 +362,7 @@ public:
     SynthesizedArgs.push_back(A);
   }
 
-  virtual const char *MakeArgString(StringRef Str) const;
+  const char *MakeArgString(StringRef Str) const override;
 
   /// AddFlagArg - Construct a new FlagArg for the given option \p Id and
   /// append it to the argument list.

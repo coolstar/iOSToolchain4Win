@@ -1,803 +1,1143 @@
 
 #ifdef GET_DIAG_ARRAYS
-static const short DiagSubGroup0[] = { 131, -1 };
-static const short DiagArray1[] = { diag::warn_pragma_message, -1 };
-static const short DiagArray2[] = { diag::pp_hash_warning, -1 };
-static const short DiagArray3[] = { diag::warn_cfstring_truncated, -1 };
-static const short DiagArray4[] = { diag::warn_nsobject_attribute, -1 };
-static const short DiagArray6[] = { diag::warn_abstract_final_class, -1 };
-static const short DiagArray8[] = { diag::warn_temporary_array_to_pointer_decay, -1 };
-static const short DiagArray9[] = { diag::ext_typecheck_addrof_temporary, -1 };
-static const short DiagSubGroup11[] = { 219, 268, 339, -1 };
-static const short DiagArray12[] = { diag::warn_pp_ambiguous_macro, -1 };
-static const short DiagArray13[] = { diag::ext_nested_name_member_ref_lookup_ambiguous, -1 };
-static const short DiagArray14[] = { diag::warn_incompatible_analyzer_plugin_api, -1 };
-static const short DiagArray15[] = { diag::ext_abstract_pack_declarator_parens, -1 };
-static const short DiagSubGroup16[] = { 24, 23, 20, -1 };
-static const short DiagArray18[] = { diag::warn_arc_bridge_cast_nonarc, -1 };
-static const short DiagArray19[] = { diag::warn_arc_possible_repeated_use_of_weak, -1 };
-static const short DiagArray20[] = { diag::warn_arc_object_memaccess, -1 };
-static const short DiagArray21[] = { diag::warn_arc_perform_selector_leaks, -1 };
-static const short DiagArray22[] = { diag::warn_arc_repeated_use_of_weak, -1 };
-static const short DiagSubGroup22[] = { 19, -1 };
-static const short DiagArray23[] = { diag::warn_arc_retain_cycle, -1 };
-static const short DiagArray24[] = { diag::warn_arc_literal_assign, diag::warn_arc_retained_assign, diag::warn_arc_retained_property_assign, -1 };
-static const short DiagArray25[] = { diag::warn_array_index_exceeds_bounds, diag::warn_array_index_precedes_bounds, diag::warn_static_array_too_small, diag::warn_typecheck_zero_static_array_size, -1 };
-static const short DiagArray26[] = { diag::warn_ptr_arith_exceeds_bounds, diag::warn_ptr_arith_precedes_bounds, -1 };
-static const short DiagSubGroup27[] = { 28, -1 };
-static const short DiagArray28[] = { diag::warn_asm_mismatched_size_modifier, -1 };
-static const short DiagArray29[] = { diag::warn_not_in_enum_assignement, -1 };
-static const short DiagSubGroup30[] = { 157, 86, -1 };
-static const short DiagArray31[] = { diag::warn_atomic_property_rule, -1 };
-static const short DiagArray32[] = { diag::warn_ms_declspec_unknown, diag::warn_unknown_attribute_ignored, -1 };
-static const short DiagArray33[] = { diag::warn_auto_module_import, -1 };
-static const short DiagArray34[] = { diag::ext_auto_storage_class, -1 };
-static const short DiagArray35[] = { diag::warn_auto_var_is_id, -1 };
-static const short DiagArray36[] = { diag::warn_availability_and_unavailable, diag::warn_availability_unknown_platform, diag::warn_availability_version_ordering, diag::warn_mismatched_availability, diag::warn_mismatched_availability_override, diag::warn_mismatched_availability_override_unavail, -1 };
-static const short DiagArray37[] = { diag::backslash_newline_space, -1 };
-static const short DiagArray38[] = { diag::warn_array_new_too_large, diag::warn_typecheck_negative_array_new_size, -1 };
-static const short DiagArray39[] = { diag::warn_bad_function_cast, -1 };
-static const short DiagArray40[] = { diag::ext_rvalue_to_reference_access_ctor, diag::ext_rvalue_to_reference_temp_copy_no_viable, -1 };
-static const short DiagSubGroup40[] = { 60, -1 };
-static const short DiagArray41[] = { diag::warn_impcast_bitfield_precision_constant, -1 };
-static const short DiagArray42[] = { diag::warn_bitwise_and_in_bitwise_or, -1 };
-static const short DiagArray43[] = { diag::warn_impcast_bool_to_null_pointer, diag::warn_impcast_function_to_bool, -1 };
-static const short DiagSubGroup44[] = { 43, -1 };
-static const short DiagArray45[] = { diag::ext_pp_redef_builtin_macro, diag::ext_pp_undef_builtin_macro, -1 };
-static const short DiagArray46[] = { diag::warn_implicit_decl_requires_setjmp, diag::warn_implicit_decl_requires_stdio, diag::warn_implicit_decl_requires_ucontext, -1 };
-static const short DiagArray47[] = { diag::warn_empty_struct_union_compat, -1 };
-static const short DiagSubGroup48[] = { 51, -1 };
-static const short DiagSubGroup49[] = { 54, -1 };
-static const short DiagSubGroup50[] = { 57, -1 };
-static const short DiagArray51[] = { diag::warn_auto_storage_class, diag::warn_cxx0x_right_shift_in_template_arg, diag::warn_cxx11_compat_user_defined_literal, diag::warn_cxx11_keyword, diag::warn_explicit_instantiation_inline_0x, diag::warn_explicit_instantiation_must_be_global_0x, diag::warn_explicit_instantiation_out_of_scope_0x, diag::warn_explicit_instantiation_unqualified_wrong_namespace_0x, -1 };
-static const short DiagSubGroup51[] = { 57, 53, 87, -1 };
-static const short DiagSubGroup52[] = { 88, -1 };
-static const short DiagArray53[] = { diag::warn_cxx11_compat_reserved_user_defined_literal, -1 };
-static const short DiagArray54[] = { diag::ext_alias_declaration, diag::ext_array_size_conversion, diag::ext_auto_type_specifier, diag::ext_cxx11_enum_fixed_underlying_type, diag::ext_defaulted_function, diag::ext_deleted_function, diag::ext_enumerator_list_comma_cxx, diag::ext_explicit_conversion_functions, diag::ext_explicit_instantiation_after_specialization, diag::ext_extern_template, diag::ext_for_range, diag::ext_generalized_initializer_lists, diag::ext_inline_namespace, diag::ext_nonclass_type_friend, diag::ext_nonstatic_member_init, diag::ext_override_control_keyword, diag::ext_ref_qualifier, diag::ext_rvalue_reference, diag::ext_scoped_enum, diag::ext_static_data_member_in_union, diag::ext_template_arg_object_internal, diag::ext_template_outside_of_template, diag::ext_template_parameter_default_in_function_template, diag::ext_template_spec_decl_out_of_scope, diag::ext_typename_outside_of_template, diag::ext_unelaborated_friend_type, diag::ext_variadic_templates, -1 };
-static const short DiagSubGroup54[] = { 55, 56, -1 };
-static const short DiagArray55[] = { diag::ext_extra_semi_cxx11, -1 };
-static const short DiagArray56[] = { diag::ext_cxx11_longlong, -1 };
-static const short DiagArray57[] = { diag::err_cce_narrowing, diag::err_init_list_constant_narrowing, diag::err_init_list_type_narrowing, diag::err_init_list_variable_narrowing, diag::warn_init_list_constant_narrowing, diag::warn_init_list_type_narrowing, diag::warn_init_list_variable_narrowing, -1 };
-static const short DiagArray58[] = { diag::ext_binary_literal_cxx1y, diag::ext_constexpr_body_invalid_stmt, diag::ext_constexpr_body_multiple_return, diag::ext_constexpr_local_var, diag::ext_constexpr_type_definition, diag::ext_decltype_auto_type_specifier, -1 };
-static const short DiagArray59[] = { diag::warn_cxx98_compat_alias_declaration, diag::warn_cxx98_compat_alignas, diag::warn_cxx98_compat_alignof, diag::warn_cxx98_compat_attribute, diag::warn_cxx98_compat_auto_type_specifier, diag::warn_cxx98_compat_constexpr, diag::warn_cxx98_compat_ctor_list_init, diag::warn_cxx98_compat_decltype, diag::warn_cxx98_compat_defaulted_function, diag::warn_cxx98_compat_delegating_ctor, diag::warn_cxx98_compat_deleted_function, diag::warn_cxx98_compat_empty_scalar_initializer, diag::warn_cxx98_compat_enum_fixed_underlying_type, diag::warn_cxx98_compat_enum_friend, diag::warn_cxx98_compat_enum_nested_name_spec, diag::warn_cxx98_compat_explicit_conversion_functions, diag::warn_cxx98_compat_for_range, diag::warn_cxx98_compat_friend_is_member, diag::warn_cxx98_compat_friend_redefinition, diag::warn_cxx98_compat_generalized_initializer_lists, diag::warn_cxx98_compat_goto_into_protected_scope, diag::warn_cxx98_compat_indirect_goto_in_protected_scope, diag::warn_cxx98_compat_initializer_list_init, diag::warn_cxx98_compat_inline_namespace, diag::warn_cxx98_compat_lambda, diag::warn_cxx98_compat_less_colon_colon, diag::warn_cxx98_compat_literal_operator, diag::warn_cxx98_compat_literal_ucn_control_character, diag::warn_cxx98_compat_literal_ucn_escape_basic_scs, diag::warn_cxx98_compat_noexcept_decl, diag::warn_cxx98_compat_noexcept_expr, diag::warn_cxx98_compat_non_static_member_use, diag::warn_cxx98_compat_nonclass_type_friend, diag::warn_cxx98_compat_nonstatic_member_init, diag::warn_cxx98_compat_nontrivial_union_or_anon_struct_member, diag::warn_cxx98_compat_nullptr, diag::warn_cxx98_compat_override_control_keyword, diag::warn_cxx98_compat_pass_non_pod_arg_to_vararg, diag::warn_cxx98_compat_raw_string_literal, diag::warn_cxx98_compat_ref_qualifier, diag::warn_cxx98_compat_reference_list_init, diag::warn_cxx98_compat_rvalue_reference, diag::warn_cxx98_compat_scoped_enum, diag::warn_cxx98_compat_sfinae_access_control, diag::warn_cxx98_compat_static_assert, diag::warn_cxx98_compat_static_data_member_in_union, diag::warn_cxx98_compat_switch_into_protected_scope, diag::warn_cxx98_compat_template_arg_extra_parens, diag::warn_cxx98_compat_template_arg_null, diag::warn_cxx98_compat_template_arg_object_internal, diag::warn_cxx98_compat_template_outside_of_template, diag::warn_cxx98_compat_template_parameter_default_in_function_template, diag::warn_cxx98_compat_template_spec_decl_out_of_scope, diag::warn_cxx98_compat_trailing_return_type, diag::warn_cxx98_compat_two_right_angle_brackets, diag::warn_cxx98_compat_typename_outside_of_template, diag::warn_cxx98_compat_unelaborated_friend_type, diag::warn_cxx98_compat_unicode_id, diag::warn_cxx98_compat_unicode_literal, diag::warn_cxx98_compat_unicode_type, diag::warn_cxx98_compat_using_decl_constructor, diag::warn_cxx98_compat_variadic_templates, -1 };
-static const short DiagSubGroup59[] = { 60, 61, 63, 87, -1 };
-static const short DiagArray60[] = { diag::warn_cxx98_compat_temp_copy, -1 };
-static const short DiagArray61[] = { diag::warn_cxx98_compat_template_arg_local_type, -1 };
-static const short DiagArray62[] = { diag::warn_cxx98_compat_array_size_conversion, diag::warn_cxx98_compat_cast_fn_obj, diag::warn_cxx98_compat_empty_fnmacro_arg, diag::warn_cxx98_compat_enumerator_list_comma, diag::warn_cxx98_compat_explicit_instantiation_after_specialization, diag::warn_cxx98_compat_extern_template, diag::warn_cxx98_compat_longlong, diag::warn_cxx98_compat_no_newline_eof, diag::warn_cxx98_compat_pp_line_too_big, diag::warn_cxx98_compat_top_level_semi, diag::warn_cxx98_compat_variadic_macro, -1 };
-static const short DiagSubGroup62[] = { 59, 88, -1 };
-static const short DiagArray63[] = { diag::warn_cxx98_compat_template_arg_unnamed_type, -1 };
-static const short DiagArray64[] = { diag::ext_anonymous_union, diag::ext_c11_alignment, diag::ext_c11_anonymous_struct, diag::ext_c11_generic_selection, diag::ext_c11_noreturn, diag::ext_c11_static_assert, -1 };
-static const short DiagArray65[] = { diag::warn_c99_compat_unicode_id, diag::warn_c99_compat_unicode_literal, -1 };
-static const short DiagArray66[] = { diag::ext_c99_array_usage, diag::ext_c99_compound_literal, diag::ext_c99_flexible_array_member, diag::ext_c99_variable_decl_in_for_loop, diag::ext_c99_whitespace_required_after_macro_name, diag::ext_designated_init, diag::ext_empty_fnmacro_arg, diag::ext_enumerator_list_comma_c, diag::ext_hexconstant_invalid, -1 };
-static const short DiagArray67[] = { diag::warn_cast_align, -1 };
-static const short DiagArray68[] = { diag::warn_cast_pointer_from_sel, -1 };
-static const short DiagArray71[] = { diag::warn_subscript_is_char, -1 };
-static const short DiagArray72[] = { diag::escaped_newline_block_comment_end, diag::ext_line_comment, diag::ext_multi_line_line_comment, diag::warn_nested_block_comment, -1 };
-static const short DiagSubGroup73[] = { 72, -1 };
-static const short DiagArray74[] = { diag::ext_typecheck_comparison_of_distinct_pointers, diag::ext_typecheck_comparison_of_distinct_pointers_nonstandard, -1 };
-static const short DiagArray75[] = { diag::ext_complex_component_init, -1 };
-static const short DiagArray76[] = { diag::warn_typecheck_cond_pointer_integer_mismatch, -1 };
-static const short DiagArray77[] = { diag::warn_maybe_uninit_var, -1 };
-static const short DiagArray78[] = { diag::warn_module_config_macro_undef, -1 };
-static const short DiagArray79[] = { diag::warn_impcast_integer_precision_constant, -1 };
-static const short DiagSubGroup79[] = { 41, -1 };
-static const short DiagArray80[] = { diag::warn_logical_instead_of_bitwise, -1 };
-static const short DiagArray81[] = { diag::warn_cxx1y_compat_constexpr_not_const, -1 };
-static const short DiagArray82[] = { diag::warn_impcast_complex_scalar, diag::warn_impcast_float_integer, diag::warn_impcast_float_precision, diag::warn_impcast_integer_precision, diag::warn_impcast_vector_scalar, diag::warn_template_arg_negative, diag::warn_template_arg_too_large, -1 };
-static const short DiagSubGroup82[] = { 43, 79, 126, 306, 176, 191, 226, 233, 308, 334, -1 };
-static const short DiagSubGroup83[] = { 233, -1 };
-static const short DiagArray84[] = { diag::warn_unreachable_default, -1 };
-static const short DiagArray86[] = { diag::warn_default_atomic_custom_getter_setter, -1 };
-static const short DiagArray87[] = { diag::warn_cxx11_compat_constexpr_body_invalid_stmt, diag::warn_cxx11_compat_constexpr_body_multiple_return, diag::warn_cxx11_compat_constexpr_body_no_return, diag::warn_cxx11_compat_constexpr_local_var, diag::warn_cxx11_compat_constexpr_type_definition, diag::warn_cxx11_compat_decltype_auto_type_specifier, -1 };
-static const short DiagArray88[] = { diag::warn_cxx11_compat_array_of_runtime_bound, diag::warn_cxx11_compat_binary_literal, -1 };
-static const short DiagSubGroup88[] = { 87, -1 };
-static const short DiagArray89[] = { diag::warn_dangling_else, -1 };
-static const short DiagArray90[] = { diag::warn_bind_ref_member_to_parameter, diag::warn_bind_ref_member_to_temporary, diag::warn_init_ptr_member_to_parameter_addr, -1 };
-static const short DiagArray91[] = { diag::warn_dangling_std_initializer_list, -1 };
-static const short DiagArray92[] = { diag::ext_mixed_decls_code, -1 };
-static const short DiagArray93[] = { diag::warn_delegating_ctor_cycle, -1 };
-static const short DiagArray94[] = { diag::warn_delete_incomplete, -1 };
-static const short DiagArray95[] = { diag::warn_delete_abstract_non_virtual_dtor, diag::warn_delete_non_virtual_dtor, -1 };
-static const short DiagArray96[] = { diag::warn_access_decl_deprecated, diag::warn_drv_deprecated_arg, diag::warn_drv_treating_input_as_cxx, diag::warn_increment_bool, diag::warn_vector_long_decl_spec_combination, -1 };
-static const short DiagSubGroup96[] = { 97, -1 };
-static const short DiagArray97[] = { diag::warn_cstyle_param, diag::warn_deprecated, diag::warn_deprecated_fwdclass_message, diag::warn_deprecated_message, -1 };
-static const short DiagArray98[] = { diag::warn_deprecated_def, -1 };
-static const short DiagArray99[] = { diag::warn_objc_isa_assign, diag::warn_objc_isa_use, -1 };
-static const short DiagArray100[] = { diag::warn_objc_pointer_masking, -1 };
-static const short DiagArray101[] = { diag::warn_deprecated_string_literal_conversion, -1 };
-static const short DiagArray102[] = { diag::warn_direct_ivar_access, -1 };
-static const short DiagArray103[] = { diag::pp_disabled_macro_expansion, -1 };
-static const short DiagArray106[] = { diag::warn_conflicting_param_modifiers, diag::warn_conflicting_ret_type_modifiers, -1 };
-static const short DiagArray108[] = { diag::warn_division_by_zero, diag::warn_remainder_by_zero, -1 };
-static const short DiagArray109[] = { diag::warn_doc_api_container_decl_mismatch, diag::warn_doc_block_command_duplicate, diag::warn_doc_block_command_empty_paragraph, diag::warn_doc_container_decl_mismatch, diag::warn_doc_function_method_decl_mismatch, diag::warn_doc_html_start_tag_expected_ident_or_greater, diag::warn_doc_html_start_tag_expected_quoted_string, diag::warn_doc_param_duplicate, diag::warn_doc_param_invalid_direction, diag::warn_doc_param_not_attached_to_a_function_decl, diag::warn_doc_param_not_found, diag::warn_doc_returns_attached_to_a_void_function, diag::warn_doc_returns_not_attached_to_a_function_decl, diag::warn_doc_tparam_duplicate, diag::warn_doc_tparam_not_attached_to_a_template_decl, diag::warn_doc_tparam_not_found, diag::warn_not_a_doxygen_trailing_member_comment, diag::warn_verbatim_block_end_without_start, -1 };
-static const short DiagSubGroup109[] = { 111, 110, -1 };
-static const short DiagArray110[] = { diag::warn_doc_deprecated_not_sync, -1 };
-static const short DiagArray111[] = { diag::warn_doc_html_end_forbidden, diag::warn_doc_html_end_unbalanced, diag::warn_doc_html_start_end_mismatch, -1 };
-static const short DiagArray112[] = { diag::warn_doc_param_spaces_in_direction, -1 };
-static const short DiagSubGroup112[] = { 113, -1 };
-static const short DiagArray113[] = { diag::warn_unknown_comment_command_name, -1 };
-static const short DiagArray114[] = { diag::ext_dollar_in_identifier, -1 };
-static const short DiagArray115[] = { diag::ext_duplicate_declspec, diag::warn_duplicate_declspec, -1 };
-static const short DiagArray116[] = { diag::warn_duplicate_enum_values, -1 };
-static const short DiagArray117[] = { diag::warn_method_param_declaration, -1 };
-static const short DiagArray118[] = { diag::warn_duplicate_method_decl, -1 };
-static const short DiagArray119[] = { diag::warn_dyn_class_memaccess, -1 };
-static const short DiagArray121[] = { diag::ext_embedded_directive, -1 };
-static const short DiagArray122[] = { diag::warn_empty_for_body, diag::warn_empty_if_body, diag::warn_empty_range_based_for_body, diag::warn_empty_switch_body, diag::warn_empty_while_body, -1 };
-static const short DiagArray123[] = { diag::ext_empty_translation_unit, -1 };
-static const short DiagSubGroup124[] = { 133, -1 };
-static const short DiagArray125[] = { diag::warn_comparison_of_mixed_enum_types, -1 };
-static const short DiagArray126[] = { diag::warn_impcast_different_enum_types, -1 };
-static const short DiagArray127[] = { diag::warn_exit_time_destructor, -1 };
-static const short DiagArray128[] = { diag::warn_arc_strong_pointer_objc_pointer, -1 };
-static const short DiagArray129[] = { diag::ext_offsetof_extended_field_designator, -1 };
-static const short DiagArray130[] = { diag::warn_extern_init, -1 };
-static const short DiagSubGroup131[] = { 209, 155, 174, 295, 212, 307, 381, -1 };
-static const short DiagArray132[] = { diag::ext_extra_semi, diag::warn_extra_semi_after_mem_fn_def, -1 };
-static const short DiagSubGroup132[] = { 55, -1 };
-static const short DiagArray133[] = { diag::ext_pp_extra_tokens_at_eol, diag::warn_omp_extra_tokens_at_eol, -1 };
-static const short DiagArray134[] = { diag::ext_flexible_array_in_array, diag::ext_flexible_array_in_struct, -1 };
-static const short DiagArray135[] = { diag::warn_floatingpoint_eq, -1 };
-static const short DiagArray136[] = { diag::warn_format_argument_needs_cast, diag::warn_format_invalid_positional_specifier, diag::warn_format_mix_positional_nonpositional_args, diag::warn_format_nonsensical_length, diag::warn_format_string_is_wide_literal, diag::warn_format_zero_positional_specifier, diag::warn_missing_format_string, diag::warn_printf_asterisk_missing_arg, diag::warn_printf_asterisk_wrong_type, diag::warn_printf_conversion_argument_type_mismatch, diag::warn_printf_format_string_contains_null_char, diag::warn_printf_ignored_flag, diag::warn_printf_incomplete_specifier, diag::warn_printf_insufficient_data_args, diag::warn_printf_nonsensical_flag, diag::warn_printf_nonsensical_optional_amount, diag::warn_printf_positional_arg_exceeds_data_args, diag::warn_scanf_nonzero_width, diag::warn_scanf_scanlist_incomplete, -1 };
-static const short DiagSubGroup136[] = { 137, 143, 229, 141, 142, 138, -1 };
-static const short DiagArray137[] = { diag::warn_printf_data_arg_not_used, -1 };
-static const short DiagArray138[] = { diag::warn_format_invalid_conversion, -1 };
-static const short DiagArray139[] = { diag::warn_format_non_standard, diag::warn_format_non_standard_conversion_spec, diag::warn_format_non_standard_positional_arg, -1 };
-static const short DiagArray140[] = { diag::warn_format_nonliteral, -1 };
-static const short DiagSubGroup140[] = { 141, -1 };
-static const short DiagArray141[] = { diag::warn_format_nonliteral_noargs, -1 };
-static const short DiagArray143[] = { diag::warn_empty_format_string, -1 };
-static const short DiagSubGroup144[] = { 140, 141, 142, -1 };
-static const short DiagArray145[] = { diag::ext_four_char_character_literal, -1 };
-static const short DiagArray146[] = { diag::warn_attribute_on_function_definition, -1 };
-static const short DiagArray147[] = { diag::warn_global_constructor, diag::warn_global_destructor, -1 };
-static const short DiagArray148[] = { diag::ext_alignof_expr, diag::ext_array_init_copy, diag::ext_binary_literal, diag::ext_empty_struct_union, diag::ext_expr_not_ice, diag::ext_flexible_array_empty_aggregate_gnu, diag::ext_flexible_array_init, diag::ext_flexible_array_union_gnu, diag::ext_forward_ref_enum_def, diag::ext_gnu_address_of_label, diag::ext_gnu_anonymous_struct, diag::ext_gnu_case_range, diag::ext_gnu_conditional_expr, diag::ext_gnu_empty_initializer, diag::ext_gnu_indirect_goto, diag::ext_gnu_local_label, diag::ext_gnu_statement_expr, diag::ext_imaginary_constant, diag::ext_in_class_initializer_non_constant, diag::ext_integer_complex, diag::ext_missing_varargs_arg, diag::ext_paste_comma, diag::ext_pp_line_zero, diag::ext_typecheck_cast_to_union, diag::ext_variable_sized_type_in_struct, -1 };
-static const short DiagSubGroup148[] = { 150, 396, 401, 151, -1 };
-static const short DiagArray149[] = { diag::ext_array_init_parens, -1 };
-static const short DiagArray150[] = { diag::ext_gnu_array_range, diag::ext_gnu_missing_equal_designator, diag::ext_gnu_old_style_field_designator, -1 };
-static const short DiagArray151[] = { diag::ext_in_class_initializer_float_type, -1 };
-static const short DiagArray152[] = { diag::warn_using_directive_in_header, -1 };
-static const short DiagArray153[] = { diag::warn_condition_is_idiomatic_assignment, -1 };
-static const short DiagArray154[] = { diag::warn_attribute_after_definition_ignored, diag::warn_attribute_ibaction, diag::warn_attribute_iboutlet, diag::warn_attribute_ignored, diag::warn_attribute_ignored_for_field_of_type, diag::warn_attribute_malloc_pointer_only, diag::warn_attribute_no_decl, diag::warn_attribute_nonnull_no_pointers, diag::warn_attribute_not_on_decl, diag::warn_attribute_precede_definition, diag::warn_attribute_requires_functions_or_static_globals, diag::warn_attribute_sentinel_named_arguments, diag::warn_attribute_sentinel_not_variadic, diag::warn_attribute_type_not_supported, diag::warn_attribute_unknown_endian, diag::warn_attribute_unknown_visibility, diag::warn_attribute_void_function_method, diag::warn_attribute_weak_import_invalid_on_definition, diag::warn_attribute_weak_on_field, diag::warn_attribute_weak_on_local, diag::warn_attribute_wrong_decl_type, diag::warn_cconv_ignored, diag::warn_cxx11_gnu_attribute_on_type, diag::warn_declspec_attribute_ignored, diag::warn_duplicate_attribute, diag::warn_function_attribute_wrong_type, diag::warn_gc_attribute_weak_on_local, diag::warn_gnu_inline_attribute_requires_inline, diag::warn_mmap_unknown_attribute, diag::warn_ns_attribute_wrong_parameter_type, diag::warn_ns_attribute_wrong_return_type, diag::warn_objc_object_attribute_wrong_type, diag::warn_pointer_attribute_wrong_type, diag::warn_transparent_union_attribute_field_size_align, diag::warn_transparent_union_attribute_floating, diag::warn_transparent_union_attribute_not_definition, diag::warn_transparent_union_attribute_zero_fields, diag::warn_unhandled_ms_attribute_ignored, -1 };
-static const short DiagArray155[] = { diag::warn_arc_lifetime_result_type, diag::warn_qual_return_type, -1 };
-static const short DiagSubGroup156[] = { 162, 163, -1 };
-static const short DiagArray157[] = { diag::warn_auto_implicit_atomic_property, diag::warn_implicit_atomic_property, -1 };
-static const short DiagArray158[] = { diag::warn_impcast_floating_point_to_bool, -1 };
-static const short DiagArray159[] = { diag::ext_implicit_exception_spec_mismatch, -1 };
-static const short DiagArray160[] = { diag::warn_fallthrough_attr_invalid_placement, diag::warn_fallthrough_attr_unreachable, diag::warn_unannotated_fallthrough, -1 };
-static const short DiagSubGroup160[] = { 161, -1 };
-static const short DiagArray161[] = { diag::warn_unannotated_fallthrough_per_function, -1 };
-static const short DiagArray162[] = { diag::ext_implicit_function_decl, diag::warn_builtin_unknown, diag::warn_implicit_function_decl, -1 };
-static const short DiagArray163[] = { diag::ext_missing_type_specifier, -1 };
-static const short DiagArray164[] = { diag::warn_implicitly_retains_self, -1 };
-static const short DiagArray166[] = { diag::ext_pp_import_directive, -1 };
-static const short DiagArray167[] = { diag::warn_redecl_library_builtin, -1 };
-static const short DiagArray168[] = { diag::ext_typecheck_convert_incompatible_pointer, -1 };
-static const short DiagSubGroup168[] = { 169, -1 };
-static const short DiagArray169[] = { diag::ext_nested_pointer_qualifier_mismatch, diag::ext_typecheck_convert_discards_qualifiers, -1 };
-static const short DiagArray170[] = { diag::warn_undef_method_impl, -1 };
-static const short DiagArray171[] = { diag::warn_missing_submodule, diag::warn_uncovered_module_header, -1 };
-static const short DiagArray172[] = { diag::warn_using_decl_constructor_ellipsis, -1 };
-static const short DiagArray174[] = { diag::warn_initializer_overrides, diag::warn_subobject_initializer_overrides, -1 };
-static const short DiagArray176[] = { diag::ext_typecheck_convert_int_pointer, diag::ext_typecheck_convert_pointer_int, -1 };
-static const short DiagSubGroup177[] = { 176, -1 };
-static const short DiagArray178[] = { diag::warn_int_to_pointer_cast, -1 };
-static const short DiagArray179[] = { diag::warn_integer_constant_overflow, -1 };
-static const short DiagArray180[] = { diag::ext_constexpr_function_never_constant_expr, -1 };
-static const short DiagArray181[] = { diag::warn_iboutlet_object_type, -1 };
-static const short DiagArray182[] = { diag::warn_falloff_noreturn_function, diag::warn_noreturn_function_has_return_expr, -1 };
-static const short DiagArray183[] = { diag::warn_offsetof_non_pod_type, diag::warn_offsetof_non_standardlayout_type, -1 };
-static const short DiagArray185[] = { diag::ext_empty_character, diag::ext_unterminated_char, diag::ext_unterminated_string, -1 };
-static const short DiagArray186[] = { diag::warn_bad_character_encoding, diag::warn_bad_string_encoding, -1 };
-static const short DiagArray187[] = { diag::err_pp_bad_paste_ms, -1 };
-static const short DiagArray188[] = { diag::ext_param_promoted_not_compatible_with_prototype, -1 };
-static const short DiagArray189[] = { diag::ext_token_used, -1 };
-static const short DiagArray190[] = { diag::warn_parameter_size, diag::warn_return_value_size, -1 };
-static const short DiagArray191[] = { diag::warn_impcast_literal_float_to_integer, -1 };
-static const short DiagArray192[] = { diag::warn_float_overflow, diag::warn_float_underflow, -1 };
-static const short DiagArray193[] = { diag::ext_template_arg_local_type, -1 };
-static const short DiagSubGroup193[] = { 61, -1 };
-static const short DiagArray194[] = { diag::warn_logical_and_in_logical_or, -1 };
-static const short DiagArray195[] = { diag::ext_c99_longlong, -1 };
-static const short DiagSubGroup195[] = { 56, -1 };
-static const short DiagArray196[] = { diag::warn_variables_not_in_loop_body, -1 };
-static const short DiagArray197[] = { diag::ext_noreturn_main, diag::warn_main_one_arg, diag::warn_static_main, -1 };
-static const short DiagArray198[] = { diag::ext_main_returns_nonint, -1 };
-static const short DiagArray199[] = { diag::warn_has_warning_invalid_option, -1 };
-static const short DiagArray200[] = { diag::warn_non_contravariant_param_types, diag::warn_non_covariant_ret_types, -1 };
-static const short DiagArray201[] = { diag::ext_anonymous_record_with_type, diag::ext_c_enum_fixed_underlying_type, diag::ext_charize_microsoft, diag::ext_ellipsis_exception_spec, diag::ext_enumerator_too_large, diag::ext_flexible_array_empty_aggregate_ms, diag::ext_flexible_array_union_ms, diag::ext_function_specialization_in_class, diag::ext_ms_anonymous_struct, diag::ext_ms_explicit_constructor_call, diag::ext_ms_forward_ref_enum, diag::ext_ms_using_declaration_inaccessible, diag::ext_pseudo_dtor_on_void, diag::warn_found_via_dependent_bases_lookup, diag::warn_goto_into_protected_scope, diag::warn_member_extra_qualification, diag::warn_override_exception_spec, diag::warn_pure_function_definition, -1 };
-static const short DiagArray202[] = { diag::warn_microsoft_dependent_exists, -1 };
-static const short DiagArray203[] = { diag::warn_attribute_method_def, -1 };
-static const short DiagArray204[] = { diag::warn_conflicting_param_types, -1 };
-static const short DiagArray205[] = { diag::warn_conflicting_ret_types, -1 };
-static const short DiagArray206[] = { diag::warn_struct_class_previous_tag_mismatch, diag::warn_struct_class_tag_mismatch, -1 };
-static const short DiagArray207[] = { diag::warn_missing_braces, -1 };
-static const short DiagArray208[] = { diag::ext_no_declarators, diag::ext_standalone_specifier, diag::ext_typedef_without_a_name, diag::warn_standalone_specifier, -1 };
-static const short DiagArray209[] = { diag::warn_missing_field_initializers, -1 };
-static const short DiagArray212[] = { diag::warn_missing_method_return_type, -1 };
-static const short DiagArray213[] = { diag::warn_suggest_noreturn_block, diag::warn_suggest_noreturn_function, -1 };
-static const short DiagArray214[] = { diag::warn_missing_prototype, -1 };
-static const short DiagArray215[] = { diag::warn_missing_selector_name, -1 };
-static const short DiagArray216[] = { diag::warn_missing_sysroot, -1 };
-static const short DiagArray217[] = { diag::warn_missing_variable_declarations, -1 };
-static const short DiagArray218[] = { diag::warn_module_conflict, -1 };
-static const short DiagSubGroup219[] = { 71, 72, 95, 136, 156, 206, 207, 220, 285, 289, 293, 310, 311, 335, 351, 363, 364, 372, 397, 242, 264, 276, 68, -1 };
-static const short DiagArray220[] = { diag::ext_multichar_character_literal, -1 };
-static const short DiagSubGroup221[] = { 57, -1 };
-static const short DiagArray222[] = { diag::ext_anonymous_record_with_anonymous_type, -1 };
-static const short DiagArray224[] = { diag::ext_no_newline_eof, -1 };
-static const short DiagSubGroup225[] = { 307, 82, 192, -1 };
-static const short DiagArray226[] = { diag::warn_non_literal_null_pointer, -1 };
-static const short DiagArray227[] = { diag::warn_cannot_pass_non_pod_arg_to_vararg, diag::warn_non_pod_vararg_with_format_string, diag::warn_second_parameter_to_va_arg_not_pod, diag::warn_second_parameter_to_va_arg_ownership_qualified, -1 };
-static const short DiagArray228[] = { diag::warn_non_virtual_dtor, -1 };
-static const short DiagArray229[] = { diag::warn_null_arg, -1 };
-static const short DiagArray231[] = { diag::warn_null_in_arithmetic_operation, diag::warn_null_in_comparison_operation, -1 };
-static const short DiagArray232[] = { diag::null_in_char, diag::null_in_file, diag::null_in_string, -1 };
-static const short DiagArray233[] = { diag::warn_impcast_null_pointer_to_integer, -1 };
-static const short DiagArray234[] = { diag::warn_indirection_through_null, -1 };
-static const short DiagArray235[] = { diag::warn_autosynthesis_property_ivar_match, -1 };
-static const short DiagSubGroup236[] = { 252, -1 };
-static const short DiagArray237[] = { diag::warn_forward_class_redefinition, -1 };
-static const short DiagArray238[] = { diag::warn_ivars_in_interface, -1 };
-static const short DiagArray239[] = { diag::warn_objc_literal_comparison, -1 };
-static const short DiagSubGroup239[] = { 255, -1 };
-static const short DiagArray240[] = { diag::warn_class_method_not_found, diag::warn_inst_method_not_found, diag::warn_instance_method_on_class_found, diag::warn_root_inst_method_not_found, -1 };
-static const short DiagArray241[] = { diag::warn_missing_explicit_synthesis, -1 };
-static const short DiagArray242[] = { diag::warn_objc_missing_super_call, -1 };
-static const short DiagArray243[] = { diag::warn_objc_property_retain_of_block, -1 };
-static const short DiagArray244[] = { diag::warn_objc_pointer_cxx_catch_fragile, -1 };
-static const short DiagArray245[] = { diag::warn_setter_getter_impl_required, diag::warn_setter_getter_impl_required_in_category, -1 };
-static const short DiagArray246[] = { diag::warn_owning_getter_rule, -1 };
-static const short DiagArray247[] = { diag::warn_objc_property_default_assign_on_object, diag::warn_objc_property_no_assignment_attribute, -1 };
-static const short DiagArray248[] = { diag::warn_no_autosynthesis_property, diag::warn_no_autosynthesis_shared_ivar_property, -1 };
-static const short DiagArray249[] = { diag::warn_category_method_impl_match, -1 };
-static const short DiagArray250[] = { diag::warn_auto_synthesizing_protocol_property, -1 };
-static const short DiagArray251[] = { diag::warn_objc_readonly_property_has_setter, -1 };
-static const short DiagSubGroup252[] = { 253, -1 };
-static const short DiagArray253[] = { diag::warn_objc_redundant_literal_use, -1 };
-static const short DiagArray254[] = { diag::warn_objc_root_class_missing, -1 };
-static const short DiagArray255[] = { diag::warn_objc_string_literal_comparison, -1 };
-static const short DiagArray256[] = { diag::warn_odr_tag_type_inconsistent, -1 };
-static const short DiagArray259[] = { diag::ext_out_of_line_declaration, -1 };
-static const short DiagArray260[] = { diag::warn_overaligned_type, -1 };
-static const short DiagArray262[] = { diag::ext_string_too_long, -1 };
-static const short DiagArray263[] = { diag::warn_overloaded_shift_in_comparison, -1 };
-static const short DiagArray264[] = { diag::warn_overloaded_virtual, -1 };
-static const short DiagArray265[] = { diag::warn_conflicting_overriding_param_modifiers, diag::warn_conflicting_overriding_param_types, diag::warn_conflicting_overriding_ret_type_modifiers, diag::warn_conflicting_overriding_ret_types, diag::warn_conflicting_overriding_variadic, diag::warn_non_contravariant_overriding_param_types, diag::warn_non_covariant_overriding_ret_types, -1 };
-static const short DiagArray266[] = { diag::warn_unnecessary_packed, -1 };
-static const short DiagArray267[] = { diag::warn_padded_struct_anon_field, diag::warn_padded_struct_field, diag::warn_padded_struct_size, -1 };
-static const short DiagArray268[] = { diag::warn_condition_is_assignment, diag::warn_precedence_bitwise_rel, diag::warn_precedence_conditional, -1 };
-static const short DiagSubGroup268[] = { 194, 42, 303, 263, 269, 89, -1 };
-static const short DiagArray269[] = { diag::warn_equality_with_extra_parens, -1 };
-static const short DiagArray270[] = { diag::ext_anonymous_record_with_type, diag::ext_anonymous_struct_union_qualified, diag::ext_array_init_copy, diag::ext_array_size_conversion, diag::ext_binary_literal, diag::ext_binary_literal_cxx1y, diag::ext_c99_array_usage, diag::ext_c99_compound_literal, diag::ext_c99_flexible_array_member, diag::ext_c99_variable_decl_in_for_loop, diag::ext_c_enum_fixed_underlying_type, diag::ext_cast_fn_obj, diag::ext_charize_microsoft, diag::ext_cxx11_enum_fixed_underlying_type, diag::ext_designated_init, diag::ext_ellipsis_exception_spec, diag::ext_empty_fnmacro_arg, diag::ext_empty_struct_union, diag::ext_enum_value_not_int, diag::ext_enumerator_list_comma_c, diag::ext_enumerator_list_comma_cxx, diag::ext_explicit_instantiation_after_specialization, diag::ext_explicit_instantiation_without_qualified_id, diag::ext_expr_not_ice, diag::ext_extern_template, diag::ext_extra_semi, diag::ext_flexible_array_empty_aggregate_gnu, diag::ext_flexible_array_empty_aggregate_ms, diag::ext_flexible_array_init, diag::ext_flexible_array_union_gnu, diag::ext_flexible_array_union_ms, diag::ext_forward_ref_enum, diag::ext_forward_ref_enum_def, diag::ext_freestanding_complex, diag::ext_gnu_address_of_label, diag::ext_gnu_anonymous_struct, diag::ext_gnu_array_range, diag::ext_gnu_case_range, diag::ext_gnu_conditional_expr, diag::ext_gnu_empty_initializer, diag::ext_gnu_indirect_goto, diag::ext_gnu_local_label, diag::ext_gnu_statement_expr, diag::ext_hexconstant_invalid, diag::ext_ident_list_in_param, diag::ext_imaginary_constant, diag::ext_in_class_initializer_non_constant, diag::ext_integer_complement_complex, diag::ext_integer_complex, diag::ext_integer_increment_complex, diag::ext_internal_in_extern_inline, diag::ext_invalid_sign_spec, diag::ext_line_comment, diag::ext_missing_varargs_arg, diag::ext_ms_forward_ref_enum, diag::ext_multi_line_line_comment, diag::ext_nonstandard_escape, diag::ext_param_not_declared, diag::ext_paste_comma, diag::ext_pp_bad_vaargs_use, diag::ext_pp_comma_expr, diag::ext_pp_ident_directive, diag::ext_pp_include_next_directive, diag::ext_pp_line_too_big, diag::ext_pp_line_zero, diag::ext_pp_warning_directive, diag::ext_return_has_void_expr, diag::ext_subscript_non_lvalue, diag::ext_thread_before, diag::ext_typecheck_addrof_void, diag::ext_typecheck_cast_nonscalar, diag::ext_typecheck_cast_to_union, diag::ext_typecheck_comparison_of_fptr_to_void, diag::ext_typecheck_cond_one_void, diag::ext_typecheck_convert_pointer_void_func, diag::ext_typecheck_ordered_comparison_of_pointer_and_zero, diag::ext_vla_folded_to_constant, diag::warn_illegal_constant_array_size, -1 };
-static const short DiagSubGroup270[] = { 64, 55, 56, 134, 139, 145, 195, 262, 271, 396, 390, 401, 166, 121, 123, 224, 75, 129, 114, 189, 222, 92, -1 };
-static const short DiagArray271[] = { diag::ext_gnu_ptr_func_arith, diag::ext_gnu_subscript_void_type, diag::ext_gnu_void_ptr, diag::ext_sizeof_alignof_function_type, diag::ext_sizeof_alignof_void_type, -1 };
-static const short DiagArray272[] = { diag::ext_typecheck_convert_incompatible_pointer_sign, -1 };
-static const short DiagArray274[] = { diag::warn_typecheck_cond_incompatible_pointers, -1 };
-static const short DiagArray275[] = { diag::ext_predef_outside_function, -1 };
-static const short DiagArray276[] = { diag::warn_private_extern, -1 };
-static const short DiagArray277[] = { diag::warn_unimplemented_protocol_method, -1 };
-static const short DiagArray278[] = { diag::warn_auto_readonly_iboutlet_property, -1 };
-static const short DiagArray279[] = { diag::warn_objc_property_attr_mutually_exclusive, -1 };
-static const short DiagArray280[] = { diag::warn_bad_receiver_type, -1 };
-static const short DiagArray281[] = { diag::warn_receiver_forward_class, diag::warn_receiver_forward_instance, -1 };
-static const short DiagArray282[] = { diag::warn_receiver_is_weak, -1 };
-static const short DiagArray284[] = { diag::warn_reinterpret_different_from_static, -1 };
-static const short DiagArray285[] = { diag::warn_initializer_out_of_order, -1 };
-static const short DiagArray286[] = { diag::warn_objc_requires_super_protocol, -1 };
-static const short DiagArray287[] = { diag::ext_ms_reserved_user_defined_literal, diag::ext_reserved_user_defined_literal, -1 };
-static const short DiagSubGroup287[] = { 53, -1 };
-static const short DiagArray288[] = { diag::warn_ret_addr_label, diag::warn_ret_local_temp_addr, diag::warn_ret_local_temp_ref, diag::warn_ret_stack_addr, diag::warn_ret_stack_ref, -1 };
-static const short DiagArray289[] = { diag::ext_return_has_expr, diag::ext_return_missing_expr, diag::warn_falloff_nonvoid_function, diag::warn_falloff_nonvoid_lambda, diag::warn_maybe_falloff_nonvoid_function, diag::warn_maybe_falloff_nonvoid_lambda, diag::warn_return_missing_expr, -1 };
-static const short DiagSubGroup289[] = { 290, -1 };
-static const short DiagArray290[] = { diag::warn_return_value_udt, diag::warn_return_value_udt_incomplete, -1 };
-static const short DiagArray291[] = { diag::warn_mismatched_section, -1 };
-static const short DiagArray292[] = { diag::warn_unimplemented_selector, -1 };
-static const short DiagArray293[] = { diag::warn_self_assignment, -1 };
-static const short DiagSubGroup293[] = { 294, -1 };
-static const short DiagArray294[] = { diag::warn_identity_field_assign, -1 };
-static const short DiagArray295[] = { diag::warn_semicolon_before_method_body, -1 };
-static const short DiagArray296[] = { diag::warn_missing_sentinel, diag::warn_not_enough_argument, -1 };
-static const short DiagSubGroup297[] = { 370, -1 };
-static const short DiagArray298[] = { diag::warn_fe_serialized_diag_failure, -1 };
-static const short DiagArray299[] = { diag::warn_decl_shadow, -1 };
-static const short DiagArray300[] = { diag::warn_ivar_use_hidden, -1 };
-static const short DiagArray301[] = { diag::warn_shift_negative, -1 };
-static const short DiagArray302[] = { diag::warn_shift_gt_typewidth, -1 };
-static const short DiagArray303[] = { diag::warn_addition_in_bitshift, -1 };
-static const short DiagArray304[] = { diag::warn_shift_result_gt_typewidth, -1 };
-static const short DiagArray305[] = { diag::warn_shift_result_sets_sign_bit, -1 };
-static const short DiagArray306[] = { diag::warn_impcast_integer_64_32, -1 };
-static const short DiagArray307[] = { diag::warn_mixed_sign_comparison, -1 };
-static const short DiagArray308[] = { diag::warn_impcast_integer_sign, diag::warn_impcast_integer_sign_conditional, -1 };
-static const short DiagArray310[] = { diag::warn_sizeof_array_param, -1 };
-static const short DiagArray311[] = { diag::warn_sizeof_array_decay, -1 };
-static const short DiagArray312[] = { diag::warn_sizeof_pointer_expr_memaccess, diag::warn_sizeof_pointer_type_memaccess, -1 };
-static const short DiagArray313[] = { diag::warn_sometimes_uninit_var, -1 };
-static const short DiagArray314[] = { diag::warn_pragma_omp_ignored, -1 };
-static const short DiagArray316[] = { diag::ext_in_class_initializer_float_type_cxx11, -1 };
-static const short DiagSubGroup316[] = { 151, -1 };
-static const short DiagArray317[] = { diag::ext_internal_in_extern_inline, diag::warn_internal_in_extern_inline, -1 };
-static const short DiagArray318[] = { diag::warn_static_local_in_extern_inline, -1 };
-static const short DiagArray319[] = { diag::warn_static_self_reference_in_init, -1 };
-static const short DiagArray332[] = { diag::warn_strict_multiple_method_decl, -1 };
-static const short DiagArray333[] = { diag::warn_stringcompare, -1 };
-static const short DiagArray334[] = { diag::warn_impcast_string_literal_to_bool, -1 };
-static const short DiagArray335[] = { diag::warn_string_plus_int, -1 };
-static const short DiagArray336[] = { diag::warn_strlcpycat_wrong_size, -1 };
-static const short DiagArray337[] = { diag::warn_strncat_large_size, diag::warn_strncat_src_size, diag::warn_strncat_wrong_size, -1 };
-static const short DiagArray338[] = { diag::ext_typecheck_base_super, -1 };
-static const short DiagArray339[] = { diag::warn_case_value_overflow, diag::warn_missing_case1, diag::warn_missing_case2, diag::warn_missing_case3, diag::warn_missing_cases, diag::warn_not_in_enum, -1 };
-static const short DiagArray341[] = { diag::warn_def_missing_case1, diag::warn_def_missing_case2, diag::warn_def_missing_case3, diag::warn_def_missing_cases, -1 };
-static const short DiagArray343[] = { diag::warn_comparison_always, diag::warn_lunsigned_always_true_comparison, diag::warn_runsigned_always_true_comparison, -1 };
-static const short DiagSubGroup343[] = { 344, -1 };
-static const short DiagArray344[] = { diag::warn_out_of_range_compare, -1 };
-static const short DiagArray345[] = { diag::ext_typecheck_decl_incomplete_type, -1 };
-static const short DiagSubGroup346[] = { 348, 347, 350, -1 };
-static const short DiagArray347[] = { diag::warn_cannot_resolve_lock, diag::warn_double_lock, diag::warn_expecting_lock_held_on_loop, diag::warn_expecting_locked, diag::warn_fun_excludes_mutex, diag::warn_fun_requires_lock, diag::warn_lock_exclusive_and_shared, diag::warn_lock_some_predecessors, diag::warn_no_unlock, diag::warn_unlock_but_no_lock, diag::warn_var_deref_requires_any_lock, diag::warn_var_deref_requires_lock, diag::warn_variable_requires_any_lock, diag::warn_variable_requires_lock, -1 };
-static const short DiagArray348[] = { diag::warn_thread_attribute_argument_not_class, diag::warn_thread_attribute_argument_not_lockable, diag::warn_thread_attribute_decl_not_lockable, diag::warn_thread_attribute_decl_not_pointer, diag::warn_thread_attribute_ignored, diag::warn_thread_attribute_wrong_decl_type, -1 };
-static const short DiagArray349[] = { diag::warn_thread_safety_beta, -1 };
-static const short DiagArray350[] = { diag::warn_fun_requires_lock_precise, diag::warn_var_deref_requires_lock_precise, diag::warn_variable_requires_lock_precise, -1 };
-static const short DiagArray351[] = { diag::trigraph_converted, diag::trigraph_ends_block_comment, diag::trigraph_ignored, diag::trigraph_ignored_block_comment, -1 };
-static const short DiagArray353[] = { diag::warn_type_safety_null_pointer_required, diag::warn_type_safety_type_mismatch, diag::warn_type_tag_for_datatype_wrong_kind, -1 };
-static const short DiagArray354[] = { diag::warn_redefinition_of_typedef, -1 };
-static const short DiagArray355[] = { diag::warn_typename_missing, -1 };
-static const short DiagArray356[] = { diag::warn_undeclared_selector, -1 };
-static const short DiagArray357[] = { diag::warn_pp_undef_identifier, -1 };
-static const short DiagArray358[] = { diag::warn_undefined_inline, -1 };
-static const short DiagArray359[] = { diag::warn_undefined_internal, -1 };
-static const short DiagArray360[] = { diag::warn_pointer_indirection_from_incompatible_type, diag::warn_undefined_reinterpret_cast, -1 };
-static const short DiagArray361[] = { diag::warn_ucn_escape_incomplete, diag::warn_ucn_escape_no_digits, diag::warn_ucn_escape_surrogate, diag::warn_ucn_not_valid_in_c89, diag::warn_ucn_not_valid_in_c89_literal, -1 };
-static const short DiagArray362[] = { diag::ext_unicode_whitespace, -1 };
-static const short DiagArray363[] = { diag::warn_field_is_uninit, diag::warn_reference_field_is_uninit, diag::warn_uninit_byref_blockvar_captured_by_block, diag::warn_uninit_self_reference_in_init, diag::warn_uninit_self_reference_in_reference_init, diag::warn_uninit_var, -1 };
-static const short DiagSubGroup363[] = { 313, 319, -1 };
-static const short DiagArray364[] = { diag::ext_on_off_switch_syntax, diag::ext_pragma_syntax_eod, diag::ext_stdc_pragma_ignored, diag::warn_pragma_diagnostic_cannot_pop, diag::warn_pragma_diagnostic_invalid, diag::warn_pragma_diagnostic_invalid_option, diag::warn_pragma_diagnostic_invalid_token, diag::warn_pragma_diagnostic_unknown_warning, diag::warn_pragma_ignored, diag::warn_pragma_include_alias_expected, diag::warn_pragma_include_alias_expected_filename, diag::warn_pragma_include_alias_mismatch_angle, diag::warn_pragma_include_alias_mismatch_quote, diag::warn_stdc_fenv_access_not_supported, -1 };
-static const short DiagArray365[] = { diag::warn_unknown_negative_warning_option, diag::warn_unknown_negative_warning_option_suggest, diag::warn_unknown_warning_option, diag::warn_unknown_warning_option_suggest, diag::warn_unknown_warning_specifier, -1 };
-static const short DiagArray366[] = { diag::ext_template_arg_unnamed_type, -1 };
-static const short DiagSubGroup366[] = { 63, -1 };
-static const short DiagArray367[] = { diag::warn_unneeded_internal_decl, diag::warn_unneeded_static_internal_decl, -1 };
-static const short DiagArray368[] = { diag::warn_unneeded_member_function, -1 };
-static const short DiagArray369[] = { diag::warn_unreachable, -1 };
-static const short DiagArray370[] = { diag::warn_unsequenced_mod_mod, diag::warn_unsequenced_mod_use, -1 };
-static const short DiagArray371[] = { diag::warn_attribute_protected_visibility, -1 };
-static const short DiagSubGroup372[] = { 373, 377, 378, 382, 385, 386, -1 };
-static const short DiagArray374[] = { diag::warn_drv_empty_joined_argument, diag::warn_drv_input_file_unused, diag::warn_drv_input_file_unused_by_cpp, diag::warn_drv_preprocessed_input_file_unused, diag::warn_drv_unused_argument, -1 };
-static const short DiagSubGroup374[] = { 384, -1 };
-static const short DiagArray375[] = { diag::warn_unused_comparison, -1 };
-static const short DiagArray376[] = { diag::warn_unused_exception_param, -1 };
-static const short DiagArray377[] = { diag::warn_unused_function, -1 };
-static const short DiagSubGroup377[] = { 367, -1 };
-static const short DiagArray378[] = { diag::warn_unused_label, -1 };
-static const short DiagArray379[] = { diag::pp_macro_not_used, -1 };
-static const short DiagArray380[] = { diag::warn_unused_member_function, -1 };
-static const short DiagSubGroup380[] = { 368, -1 };
-static const short DiagArray381[] = { diag::warn_unused_parameter, -1 };
-static const short DiagArray382[] = { diag::warn_unused_private_field, -1 };
-static const short DiagArray383[] = { diag::warn_unused_result, -1 };
-static const short DiagArray384[] = { diag::warn_drv_unused_sanitizer, -1 };
-static const short DiagArray385[] = { diag::warn_unused_call, diag::warn_unused_container_subscript_expr, diag::warn_unused_expr, diag::warn_unused_property_expr, diag::warn_unused_voidptr, -1 };
-static const short DiagSubGroup385[] = { 375, 383, -1 };
-static const short DiagArray386[] = { diag::warn_unused_variable, -1 };
-static const short DiagArray387[] = { diag::warn_unused_volatile, -1 };
-static const short DiagArray388[] = { diag::warn_used_but_marked_unused, -1 };
-static const short DiagArray389[] = { diag::warn_user_literal_reserved, -1 };
-static const short DiagArray390[] = { diag::ext_named_variadic_macro, diag::ext_variadic_macro, -1 };
-static const short DiagArray391[] = { diag::warn_incompatible_vectors, -1 };
-static const short DiagSubGroup392[] = { 391, -1 };
-static const short DiagArray393[] = { diag::warn_empty_parens_are_function_decl, diag::warn_parens_disambiguated_as_function_declaration, -1 };
-static const short DiagArray394[] = { diag::warn_decl_in_param_list, diag::warn_redefinition_in_param_list, -1 };
-static const short DiagArray395[] = { diag::warn_vla_used, -1 };
-static const short DiagArray396[] = { diag::ext_vla, -1 };
-static const short DiagArray398[] = { diag::warn_weak_template_vtable, -1 };
-static const short DiagArray399[] = { diag::warn_weak_vtable, -1 };
-static const short DiagSubGroup400[] = { 101, -1 };
-static const short DiagArray401[] = { diag::ext_typecheck_zero_array_size, -1 };
+static const int16_t DiagArrays[] = {
+  /* Empty */ -1,
+  /* DiagArray1 */ diag::warn_pragma_message, -1,
+  /* DiagArray2 */ diag::pp_hash_warning, -1,
+  /* DiagArray3 */ diag::warn_cfstring_truncated, -1,
+  /* DiagArray4 */ diag::warn_nsobject_attribute, -1,
+  /* DiagArray6 */ diag::warn_abs_too_small, diag::warn_unsigned_abs, diag::warn_wrong_absolute_value_type, -1,
+  /* DiagArray7 */ diag::warn_abstract_final_class, -1,
+  /* DiagArray8 */ diag::warn_abstract_vbase_init_ignored, -1,
+  /* DiagArray10 */ diag::warn_temporary_array_to_pointer_decay, -1,
+  /* DiagArray11 */ diag::ext_typecheck_addrof_temporary, -1,
+  /* DiagArray14 */ diag::warn_pp_ambiguous_macro, -1,
+  /* DiagArray15 */ diag::ext_nested_name_member_ref_lookup_ambiguous, -1,
+  /* DiagArray16 */ diag::warn_incompatible_analyzer_plugin_api, -1,
+  /* DiagArray17 */ diag::ext_abstract_pack_declarator_parens, -1,
+  /* DiagArray20 */ diag::warn_arc_bridge_cast_nonarc, -1,
+  /* DiagArray21 */ diag::warn_arc_possible_repeated_use_of_weak, -1,
+  /* DiagArray22 */ diag::warn_arc_object_memaccess, -1,
+  /* DiagArray23 */ diag::warn_arc_perform_selector_leaks, -1,
+  /* DiagArray24 */ diag::warn_arc_repeated_use_of_weak, -1,
+  /* DiagArray25 */ diag::warn_arc_retain_cycle, -1,
+  /* DiagArray26 */ diag::warn_arc_literal_assign, diag::warn_arc_retained_assign, diag::warn_arc_retained_property_assign, -1,
+  /* DiagArray27 */ diag::warn_array_index_exceeds_bounds, diag::warn_array_index_precedes_bounds, diag::warn_static_array_too_small, diag::warn_typecheck_zero_static_array_size, -1,
+  /* DiagArray28 */ diag::warn_ptr_arith_exceeds_bounds, diag::warn_ptr_arith_precedes_bounds, -1,
+  /* DiagArray30 */ diag::warn_asm_mismatched_size_modifier, -1,
+  /* DiagArray31 */ diag::warn_not_in_enum_assignment, -1,
+  /* DiagArray32 */ diag::warn_atomic_op_has_invalid_memory_order, -1,
+  /* DiagArray34 */ diag::warn_atomic_property_rule, -1,
+  /* DiagArray36 */ diag::warn_auto_module_import, -1,
+  /* DiagArray37 */ diag::ext_auto_storage_class, -1,
+  /* DiagArray38 */ diag::warn_auto_var_is_id, -1,
+  /* DiagArray39 */ diag::warn_availability_and_unavailable, diag::warn_availability_unknown_platform, diag::warn_availability_version_ordering, diag::warn_mismatched_availability, diag::warn_mismatched_availability_override, diag::warn_mismatched_availability_override_unavail, -1,
+  /* DiagArray40 */ diag::warn_fe_backend_plugin, -1,
+  /* DiagArray41 */ diag::backslash_newline_space, -1,
+  /* DiagArray42 */ diag::warn_array_new_too_large, diag::warn_typecheck_negative_array_new_size, -1,
+  /* DiagArray43 */ diag::warn_bad_function_cast, -1,
+  /* DiagArray44 */ diag::ext_rvalue_to_reference_access_ctor, diag::ext_rvalue_to_reference_temp_copy_no_viable, -1,
+  /* DiagArray45 */ diag::warn_impcast_bitfield_precision_constant, -1,
+  /* DiagArray46 */ diag::warn_bitwise_and_in_bitwise_or, -1,
+  /* DiagArray47 */ diag::warn_impcast_bool_to_null_pointer, -1,
+  /* DiagArray49 */ diag::warn_objc_invalid_bridge, diag::warn_objc_invalid_bridge_to_cf, -1,
+  /* DiagArray50 */ diag::ext_pp_redef_builtin_macro, diag::ext_pp_undef_builtin_macro, -1,
+  /* DiagArray51 */ diag::warn_implicit_decl_requires_setjmp, diag::warn_implicit_decl_requires_stdio, diag::warn_implicit_decl_requires_ucontext, -1,
+  /* DiagArray52 */ diag::warn_zero_size_struct_union_compat, -1,
+  /* DiagArray56 */ diag::warn_auto_storage_class, diag::warn_cxx11_compat_user_defined_literal, diag::warn_cxx11_keyword, diag::warn_cxx11_right_shift_in_template_arg, diag::warn_explicit_instantiation_inline_0x, diag::warn_explicit_instantiation_must_be_global_0x, diag::warn_explicit_instantiation_out_of_scope_0x, diag::warn_explicit_instantiation_unqualified_wrong_namespace_0x, -1,
+  /* DiagArray57 */ diag::ext_deprecated_string_literal_conversion, diag::warn_deprecated_string_literal_conversion, -1,
+  /* DiagArray59 */ diag::warn_cxx11_compat_reserved_user_defined_literal, -1,
+  /* DiagArray60 */ diag::ext_alias_declaration, diag::ext_array_size_conversion, diag::ext_auto_type_specifier, diag::ext_cxx11_enum_fixed_underlying_type, diag::ext_defaulted_function, diag::ext_deleted_function, diag::ext_enum_friend, diag::ext_enumerator_list_comma_cxx, diag::ext_explicit_conversion_functions, diag::ext_explicit_instantiation_after_specialization, diag::ext_extern_template, diag::ext_for_range, diag::ext_generalized_initializer_lists, diag::ext_inline_namespace, diag::ext_nonclass_type_friend, diag::ext_nonstatic_member_init, diag::ext_override_control_keyword, diag::ext_ref_qualifier, diag::ext_rvalue_reference, diag::ext_scoped_enum, diag::ext_static_data_member_in_union, diag::ext_template_arg_object_internal, diag::ext_template_outside_of_template, diag::ext_template_parameter_default_in_function_template, diag::ext_template_spec_decl_out_of_scope, diag::ext_typename_outside_of_template, diag::ext_unelaborated_friend_type, diag::ext_variadic_templates, -1,
+  /* DiagArray61 */ diag::ext_extra_semi_cxx11, -1,
+  /* DiagArray62 */ diag::ext_cxx11_longlong, -1,
+  /* DiagArray63 */ diag::ext_cce_narrowing, diag::ext_init_list_constant_narrowing, diag::ext_init_list_type_narrowing, diag::ext_init_list_variable_narrowing, diag::warn_init_list_constant_narrowing, diag::warn_init_list_type_narrowing, diag::warn_init_list_variable_narrowing, -1,
+  /* DiagArray64 */ diag::ext_binary_literal_cxx1y, diag::ext_constexpr_body_invalid_stmt, diag::ext_constexpr_body_multiple_return, diag::ext_constexpr_local_var, diag::ext_constexpr_type_definition, diag::ext_decltype_auto_type_specifier, diag::ext_init_capture, diag::ext_variable_template, -1,
+  /* DiagArray65 */ diag::warn_cxx11_compat_constexpr_body_invalid_stmt, diag::warn_cxx11_compat_constexpr_body_multiple_return, diag::warn_cxx11_compat_constexpr_body_no_return, diag::warn_cxx11_compat_constexpr_local_var, diag::warn_cxx11_compat_constexpr_type_definition, diag::warn_cxx11_compat_decltype_auto_type_specifier, diag::warn_cxx11_compat_digit_separator, diag::warn_cxx11_compat_init_capture, diag::warn_cxx11_compat_variable_template, -1,
+  /* DiagArray66 */ diag::warn_cxx11_compat_binary_literal, -1,
+  /* DiagArray67 */ diag::warn_cxx98_compat_alias_declaration, diag::warn_cxx98_compat_alignas, diag::warn_cxx98_compat_alignof, diag::warn_cxx98_compat_attribute, diag::warn_cxx98_compat_auto_type_specifier, diag::warn_cxx98_compat_constexpr, diag::warn_cxx98_compat_ctor_list_init, diag::warn_cxx98_compat_decltype, diag::warn_cxx98_compat_defaulted_function, diag::warn_cxx98_compat_delegating_ctor, diag::warn_cxx98_compat_deleted_function, diag::warn_cxx98_compat_empty_scalar_initializer, diag::warn_cxx98_compat_enum_fixed_underlying_type, diag::warn_cxx98_compat_enum_friend, diag::warn_cxx98_compat_enum_nested_name_spec, diag::warn_cxx98_compat_explicit_conversion_functions, diag::warn_cxx98_compat_for_range, diag::warn_cxx98_compat_friend_is_member, diag::warn_cxx98_compat_generalized_initializer_lists, diag::warn_cxx98_compat_goto_into_protected_scope, diag::warn_cxx98_compat_indirect_goto_in_protected_scope, diag::warn_cxx98_compat_initializer_list_init, diag::warn_cxx98_compat_inline_namespace, diag::warn_cxx98_compat_lambda, diag::warn_cxx98_compat_less_colon_colon, diag::warn_cxx98_compat_literal_operator, diag::warn_cxx98_compat_literal_ucn_control_character, diag::warn_cxx98_compat_literal_ucn_escape_basic_scs, diag::warn_cxx98_compat_noexcept_decl, diag::warn_cxx98_compat_noexcept_expr, diag::warn_cxx98_compat_non_static_member_use, diag::warn_cxx98_compat_nonclass_type_friend, diag::warn_cxx98_compat_nonstatic_member_init, diag::warn_cxx98_compat_nontrivial_union_or_anon_struct_member, diag::warn_cxx98_compat_nullptr, diag::warn_cxx98_compat_override_control_keyword, diag::warn_cxx98_compat_pass_non_pod_arg_to_vararg, diag::warn_cxx98_compat_raw_string_literal, diag::warn_cxx98_compat_ref_qualifier, diag::warn_cxx98_compat_reference_list_init, diag::warn_cxx98_compat_rvalue_reference, diag::warn_cxx98_compat_scoped_enum, diag::warn_cxx98_compat_sfinae_access_control, diag::warn_cxx98_compat_static_assert, diag::warn_cxx98_compat_static_data_member_in_union, diag::warn_cxx98_compat_switch_into_protected_scope, diag::warn_cxx98_compat_template_arg_extra_parens, diag::warn_cxx98_compat_template_arg_null, diag::warn_cxx98_compat_template_arg_object_internal, diag::warn_cxx98_compat_template_outside_of_template, diag::warn_cxx98_compat_template_parameter_default_in_function_template, diag::warn_cxx98_compat_template_spec_decl_out_of_scope, diag::warn_cxx98_compat_trailing_return_type, diag::warn_cxx98_compat_two_right_angle_brackets, diag::warn_cxx98_compat_typename_outside_of_template, diag::warn_cxx98_compat_unelaborated_friend_type, diag::warn_cxx98_compat_unicode_id, diag::warn_cxx98_compat_unicode_literal, diag::warn_cxx98_compat_unicode_type, diag::warn_cxx98_compat_using_decl_constructor, diag::warn_cxx98_compat_variadic_templates, -1,
+  /* DiagArray68 */ diag::warn_cxx98_compat_temp_copy, -1,
+  /* DiagArray69 */ diag::warn_cxx98_compat_template_arg_local_type, -1,
+  /* DiagArray70 */ diag::warn_cxx98_compat_array_size_conversion, diag::warn_cxx98_compat_cast_fn_obj, diag::warn_cxx98_compat_empty_fnmacro_arg, diag::warn_cxx98_compat_enumerator_list_comma, diag::warn_cxx98_compat_explicit_instantiation_after_specialization, diag::warn_cxx98_compat_extern_template, diag::warn_cxx98_compat_longlong, diag::warn_cxx98_compat_no_newline_eof, diag::warn_cxx98_compat_pp_line_too_big, diag::warn_cxx98_compat_top_level_semi, diag::warn_cxx98_compat_variadic_macro, -1,
+  /* DiagArray71 */ diag::warn_cxx98_compat_template_arg_unnamed_type, -1,
+  /* DiagArray72 */ diag::ext_anonymous_union, diag::ext_c11_alignment, diag::ext_c11_anonymous_struct, diag::ext_c11_generic_selection, diag::ext_c11_noreturn, diag::ext_c11_static_assert, -1,
+  /* DiagArray73 */ diag::warn_c99_compat_unicode_id, diag::warn_c99_compat_unicode_literal, -1,
+  /* DiagArray74 */ diag::ext_aggregate_init_not_constant, diag::ext_c99_array_usage, diag::ext_c99_compound_literal, diag::ext_c99_flexible_array_member, diag::ext_c99_variable_decl_in_for_loop, diag::ext_c99_whitespace_required_after_macro_name, diag::ext_designated_init, diag::ext_empty_fnmacro_arg, diag::ext_enumerator_list_comma_c, diag::ext_hexconstant_invalid, -1,
+  /* DiagArray75 */ diag::warn_cast_align, -1,
+  /* DiagArray76 */ diag::warn_cast_pointer_from_sel, -1,
+  /* DiagArray79 */ diag::warn_subscript_is_char, -1,
+  /* DiagArray80 */ diag::warn_pass_class_arg_to_vararg, -1,
+  /* DiagArray81 */ diag::escaped_newline_block_comment_end, diag::ext_line_comment, diag::ext_multi_line_line_comment, diag::warn_nested_block_comment, -1,
+  /* DiagArray83 */ diag::ext_typecheck_comparison_of_distinct_pointers, diag::ext_typecheck_comparison_of_distinct_pointers_nonstandard, -1,
+  /* DiagArray84 */ diag::ext_complex_component_init, -1,
+  /* DiagArray85 */ diag::warn_typecheck_cond_pointer_integer_mismatch, -1,
+  /* DiagArray86 */ diag::warn_maybe_uninit_var, -1,
+  /* DiagArray87 */ diag::warn_module_config_macro_undef, -1,
+  /* DiagArray88 */ diag::warn_impcast_integer_precision_constant, -1,
+  /* DiagArray89 */ diag::warn_logical_instead_of_bitwise, -1,
+  /* DiagArray90 */ diag::warn_cxx1y_compat_constexpr_not_const, -1,
+  /* DiagArray91 */ diag::warn_attr_on_unconsumable_class, diag::warn_loop_state_mismatch, diag::warn_param_return_typestate_mismatch, diag::warn_param_typestate_mismatch, diag::warn_return_typestate_for_unconsumable_type, diag::warn_return_typestate_mismatch, diag::warn_use_in_invalid_state, diag::warn_use_of_temp_in_invalid_state, -1,
+  /* DiagArray92 */ diag::warn_impcast_complex_scalar, diag::warn_impcast_float_integer, diag::warn_impcast_float_precision, diag::warn_impcast_integer_precision, diag::warn_impcast_vector_scalar, diag::warn_template_arg_negative, diag::warn_template_arg_too_large, -1,
+  /* DiagArray94 */ diag::warn_unreachable_default, -1,
+  /* DiagArray96 */ diag::warn_default_atomic_custom_getter_setter, -1,
+  /* DiagArray97 */ diag::warn_dangling_else, -1,
+  /* DiagArray98 */ diag::warn_bind_ref_member_to_parameter, diag::warn_bind_ref_member_to_temporary, diag::warn_init_ptr_member_to_parameter_addr, -1,
+  /* DiagArray99 */ diag::warn_dangling_std_initializer_list, -1,
+  /* DiagArray100 */ diag::warn_dealloc_in_category, -1,
+  /* DiagArray101 */ diag::warn_debug_compression_unavailable, -1,
+  /* DiagArray102 */ diag::ext_mixed_decls_code, -1,
+  /* DiagArray103 */ diag::warn_delegating_ctor_cycle, -1,
+  /* DiagArray104 */ diag::warn_delete_incomplete, -1,
+  /* DiagArray105 */ diag::warn_delete_abstract_non_virtual_dtor, diag::warn_delete_non_virtual_dtor, -1,
+  /* DiagArray106 */ diag::warn_O4_is_O3, diag::warn_access_decl_deprecated, diag::warn_deprecated_copy_operation, diag::warn_drv_treating_input_as_cxx, diag::warn_exception_spec_deprecated, diag::warn_vector_long_decl_spec_combination, -1,
+  /* DiagArray107 */ diag::warn_cstyle_param, diag::warn_deprecated, diag::warn_deprecated_fwdclass_message, diag::warn_deprecated_message, -1,
+  /* DiagArray108 */ diag::warn_deprecated_def, -1,
+  /* DiagArray109 */ diag::warn_increment_bool, -1,
+  /* DiagArray110 */ diag::warn_objc_isa_assign, diag::warn_objc_isa_use, -1,
+  /* DiagArray111 */ diag::warn_objc_pointer_masking, -1,
+  /* DiagArray112 */ diag::warn_objc_pointer_masking_performSelector, -1,
+  /* DiagArray113 */ diag::warn_deprecated_register, -1,
+  /* DiagArray115 */ diag::warn_direct_ivar_access, -1,
+  /* DiagArray116 */ diag::pp_disabled_macro_expansion, -1,
+  /* DiagArray119 */ diag::warn_conflicting_param_modifiers, diag::warn_conflicting_ret_type_modifiers, -1,
+  /* DiagArray121 */ diag::warn_division_by_zero, diag::warn_remainder_by_zero, -1,
+  /* DiagArray122 */ diag::warn_correct_comment_command_name, diag::warn_doc_api_container_decl_mismatch, diag::warn_doc_block_command_duplicate, diag::warn_doc_block_command_empty_paragraph, diag::warn_doc_container_decl_mismatch, diag::warn_doc_function_method_decl_mismatch, diag::warn_doc_html_start_tag_expected_ident_or_greater, diag::warn_doc_html_start_tag_expected_quoted_string, diag::warn_doc_param_duplicate, diag::warn_doc_param_invalid_direction, diag::warn_doc_param_not_attached_to_a_function_decl, diag::warn_doc_param_not_found, diag::warn_doc_returns_attached_to_a_void_function, diag::warn_doc_returns_not_attached_to_a_function_decl, diag::warn_doc_tparam_duplicate, diag::warn_doc_tparam_not_attached_to_a_template_decl, diag::warn_doc_tparam_not_found, diag::warn_not_a_doxygen_trailing_member_comment, diag::warn_verbatim_block_end_without_start, -1,
+  /* DiagArray123 */ diag::warn_doc_deprecated_not_sync, -1,
+  /* DiagArray124 */ diag::warn_doc_html_end_forbidden, diag::warn_doc_html_end_unbalanced, diag::warn_doc_html_start_end_mismatch, -1,
+  /* DiagArray125 */ diag::warn_doc_param_spaces_in_direction, -1,
+  /* DiagArray126 */ diag::warn_unknown_comment_command_name, -1,
+  /* DiagArray127 */ diag::ext_dollar_in_identifier, -1,
+  /* DiagArray128 */ diag::ext_duplicate_declspec, diag::warn_duplicate_declspec, -1,
+  /* DiagArray129 */ diag::warn_duplicate_enum_values, -1,
+  /* DiagArray130 */ diag::warn_method_param_declaration, -1,
+  /* DiagArray131 */ diag::warn_duplicate_method_decl, -1,
+  /* DiagArray132 */ diag::warn_dyn_class_memaccess, -1,
+  /* DiagArray134 */ diag::ext_embedded_directive, -1,
+  /* DiagArray135 */ diag::warn_empty_for_body, diag::warn_empty_if_body, diag::warn_empty_range_based_for_body, diag::warn_empty_switch_body, diag::warn_empty_while_body, -1,
+  /* DiagArray136 */ diag::ext_empty_translation_unit, -1,
+  /* DiagArray138 */ diag::warn_comparison_of_mixed_enum_types, -1,
+  /* DiagArray139 */ diag::warn_impcast_different_enum_types, -1,
+  /* DiagArray140 */ diag::ext_enum_too_large, diag::ext_enumerator_increment_too_large, -1,
+  /* DiagArray141 */ diag::warn_exit_time_destructor, -1,
+  /* DiagArray142 */ diag::warn_arc_strong_pointer_objc_pointer, -1,
+  /* DiagArray143 */ diag::ext_offsetof_extended_field_designator, -1,
+  /* DiagArray144 */ diag::warn_zero_size_struct_union_in_extern_c, -1,
+  /* DiagArray145 */ diag::warn_extern_init, -1,
+  /* DiagArray147 */ diag::warn_namespace_member_extra_qualification, -1,
+  /* DiagArray148 */ diag::ext_extra_semi, diag::warn_extra_semi_after_mem_fn_def, -1,
+  /* DiagArray149 */ diag::ext_pp_extra_tokens_at_eol, diag::warn_omp_extra_tokens_at_eol, -1,
+  /* DiagArray150 */ diag::warn_drv_invoking_fallback, -1,
+  /* DiagArray151 */ diag::ext_flexible_array_in_array, diag::ext_flexible_array_in_struct, -1,
+  /* DiagArray152 */ diag::warn_floatingpoint_eq, -1,
+  /* DiagArray153 */ diag::warn_format_argument_needs_cast, diag::warn_format_invalid_positional_specifier, diag::warn_format_mix_positional_nonpositional_args, diag::warn_format_nonsensical_length, diag::warn_format_string_is_wide_literal, diag::warn_format_zero_positional_specifier, diag::warn_missing_format_string, diag::warn_printf_asterisk_missing_arg, diag::warn_printf_asterisk_wrong_type, diag::warn_printf_conversion_argument_type_mismatch, diag::warn_printf_format_string_contains_null_char, diag::warn_printf_format_string_not_null_terminated, diag::warn_printf_ignored_flag, diag::warn_printf_incomplete_specifier, diag::warn_printf_insufficient_data_args, diag::warn_printf_nonsensical_flag, diag::warn_printf_nonsensical_optional_amount, diag::warn_printf_positional_arg_exceeds_data_args, diag::warn_scanf_nonzero_width, diag::warn_scanf_scanlist_incomplete, -1,
+  /* DiagArray154 */ diag::warn_printf_data_arg_not_used, -1,
+  /* DiagArray155 */ diag::warn_format_invalid_conversion, -1,
+  /* DiagArray156 */ diag::warn_format_non_standard, diag::warn_format_non_standard_conversion_spec, diag::warn_format_non_standard_positional_arg, -1,
+  /* DiagArray157 */ diag::warn_format_nonliteral, -1,
+  /* DiagArray158 */ diag::warn_format_nonliteral_noargs, -1,
+  /* DiagArray160 */ diag::warn_empty_format_string, -1,
+  /* DiagArray162 */ diag::ext_four_char_character_literal, -1,
+  /* DiagArray163 */ diag::warn_fe_backend_frame_larger_than, -1,
+  /* DiagArray164 */ diag::warn_attribute_on_function_definition, diag::warn_break_binds_to_switch, diag::warn_cleanup_ext, diag::warn_loop_ctrl_binds_to_inner, -1,
+  /* DiagArray165 */ diag::warn_global_constructor, diag::warn_global_destructor, -1,
+  /* DiagArray167 */ diag::ext_alignof_expr, -1,
+  /* DiagArray168 */ diag::ext_gnu_anonymous_struct, -1,
+  /* DiagArray169 */ diag::ext_array_init_parens, -1,
+  /* DiagArray170 */ diag::ext_binary_literal, -1,
+  /* DiagArray171 */ diag::ext_gnu_case_range, -1,
+  /* DiagArray172 */ diag::ext_integer_complex, -1,
+  /* DiagArray173 */ diag::ext_array_init_copy, -1,
+  /* DiagArray174 */ diag::ext_gnu_conditional_expr, -1,
+  /* DiagArray175 */ diag::ext_gnu_array_range, diag::ext_gnu_missing_equal_designator, diag::ext_gnu_old_style_field_designator, -1,
+  /* DiagArray176 */ diag::ext_gnu_empty_initializer, -1,
+  /* DiagArray177 */ diag::ext_empty_struct_union, diag::ext_flexible_array_empty_aggregate_gnu, diag::ext_no_named_members_in_struct_union, -1,
+  /* DiagArray178 */ diag::ext_flexible_array_init, -1,
+  /* DiagArray179 */ diag::ext_flexible_array_union_gnu, -1,
+  /* DiagArray180 */ diag::ext_expr_not_ice, diag::ext_in_class_initializer_non_constant, diag::ext_vla_folded_to_constant, -1,
+  /* DiagArray181 */ diag::ext_imaginary_constant, -1,
+  /* DiagArray182 */ diag::ext_gnu_address_of_label, diag::ext_gnu_indirect_goto, -1,
+  /* DiagArray183 */ diag::ext_forward_ref_enum_def, -1,
+  /* DiagArray184 */ diag::ext_gnu_statement_expr, -1,
+  /* DiagArray185 */ diag::ext_in_class_initializer_float_type, -1,
+  /* DiagArray186 */ diag::ext_string_literal_operator_template, -1,
+  /* DiagArray187 */ diag::ext_typecheck_cast_to_union, -1,
+  /* DiagArray188 */ diag::ext_variable_sized_type_in_struct, -1,
+  /* DiagArray189 */ diag::ext_pp_line_zero, -1,
+  /* DiagArray190 */ diag::ext_missing_varargs_arg, diag::ext_paste_comma, -1,
+  /* DiagArray191 */ diag::warn_header_guard, -1,
+  /* DiagArray192 */ diag::warn_using_directive_in_header, -1,
+  /* DiagArray193 */ diag::warn_condition_is_idiomatic_assignment, -1,
+  /* DiagArray194 */ diag::warn_alias_to_weak_alias, diag::warn_attribute_after_definition_ignored, diag::warn_attribute_iboutlet, diag::warn_attribute_ignored, diag::warn_attribute_ignored_for_field_of_type, diag::warn_attribute_invalid_on_definition, diag::warn_attribute_malloc_pointer_only, diag::warn_attribute_no_decl, diag::warn_attribute_nonnull_no_pointers, diag::warn_attribute_nonnull_parm_no_args, diag::warn_attribute_not_on_decl, diag::warn_attribute_pointers_only, diag::warn_attribute_precede_definition, diag::warn_attribute_requires_functions_or_static_globals, diag::warn_attribute_return_pointers_only, diag::warn_attribute_sentinel_named_arguments, diag::warn_attribute_sentinel_not_variadic, diag::warn_attribute_type_not_supported, diag::warn_attribute_unknown_visibility, diag::warn_attribute_void_function_method, diag::warn_attribute_weak_on_field, diag::warn_attribute_weak_on_local, diag::warn_attribute_wrong_decl_type, diag::warn_cconv_ignored, diag::warn_cconv_varargs, diag::warn_cxx11_gnu_attribute_on_type, diag::warn_declspec_attribute_ignored, diag::warn_duplicate_attribute, diag::warn_duplicate_attribute_exact, diag::warn_gc_attribute_weak_on_local, diag::warn_gnu_inline_attribute_requires_inline, diag::warn_ignored_ms_inheritance, diag::warn_mmap_unknown_attribute, diag::warn_ns_attribute_wrong_parameter_type, diag::warn_ns_attribute_wrong_return_type, diag::warn_transparent_union_attribute_field_size_align, diag::warn_transparent_union_attribute_floating, diag::warn_transparent_union_attribute_not_definition, diag::warn_transparent_union_attribute_zero_fields, diag::warn_type_attribute_wrong_type, diag::warn_unhandled_ms_attribute_ignored, -1,
+  /* DiagArray195 */ diag::warn_pragma_align_expected_equal, diag::warn_pragma_align_invalid_option, diag::warn_pragma_debug_unexpected_command, diag::warn_pragma_expected_action_or_r_paren, diag::warn_pragma_expected_colon, diag::warn_pragma_expected_enable_disable, diag::warn_pragma_expected_identifier, diag::warn_pragma_expected_integer, diag::warn_pragma_expected_lparen, diag::warn_pragma_expected_punc, diag::warn_pragma_expected_rparen, diag::warn_pragma_expected_section_label_or_name, diag::warn_pragma_expected_section_name, diag::warn_pragma_expected_section_push_pop_or_name, diag::warn_pragma_extra_tokens_at_eol, diag::warn_pragma_invalid_action, diag::warn_pragma_invalid_specific_action, diag::warn_pragma_ms_struct, diag::warn_pragma_options_align_reset_failed, diag::warn_pragma_options_expected_align, diag::warn_pragma_pack_invalid_alignment, diag::warn_pragma_pack_malformed, diag::warn_pragma_pop_failed, diag::warn_pragma_pop_macro_no_push, diag::warn_pragma_unknown_extension, diag::warn_pragma_unsupported_action, diag::warn_pragma_unused_expected_var, diag::warn_pragma_unused_expected_var_arg, diag::warn_pragma_unused_undeclared_var, -1,
+  /* DiagArray196 */ diag::warn_arc_lifetime_result_type, diag::warn_qual_return_type, diag::warn_typecheck_reference_qualifiers, -1,
+  /* DiagArray198 */ diag::warn_auto_implicit_atomic_property, diag::warn_implicit_atomic_property, -1,
+  /* DiagArray199 */ diag::warn_impcast_floating_point_to_bool, -1,
+  /* DiagArray200 */ diag::ext_implicit_exception_spec_mismatch, -1,
+  /* DiagArray201 */ diag::warn_fallthrough_attr_invalid_placement, diag::warn_fallthrough_attr_unreachable, diag::warn_unannotated_fallthrough, -1,
+  /* DiagArray202 */ diag::warn_unannotated_fallthrough_per_function, -1,
+  /* DiagArray203 */ diag::ext_implicit_function_decl, diag::warn_builtin_unknown, diag::warn_implicit_function_decl, -1,
+  /* DiagArray204 */ diag::ext_missing_type_specifier, -1,
+  /* DiagArray205 */ diag::warn_implicitly_retains_self, -1,
+  /* DiagArray206 */ diag::ext_integer_too_large_for_signed, -1,
+  /* DiagArray208 */ diag::ext_pp_import_directive, -1,
+  /* DiagArray209 */ diag::warn_redecl_library_builtin, -1,
+  /* DiagArray210 */ diag::warn_cxx_ms_struct, -1,
+  /* DiagArray211 */ diag::ext_typecheck_convert_incompatible_pointer, -1,
+  /* DiagArray212 */ diag::ext_nested_pointer_qualifier_mismatch, diag::ext_typecheck_convert_discards_qualifiers, -1,
+  /* DiagArray213 */ diag::warn_undef_method_impl, -1,
+  /* DiagArray214 */ diag::warn_forgotten_module_header, -1,
+  /* DiagArray215 */ diag::warn_missing_submodule, diag::warn_uncovered_module_header, -1,
+  /* DiagArray216 */ diag::warn_infinite_recursive_function, -1,
+  /* DiagArray217 */ diag::warn_using_decl_constructor_ellipsis, -1,
+  /* DiagArray219 */ diag::warn_initializer_overrides, diag::warn_subobject_initializer_overrides, -1,
+  /* DiagArray221 */ diag::warn_fe_inline_asm, -1,
+  /* DiagArray222 */ diag::ext_operator_new_delete_declared_inline, -1,
+  /* DiagArray223 */ diag::ext_typecheck_convert_int_pointer, diag::ext_typecheck_convert_pointer_int, -1,
+  /* DiagArray225 */ diag::warn_int_to_pointer_cast, -1,
+  /* DiagArray226 */ diag::warn_int_to_void_pointer_cast, -1,
+  /* DiagArray227 */ diag::warn_integer_constant_overflow, -1,
+  /* DiagArray228 */ diag::warn_drv_optimization_value, -1,
+  /* DiagArray229 */ diag::ext_constexpr_function_never_constant_expr, -1,
+  /* DiagArray230 */ diag::warn_iboutlet_object_type, diag::warn_iboutletcollection_property_assign, -1,
+  /* DiagArray231 */ diag::warn_falloff_noreturn_function, diag::warn_noreturn_function_has_return_expr, -1,
+  /* DiagArray232 */ diag::warn_offsetof_non_pod_type, diag::warn_offsetof_non_standardlayout_type, -1,
+  /* DiagArray234 */ diag::ext_empty_character, diag::ext_unterminated_char, diag::ext_unterminated_string, -1,
+  /* DiagArray235 */ diag::warn_bad_character_encoding, diag::warn_bad_string_encoding, -1,
+  /* DiagArray236 */ diag::ext_pp_bad_paste_ms, -1,
+  /* DiagArray237 */ diag::ext_keyword_as_ident, -1,
+  /* DiagArray238 */ diag::ext_param_promoted_not_compatible_with_prototype, -1,
+  /* DiagArray239 */ diag::ext_token_used, -1,
+  /* DiagArray240 */ diag::warn_parameter_size, diag::warn_return_value_size, -1,
+  /* DiagArray241 */ diag::warn_impcast_literal_float_to_integer, -1,
+  /* DiagArray242 */ diag::warn_float_overflow, diag::warn_float_underflow, -1,
+  /* DiagArray243 */ diag::ext_template_arg_local_type, -1,
+  /* DiagArray244 */ diag::warn_logical_not_on_lhs_of_comparison, -1,
+  /* DiagArray245 */ diag::warn_logical_and_in_logical_or, -1,
+  /* DiagArray246 */ diag::ext_c99_longlong, -1,
+  /* DiagArray247 */ diag::warn_redundant_loop_iteration, diag::warn_variables_not_in_loop_body, -1,
+  /* DiagArray248 */ diag::ext_pp_macro_redef, -1,
+  /* DiagArray249 */ diag::ext_main_used, diag::ext_noreturn_main, diag::warn_main_one_arg, diag::warn_static_main, -1,
+  /* DiagArray250 */ diag::ext_main_returns_nonint, -1,
+  /* DiagArray251 */ diag::warn_has_warning_invalid_option, -1,
+  /* DiagArray252 */ diag::warn_memsize_comparison, -1,
+  /* DiagArray253 */ diag::warn_non_contravariant_param_types, diag::warn_non_covariant_ret_types, -1,
+  /* DiagArray254 */ diag::ext_anonymous_record_with_type, diag::ext_c_enum_fixed_underlying_type, diag::ext_charize_microsoft, diag::ext_ellipsis_exception_spec, diag::ext_enumerator_too_large, diag::ext_flexible_array_empty_aggregate_ms, diag::ext_flexible_array_union_ms, diag::ext_function_specialization_in_class, diag::ext_ms_anonymous_struct, diag::ext_ms_deref_template_argument, diag::ext_ms_explicit_constructor_call, diag::ext_ms_forward_ref_enum, diag::ext_ms_sealed_keyword, diag::ext_ms_using_declaration_inaccessible, diag::ext_pseudo_dtor_on_void, diag::ext_union_member_of_reference_type, diag::warn_found_via_dependent_bases_lookup, diag::warn_goto_into_protected_scope, diag::warn_member_extra_qualification, diag::warn_override_exception_spec, diag::warn_pure_function_definition, -1,
+  /* DiagArray255 */ diag::warn_microsoft_dependent_exists, -1,
+  /* DiagArray256 */ diag::warn_conflicting_param_types, -1,
+  /* DiagArray257 */ diag::warn_conflicting_ret_types, -1,
+  /* DiagArray258 */ diag::warn_struct_class_previous_tag_mismatch, diag::warn_struct_class_tag_mismatch, -1,
+  /* DiagArray259 */ diag::warn_missing_braces, -1,
+  /* DiagArray260 */ diag::ext_no_declarators, diag::ext_standalone_specifier, diag::ext_typedef_without_a_name, diag::warn_standalone_specifier, -1,
+  /* DiagArray261 */ diag::warn_missing_field_initializers, -1,
+  /* DiagArray264 */ diag::warn_missing_method_return_type, -1,
+  /* DiagArray265 */ diag::warn_suggest_noreturn_block, diag::warn_suggest_noreturn_function, -1,
+  /* DiagArray266 */ diag::warn_missing_prototype, -1,
+  /* DiagArray267 */ diag::warn_missing_selector_name, -1,
+  /* DiagArray268 */ diag::warn_missing_sysroot, -1,
+  /* DiagArray269 */ diag::warn_missing_variable_declarations, -1,
+  /* DiagArray270 */ diag::warn_module_conflict, -1,
+  /* DiagArray272 */ diag::ext_pp_include_search_ms, -1,
+  /* DiagArray273 */ diag::ext_multichar_character_literal, -1,
+  /* DiagArray274 */ diag::warn_vbase_moved_multiple_times, -1,
+  /* DiagArray276 */ diag::ext_anonymous_record_with_anonymous_type, -1,
+  /* DiagArray278 */ diag::warn_operator_new_returns_null, -1,
+  /* DiagArray279 */ diag::ext_no_newline_eof, diag::warn_no_newline_eof, -1,
+  /* DiagArray281 */ diag::warn_non_literal_null_pointer, -1,
+  /* DiagArray282 */ diag::warn_cannot_pass_non_pod_arg_to_vararg, diag::warn_non_pod_vararg_with_format_string, diag::warn_second_parameter_to_va_arg_not_pod, diag::warn_second_parameter_to_va_arg_ownership_qualified, -1,
+  /* DiagArray283 */ diag::warn_non_virtual_dtor, -1,
+  /* DiagArray284 */ diag::warn_null_arg, diag::warn_null_ret, -1,
+  /* DiagArray286 */ diag::warn_null_in_arithmetic_operation, diag::warn_null_in_comparison_operation, -1,
+  /* DiagArray287 */ diag::null_in_char, diag::null_in_file, diag::null_in_string, -1,
+  /* DiagArray288 */ diag::warn_impcast_null_pointer_to_integer, -1,
+  /* DiagArray289 */ diag::warn_indirection_through_null, -1,
+  /* DiagArray290 */ diag::warn_autosynthesis_property_ivar_match, -1,
+  /* DiagArray292 */ diag::warn_objc_designated_init_missing_super_call, diag::warn_objc_designated_init_non_designated_init_call, diag::warn_objc_designated_init_non_super_designated_init_call, diag::warn_objc_implementation_missing_designated_init_override, diag::warn_objc_secondary_init_missing_init_call, diag::warn_objc_secondary_init_super_init_call, -1,
+  /* DiagArray293 */ diag::warn_forward_class_redefinition, -1,
+  /* DiagArray294 */ diag::warn_ivars_in_interface, -1,
+  /* DiagArray295 */ diag::warn_objc_literal_comparison, -1,
+  /* DiagArray296 */ diag::warn_impcast_objective_c_literal_to_bool, -1,
+  /* DiagArray297 */ diag::warn_class_method_not_found, diag::warn_class_method_not_found_with_typo, diag::warn_inst_method_not_found, diag::warn_instance_method_not_found_with_typo, diag::warn_instance_method_on_class_found, diag::warn_root_inst_method_not_found, -1,
+  /* DiagArray298 */ diag::warn_missing_explicit_synthesis, -1,
+  /* DiagArray299 */ diag::warn_objc_missing_super_call, -1,
+  /* DiagArray300 */ diag::warn_objc_property_retain_of_block, -1,
+  /* DiagArray301 */ diag::warn_objc_pointer_cxx_catch_fragile, -1,
+  /* DiagArray302 */ diag::warn_setter_getter_impl_required, diag::warn_setter_getter_impl_required_in_category, -1,
+  /* DiagArray303 */ diag::warn_property_implicitly_mismatched, -1,
+  /* DiagArray304 */ diag::warn_cocoa_naming_owned_rule, -1,
+  /* DiagArray305 */ diag::warn_objc_property_default_assign_on_object, diag::warn_objc_property_no_assignment_attribute, -1,
+  /* DiagArray306 */ diag::warn_no_autosynthesis_property, diag::warn_no_autosynthesis_shared_ivar_property, -1,
+  /* DiagArray307 */ diag::warn_category_method_impl_match, -1,
+  /* DiagArray308 */ diag::warn_auto_synthesizing_protocol_property, -1,
+  /* DiagArray309 */ diag::warn_objc_readonly_property_has_setter, -1,
+  /* DiagArray311 */ diag::warn_objc_redundant_literal_use, -1,
+  /* DiagArray312 */ diag::warn_objc_root_class_missing, -1,
+  /* DiagArray313 */ diag::warn_objc_string_literal_comparison, -1,
+  /* DiagArray314 */ diag::warn_concatenated_nsarray_literal, -1,
+  /* DiagArray315 */ diag::warn_odr_tag_type_inconsistent, -1,
+  /* DiagArray316 */ diag::warn_old_style_cast, -1,
+  /* DiagArray318 */ diag::ext_out_of_line_declaration, -1,
+  /* DiagArray319 */ diag::warn_overaligned_type, -1,
+  /* DiagArray321 */ diag::ext_string_too_long, -1,
+  /* DiagArray322 */ diag::warn_overloaded_shift_in_comparison, -1,
+  /* DiagArray323 */ diag::warn_overloaded_virtual, -1,
+  /* DiagArray324 */ diag::warn_conflicting_overriding_param_modifiers, diag::warn_conflicting_overriding_param_types, diag::warn_conflicting_overriding_ret_type_modifiers, diag::warn_conflicting_overriding_ret_types, diag::warn_conflicting_overriding_variadic, diag::warn_non_contravariant_overriding_param_types, diag::warn_non_covariant_overriding_ret_types, -1,
+  /* DiagArray325 */ diag::warn_drv_overriding_flag_option, -1,
+  /* DiagArray326 */ diag::warn_unnecessary_packed, -1,
+  /* DiagArray327 */ diag::warn_padded_struct_anon_field, diag::warn_padded_struct_field, diag::warn_padded_struct_size, -1,
+  /* DiagArray328 */ diag::warn_condition_is_assignment, diag::warn_precedence_bitwise_rel, diag::warn_precedence_conditional, -1,
+  /* DiagArray329 */ diag::warn_equality_with_extra_parens, -1,
+  /* DiagArray330 */ diag::remark_fe_backend_optimization_remark, -1,
+  /* DiagArray331 */ diag::ext_aggregate_init_not_constant, diag::ext_anonymous_record_with_type, diag::ext_anonymous_struct_union_qualified, diag::ext_array_size_conversion, diag::ext_binary_literal_cxx1y, diag::ext_c99_array_usage, diag::ext_c99_compound_literal, diag::ext_c99_flexible_array_member, diag::ext_c99_variable_decl_in_for_loop, diag::ext_c_enum_fixed_underlying_type, diag::ext_cast_fn_obj, diag::ext_charize_microsoft, diag::ext_cxx11_enum_fixed_underlying_type, diag::ext_designated_init, diag::ext_ellipsis_exception_spec, diag::ext_empty_fnmacro_arg, diag::ext_enum_value_not_int, diag::ext_enumerator_list_comma_c, diag::ext_enumerator_list_comma_cxx, diag::ext_explicit_instantiation_after_specialization, diag::ext_explicit_instantiation_without_qualified_id, diag::ext_extern_template, diag::ext_extra_semi, diag::ext_flexible_array_empty_aggregate_ms, diag::ext_flexible_array_union_ms, diag::ext_forward_ref_enum, diag::ext_freestanding_complex, diag::ext_gnu_array_range, diag::ext_gnu_ptr_func_arith, diag::ext_gnu_subscript_void_type, diag::ext_gnu_void_ptr, diag::ext_hexconstant_invalid, diag::ext_ident_list_in_param, diag::ext_integer_complement_complex, diag::ext_integer_increment_complex, diag::ext_internal_in_extern_inline, diag::ext_invalid_sign_spec, diag::ext_line_comment, diag::ext_main_used, diag::ext_ms_forward_ref_enum, diag::ext_multi_line_line_comment, diag::ext_no_newline_eof, diag::ext_nonstandard_escape, diag::ext_param_not_declared, diag::ext_pp_bad_vaargs_use, diag::ext_pp_comma_expr, diag::ext_pp_ident_directive, diag::ext_pp_include_next_directive, diag::ext_pp_line_too_big, diag::ext_pp_warning_directive, diag::ext_return_has_void_expr, diag::ext_sizeof_alignof_function_type, diag::ext_sizeof_alignof_void_type, diag::ext_subscript_non_lvalue, diag::ext_thread_before, diag::ext_typecheck_addrof_void, diag::ext_typecheck_cast_nonscalar, diag::ext_typecheck_comparison_of_fptr_to_void, diag::ext_typecheck_cond_one_void, diag::ext_typecheck_convert_pointer_void_func, diag::ext_typecheck_ordered_comparison_of_pointer_and_zero, diag::warn_illegal_constant_array_size, -1,
+  /* DiagArray332 */ diag::ext_gnu_ptr_func_arith, diag::ext_gnu_subscript_void_type, diag::ext_gnu_void_ptr, diag::ext_sizeof_alignof_function_type, diag::ext_sizeof_alignof_void_type, diag::warn_sub_ptr_zero_size_types, -1,
+  /* DiagArray333 */ diag::warn_impcast_pointer_to_bool, -1,
+  /* DiagArray334 */ diag::ext_typecheck_convert_incompatible_pointer_sign, -1,
+  /* DiagArray336 */ diag::warn_typecheck_cond_incompatible_pointers, -1,
+  /* DiagArray338 */ diag::ext_predef_outside_function, -1,
+  /* DiagArray339 */ diag::warn_private_extern, -1,
+  /* DiagArray340 */ diag::warn_profile_data_out_of_date, -1,
+  /* DiagArray341 */ diag::warn_unimplemented_protocol_method, -1,
+  /* DiagArray342 */ diag::warn_protocol_property_mismatch, -1,
+  /* DiagArray343 */ diag::warn_auto_readonly_iboutlet_property, -1,
+  /* DiagArray344 */ diag::warn_bad_receiver_type, -1,
+  /* DiagArray345 */ diag::warn_receiver_forward_class, diag::warn_receiver_forward_instance, -1,
+  /* DiagArray346 */ diag::warn_receiver_is_weak, -1,
+  /* DiagArray347 */ diag::ext_member_redeclared, -1,
+  /* DiagArray349 */ diag::warn_reinterpret_different_from_static, -1,
+  /* DiagArray350 */ diag::remark_fe_backend_plugin, -1,
+  /* DiagArray351 */ diag::warn_initializer_out_of_order, -1,
+  /* DiagArray352 */ diag::warn_objc_requires_super_protocol, -1,
+  /* DiagArray353 */ diag::ext_ms_reserved_user_defined_literal, diag::ext_reserved_user_defined_literal, -1,
+  /* DiagArray354 */ diag::ext_retained_language_linkage, -1,
+  /* DiagArray355 */ diag::warn_ret_addr_label, diag::warn_ret_local_temp_addr, diag::warn_ret_local_temp_ref, diag::warn_ret_stack_addr, diag::warn_ret_stack_ref, -1,
+  /* DiagArray356 */ diag::ext_return_has_expr, diag::ext_return_missing_expr, diag::warn_falloff_nonvoid_function, diag::warn_falloff_nonvoid_lambda, diag::warn_maybe_falloff_nonvoid_function, diag::warn_maybe_falloff_nonvoid_lambda, diag::warn_return_missing_expr, -1,
+  /* DiagArray357 */ diag::warn_return_value_udt, diag::warn_return_value_udt_incomplete, -1,
+  /* DiagArray358 */ diag::warn_mismatched_section, -1,
+  /* DiagArray359 */ diag::warn_unimplemented_selector, -1,
+  /* DiagArray360 */ diag::warning_multiple_selectors, -1,
+  /* DiagArray361 */ diag::warn_self_assignment, -1,
+  /* DiagArray362 */ diag::warn_identity_field_assign, -1,
+  /* DiagArray363 */ diag::warn_semicolon_before_method_body, -1,
+  /* DiagArray364 */ diag::warn_missing_sentinel, diag::warn_not_enough_argument, -1,
+  /* DiagArray366 */ diag::warn_fe_serialized_diag_failure, -1,
+  /* DiagArray367 */ diag::warn_decl_shadow, -1,
+  /* DiagArray368 */ diag::warn_ivar_use_hidden, -1,
+  /* DiagArray369 */ diag::warn_shift_negative, -1,
+  /* DiagArray370 */ diag::warn_shift_gt_typewidth, -1,
+  /* DiagArray371 */ diag::warn_addition_in_bitshift, -1,
+  /* DiagArray372 */ diag::warn_shift_result_gt_typewidth, -1,
+  /* DiagArray373 */ diag::warn_shift_result_sets_sign_bit, -1,
+  /* DiagArray374 */ diag::warn_impcast_integer_64_32, -1,
+  /* DiagArray375 */ diag::warn_mixed_sign_comparison, -1,
+  /* DiagArray376 */ diag::warn_impcast_integer_sign, diag::warn_impcast_integer_sign_conditional, -1,
+  /* DiagArray378 */ diag::warn_sizeof_array_param, -1,
+  /* DiagArray379 */ diag::warn_sizeof_array_decay, -1,
+  /* DiagArray380 */ diag::warn_sizeof_pointer_expr_memaccess, diag::warn_sizeof_pointer_type_memaccess, -1,
+  /* DiagArray381 */ diag::warn_sometimes_uninit_var, -1,
+  /* DiagArray382 */ diag::warn_pragma_omp_ignored, -1,
+  /* DiagArray384 */ diag::ext_in_class_initializer_float_type_cxx11, -1,
+  /* DiagArray385 */ diag::ext_internal_in_extern_inline, diag::warn_internal_in_extern_inline, -1,
+  /* DiagArray386 */ diag::warn_static_inline_explicit_inst_ignored, -1,
+  /* DiagArray387 */ diag::warn_static_local_in_extern_inline, -1,
+  /* DiagArray388 */ diag::warn_static_self_reference_in_init, -1,
+  /* DiagArray401 */ diag::warn_strict_multiple_method_decl, -1,
+  /* DiagArray402 */ diag::warn_stringcompare, -1,
+  /* DiagArray403 */ diag::warn_impcast_string_literal_to_bool, -1,
+  /* DiagArray404 */ diag::warn_string_plus_char, -1,
+  /* DiagArray405 */ diag::warn_string_plus_int, -1,
+  /* DiagArray406 */ diag::warn_strlcpycat_wrong_size, -1,
+  /* DiagArray407 */ diag::warn_strncat_large_size, diag::warn_strncat_src_size, diag::warn_strncat_wrong_size, -1,
+  /* DiagArray408 */ diag::ext_typecheck_base_super, -1,
+  /* DiagArray409 */ diag::warn_case_value_overflow, diag::warn_missing_case1, diag::warn_missing_case2, diag::warn_missing_case3, diag::warn_missing_cases, diag::warn_not_in_enum, -1,
+  /* DiagArray410 */ diag::warn_bool_switch_condition, -1,
+  /* DiagArray412 */ diag::warn_def_missing_case1, diag::warn_def_missing_case2, diag::warn_def_missing_case3, diag::warn_def_missing_cases, -1,
+  /* DiagArray414 */ diag::warn_comparison_always, diag::warn_lunsigned_always_true_comparison, diag::warn_runsigned_always_true_comparison, -1,
+  /* DiagArray415 */ diag::warn_out_of_range_compare, -1,
+  /* DiagArray416 */ diag::warn_tautological_overlap_comparison, -1,
+  /* DiagArray417 */ diag::warn_null_pointer_compare, -1,
+  /* DiagArray418 */ diag::ext_typecheck_decl_incomplete_type, -1,
+  /* DiagArray420 */ diag::warn_cannot_resolve_lock, diag::warn_double_lock, diag::warn_expecting_lock_held_on_loop, diag::warn_expecting_locked, diag::warn_fun_excludes_mutex, diag::warn_fun_requires_lock, diag::warn_lock_exclusive_and_shared, diag::warn_lock_some_predecessors, diag::warn_no_unlock, diag::warn_unlock_but_no_lock, diag::warn_unlock_kind_mismatch, diag::warn_var_deref_requires_any_lock, diag::warn_var_deref_requires_lock, diag::warn_variable_requires_any_lock, diag::warn_variable_requires_lock, -1,
+  /* DiagArray421 */ diag::warn_invalid_capability_name, diag::warn_thread_attribute_argument_not_lockable, diag::warn_thread_attribute_decl_not_lockable, diag::warn_thread_attribute_decl_not_pointer, diag::warn_thread_attribute_ignored, -1,
+  /* DiagArray422 */ diag::warn_thread_safety_beta, -1,
+  /* DiagArray423 */ diag::warn_fun_requires_lock_precise, diag::warn_var_deref_requires_lock_precise, diag::warn_variable_requires_lock_precise, -1,
+  /* DiagArray424 */ diag::trigraph_converted, diag::trigraph_ends_block_comment, diag::trigraph_ignored, diag::trigraph_ignored_block_comment, -1,
+  /* DiagArray426 */ diag::warn_type_safety_null_pointer_required, diag::warn_type_safety_type_mismatch, diag::warn_type_tag_for_datatype_wrong_kind, -1,
+  /* DiagArray427 */ diag::warn_redefinition_of_typedef, -1,
+  /* DiagArray428 */ diag::warn_typename_missing, -1,
+  /* DiagArray429 */ diag::warn_unavailable_fwdclass_message, -1,
+  /* DiagArray430 */ diag::warn_undeclared_selector, diag::warn_undeclared_selector_with_typo, -1,
+  /* DiagArray431 */ diag::warn_pp_undef_identifier, -1,
+  /* DiagArray432 */ diag::warn_undefined_inline, -1,
+  /* DiagArray433 */ diag::warn_undefined_internal, -1,
+  /* DiagArray434 */ diag::warn_pointer_indirection_from_incompatible_type, diag::warn_undefined_reinterpret_cast, -1,
+  /* DiagArray435 */ diag::warn_ucn_escape_incomplete, diag::warn_ucn_escape_no_digits, diag::warn_ucn_escape_surrogate, diag::warn_ucn_not_valid_in_c89, diag::warn_ucn_not_valid_in_c89_literal, -1,
+  /* DiagArray436 */ diag::ext_unicode_whitespace, -1,
+  /* DiagArray437 */ diag::warn_field_is_uninit, diag::warn_reference_field_is_uninit, diag::warn_uninit_byref_blockvar_captured_by_block, diag::warn_uninit_self_reference_in_init, diag::warn_uninit_self_reference_in_reference_init, diag::warn_uninit_var, -1,
+  /* DiagArray438 */ diag::warn_unknown_attribute_ignored, -1,
+  /* DiagArray439 */ diag::ext_unknown_escape, -1,
+  /* DiagArray440 */ diag::ext_on_off_switch_syntax, diag::ext_pragma_syntax_eod, diag::ext_stdc_pragma_ignored, diag::warn_pragma_diagnostic_cannot_pop, diag::warn_pragma_diagnostic_invalid, diag::warn_pragma_diagnostic_invalid_option, diag::warn_pragma_diagnostic_invalid_token, diag::warn_pragma_diagnostic_unknown_warning, diag::warn_pragma_ignored, diag::warn_pragma_include_alias_expected, diag::warn_pragma_include_alias_expected_filename, diag::warn_pragma_include_alias_mismatch_angle, diag::warn_pragma_include_alias_mismatch_quote, diag::warn_pragma_warning_expected, diag::warn_pragma_warning_expected_number, diag::warn_pragma_warning_push_level, diag::warn_pragma_warning_spec_invalid, diag::warn_stdc_fenv_access_not_supported, -1,
+  /* DiagArray441 */ diag::warn_unknown_negative_warning_option, diag::warn_unknown_negative_warning_option_suggest, diag::warn_unknown_warning_option, diag::warn_unknown_warning_option_suggest, diag::warn_unknown_warning_specifier, -1,
+  /* DiagArray442 */ diag::ext_template_arg_unnamed_type, -1,
+  /* DiagArray443 */ diag::warn_unneeded_internal_decl, diag::warn_unneeded_static_internal_decl, -1,
+  /* DiagArray444 */ diag::warn_unneeded_member_function, -1,
+  /* DiagArray445 */ diag::warn_unreachable, -1,
+  /* DiagArray447 */ diag::warn_unreachable_break, -1,
+  /* DiagArray448 */ diag::warn_unreachable_loop_increment, -1,
+  /* DiagArray449 */ diag::warn_unreachable_return, -1,
+  /* DiagArray450 */ diag::warn_unsequenced_mod_mod, diag::warn_unsequenced_mod_use, -1,
+  /* DiagArray451 */ diag::warn_template_qualified_friend_ignored, diag::warn_template_qualified_friend_unsupported, -1,
+  /* DiagArray452 */ diag::warn_attribute_protected_visibility, -1,
+  /* DiagArray455 */ diag::warn_drv_empty_joined_argument, diag::warn_drv_input_file_unused, diag::warn_drv_input_file_unused_by_cpp, diag::warn_drv_preprocessed_input_file_unused, diag::warn_drv_unused_argument, -1,
+  /* DiagArray456 */ diag::warn_unused_comparison, -1,
+  /* DiagArray457 */ diag::warn_unused_const_variable, -1,
+  /* DiagArray458 */ diag::warn_unused_exception_param, -1,
+  /* DiagArray459 */ diag::warn_unused_function, -1,
+  /* DiagArray460 */ diag::warn_unused_label, -1,
+  /* DiagArray461 */ diag::pp_macro_not_used, -1,
+  /* DiagArray462 */ diag::warn_unused_member_function, -1,
+  /* DiagArray463 */ diag::warn_unused_parameter, -1,
+  /* DiagArray464 */ diag::warn_unused_private_field, -1,
+  /* DiagArray465 */ diag::warn_unused_property_backing_ivar, -1,
+  /* DiagArray466 */ diag::warn_unused_result, -1,
+  /* DiagArray467 */ diag::warn_drv_unused_sanitizer, -1,
+  /* DiagArray468 */ diag::warn_unused_call, diag::warn_unused_container_subscript_expr, diag::warn_unused_expr, diag::warn_unused_property_expr, diag::warn_unused_voidptr, -1,
+  /* DiagArray469 */ diag::warn_unused_variable, -1,
+  /* DiagArray470 */ diag::warn_unused_volatile, -1,
+  /* DiagArray471 */ diag::warn_used_but_marked_unused, -1,
+  /* DiagArray472 */ diag::warn_user_literal_reserved, -1,
+  /* DiagArray473 */ diag::warn_second_parameter_of_va_start_not_last_named_argument, diag::warn_second_parameter_to_va_arg_never_compatible, diag::warn_va_start_of_reference_type_is_undefined, -1,
+  /* DiagArray474 */ diag::ext_named_variadic_macro, diag::ext_variadic_macro, -1,
+  /* DiagArray475 */ diag::warn_incompatible_vectors, -1,
+  /* DiagArray477 */ diag::warn_empty_parens_are_function_decl, diag::warn_parens_disambiguated_as_function_declaration, -1,
+  /* DiagArray478 */ diag::warn_decl_in_param_list, diag::warn_redefinition_in_param_list, -1,
+  /* DiagArray479 */ diag::warn_vla_used, -1,
+  /* DiagArray480 */ diag::ext_vla, -1,
+  /* DiagArray482 */ diag::warn_weak_template_vtable, -1,
+  /* DiagArray483 */ diag::warn_weak_vtable, -1,
+  /* DiagArray485 */ diag::ext_typecheck_zero_array_size, -1,
+};
+
+static const int16_t DiagSubGroups[] = {
+  /* Empty */ -1,
+  /* DiagSubGroup0 */ 146, -1,
+  /* DiagSubGroup9 */ 333, 402, 417, -1,
+  /* DiagSubGroup13 */ 271, 328, 409, 410, -1,
+  /* DiagSubGroup18 */ 26, 25, 22, -1,
+  /* DiagSubGroup24 */ 21, -1,
+  /* DiagSubGroup29 */ 30, -1,
+  /* DiagSubGroup33 */ 198, 96, -1,
+  /* DiagSubGroup35 */ 438, 194, -1,
+  /* DiagSubGroup44 */ 68, -1,
+  /* DiagSubGroup47 */ 333, -1,
+  /* DiagSubGroup48 */ 47, -1,
+  /* DiagSubGroup53 */ 56, -1,
+  /* DiagSubGroup54 */ 60, -1,
+  /* DiagSubGroup55 */ 63, -1,
+  /* DiagSubGroup56 */ 63, 59, 57, 65, -1,
+  /* DiagSubGroup58 */ 66, -1,
+  /* DiagSubGroup60 */ 61, 62, -1,
+  /* DiagSubGroup66 */ 65, -1,
+  /* DiagSubGroup67 */ 68, 69, 71, 65, -1,
+  /* DiagSubGroup70 */ 67, 66, -1,
+  /* DiagSubGroup80 */ 282, -1,
+  /* DiagSubGroup82 */ 81, -1,
+  /* DiagSubGroup88 */ 45, -1,
+  /* DiagSubGroup92 */ 47, 88, 139, 374, 223, 241, 281, 288, 296, 376, 403, -1,
+  /* DiagSubGroup93 */ 288, -1,
+  /* DiagSubGroup106 */ 107, 109, 113, -1,
+  /* DiagSubGroup111 */ 112, -1,
+  /* DiagSubGroup114 */ 57, -1,
+  /* DiagSubGroup122 */ 124, 123, -1,
+  /* DiagSubGroup125 */ 126, -1,
+  /* DiagSubGroup137 */ 149, -1,
+  /* DiagSubGroup146 */ 261, 196, 219, 363, 264, 375, 463, -1,
+  /* DiagSubGroup148 */ 61, -1,
+  /* DiagSubGroup153 */ 154, 160, 284, 158, 159, 155, -1,
+  /* DiagSubGroup161 */ 157, 158, 159, -1,
+  /* DiagSubGroup166 */ 167, 168, 170, 171, 172, 173, 174, 175, 176, 177, 480, 178, 179, 180, 181, 182, 347, 183, 184, 185, 186, 187, 188, 485, 189, 190, -1,
+  /* DiagSubGroup197 */ 203, 204, -1,
+  /* DiagSubGroup201 */ 202, -1,
+  /* DiagSubGroup211 */ 212, -1,
+  /* DiagSubGroup214 */ 215, -1,
+  /* DiagSubGroup224 */ 223, -1,
+  /* DiagSubGroup225 */ 226, -1,
+  /* DiagSubGroup243 */ 69, -1,
+  /* DiagSubGroup246 */ 62, -1,
+  /* DiagSubGroup271 */ 79, 81, 105, 153, 197, 258, 259, 273, 351, 356, 361, 378, 379, 405, 424, 437, 440, 453, 481, 299, 292, 323, 339, 76, 144, -1,
+  /* DiagSubGroup275 */ 63, -1,
+  /* DiagSubGroup280 */ 375, 92, 242, -1,
+  /* DiagSubGroup291 */ 310, -1,
+  /* DiagSubGroup295 */ 313, -1,
+  /* DiagSubGroup310 */ 311, -1,
+  /* DiagSubGroup328 */ 245, 244, 46, 371, 322, 329, 97, -1,
+  /* DiagSubGroup331 */ 72, 61, 62, 151, 156, 162, 168, 170, 171, 172, 173, 174, 176, 177, 178, 179, 180, 181, 182, 183, 184, 187, 189, 190, 246, 321, 480, 474, 485, 354, 84, 143, 276, 102, 127, 239, 208, 134, 136, -1,
+  /* DiagSubGroup337 */ 440, 195, -1,
+  /* DiagSubGroup353 */ 59, -1,
+  /* DiagSubGroup356 */ 357, -1,
+  /* DiagSubGroup359 */ 360, -1,
+  /* DiagSubGroup361 */ 362, -1,
+  /* DiagSubGroup365 */ 450, -1,
+  /* DiagSubGroup384 */ 185, -1,
+  /* DiagSubGroup414 */ 415, 417, 416, -1,
+  /* DiagSubGroup419 */ 421, 420, 423, -1,
+  /* DiagSubGroup437 */ 381, 388, -1,
+  /* DiagSubGroup442 */ 71, -1,
+  /* DiagSubGroup445 */ 448, -1,
+  /* DiagSubGroup446 */ 445, 447, 449, -1,
+  /* DiagSubGroup453 */ 454, 459, 460, 464, 468, 469, 465, -1,
+  /* DiagSubGroup455 */ 467, -1,
+  /* DiagSubGroup459 */ 443, -1,
+  /* DiagSubGroup462 */ 444, -1,
+  /* DiagSubGroup468 */ 456, 466, -1,
+  /* DiagSubGroup469 */ 457, -1,
+  /* DiagSubGroup476 */ 475, -1,
+  /* DiagSubGroup484 */ 114, -1,
+};
+
+static const char DiagGroupNames[] = {
+    "\000\020#pragma-messages\t#warnings\020CFString-literal\022NSObject-att"
+    "ribute\003abi\016absolute-value\024abstract-final-class\023abstract-vba"
+    "se-init\007address\032address-of-array-temporary\024address-of-temporar"
+    "y\020aggregate-return\003all\017ambiguous-macro\031ambiguous-member-tem"
+    "plate\034analyzer-incompatible-plugin\025anonymous-pack-parens\003arc\007"
+    "arc-abi%arc-bridge-casts-disallowed-in-nonarc\036arc-maybe-repeated-use"
+    "-of-weak\025arc-non-pod-memaccess\031arc-performSelector-leaks\030arc-r"
+    "epeated-use-of-weak\021arc-retain-cycles\032arc-unsafe-retained-assign\014"
+    "array-bounds\037array-bounds-pointer-arithmetic\003asm\022asm-operand-w"
+    "idths\013assign-enum\026atomic-memory-ordering\021atomic-properties*ato"
+    "mic-property-with-user-defined-accessor\nattributes\013auto-import\022a"
+    "uto-storage-class\013auto-var-id\014availability\016backend-plugin\030b"
+    "ackslash-newline-escape\024bad-array-new-length\021bad-function-cast\026"
+    "bind-to-temporary-copy\034bitfield-constant-conversion\026bitwise-op-pa"
+    "rentheses\017bool-conversion\020bool-conversions\013bridge-cast\027buil"
+    "tin-macro-redefined\027builtin-requires-header\nc++-compat\014c++0x-com"
+    "pat\020c++0x-extensions\017c++0x-narrowing\014c++11-compat(c++11-compat"
+    "-deprecated-writable-strings\025c++11-compat-pedantic*c++11-compat-rese"
+    "rved-user-defined-literal\020c++11-extensions\020c++11-extra-semi\017c+"
+    "+11-long-long\017c++11-narrowing\020c++1y-extensions\022c++98-c++11-com"
+    "pat\033c++98-c++11-compat-pedantic\014c++98-compat#c++98-compat-bind-to"
+    "-temporary-copy%c++98-compat-local-type-template-args\025c++98-compat-p"
+    "edantic'c++98-compat-unnamed-type-template-args\016c11-extensions\nc99-"
+    "compat\016c99-extensions\ncast-align\020cast-of-sel-type\tcast-qual\nch"
+    "ar-align\017char-subscripts\015class-varargs\007comment\010comments\036"
+    "compare-distinct-pointer-types\026complex-component-init\031conditional"
+    "-type-mismatch\031conditional-uninitialized\015config-macros\023constan"
+    "t-conversion\030constant-logical-operand\023constexpr-not-const\010cons"
+    "umed\nconversion\017conversion-null\026covered-switch-default\021ctor-d"
+    "tor-privacy\030custom-atomic-properties\015dangling-else\016dangling-fi"
+    "eld\031dangling-initializer-list\023dealloc-in-category\035debug-compre"
+    "ssion-unavailable\033declaration-after-statement\026delegating-ctor-cyc"
+    "les\021delete-incomplete\027delete-non-virtual-dtor\ndeprecated\027depr"
+    "ecated-declarations\032deprecated-implementations\031deprecated-increme"
+    "nt-bool\031deprecated-objc-isa-usage%deprecated-objc-pointer-introspect"
+    "ion5deprecated-objc-pointer-introspection-performSelector\023deprecated"
+    "-register\033deprecated-writable-strings\022direct-ivar-access\030disab"
+    "led-macro-expansion\025disabled-optimization\014discard-qual\034distrib"
+    "uted-object-modifiers\013div-by-zero\020division-by-zero\015documentati"
+    "on\035documentation-deprecated-sync\022documentation-html\026documentat"
+    "ion-pedantic\035documentation-unknown-command\036dollar-in-identifier-e"
+    "xtension\030duplicate-decl-specifier\016duplicate-enum\024duplicate-met"
+    "hod-arg\026duplicate-method-match\027dynamic-class-memaccess\006effc++\022"
+    "embedded-directive\nempty-body\026empty-translation-unit\014endif-label"
+    "s\014enum-compare\017enum-conversion\016enum-too-large\025exit-time-des"
+    "tructors\027explicit-ownership-type\021extended-offsetof\017extern-c-co"
+    "mpat\022extern-initializer\005extra\023extra-qualification\nextra-semi\014"
+    "extra-tokens\010fallback\031flexible-array-extensions\013float-equal\006"
+    "format\021format-extra-args\030format-invalid-specifier\016format-non-i"
+    "so\021format-nonliteral\017format-security\nformat-y2k\022format-zero-l"
+    "ength\010format=2\023four-char-constants\021frame-larger-than\ngcc-comp"
+    "at\023global-constructors\003gnu\026gnu-alignof-expression\024gnu-anony"
+    "mous-struct\033gnu-array-member-paren-init\022gnu-binary-literal\016gnu"
+    "-case-range\023gnu-complex-integer gnu-compound-literal-initializer\037"
+    "gnu-conditional-omitted-operand\016gnu-designator\025gnu-empty-initiali"
+    "zer\020gnu-empty-struct\036gnu-flexible-array-initializer\037gnu-flexib"
+    "le-array-union-member\024gnu-folding-constant\026gnu-imaginary-constant"
+    "\022gnu-label-as-value\023gnu-redeclared-enum\030gnu-statement-expressi"
+    "on\025gnu-static-float-init$gnu-string-literal-operator-template\016gnu"
+    "-union-cast\"gnu-variable-sized-type-not-at-end\027gnu-zero-line-direct"
+    "ive!gnu-zero-variadic-macro-arguments\014header-guard\016header-hygiene"
+    "\025idiomatic-parentheses\022ignored-attributes\017ignored-pragmas\022i"
+    "gnored-qualifiers\010implicit\032implicit-atomic-properties*implicit-co"
+    "nversion-floating-point-to-bool implicit-exception-spec-mismatch\024imp"
+    "licit-fallthrough!implicit-fallthrough-per-function\035implicit-functio"
+    "n-declaration\014implicit-int\024implicit-retain-self\033implicitly-uns"
+    "igned-literal\006import&import-preprocessor-directive-pedantic\"incompa"
+    "tible-library-redeclaration\026incompatible-ms-struct\032incompatible-p"
+    "ointer-types.incompatible-pointer-types-discards-qualifiers\031incomple"
+    "te-implementation\021incomplete-module\023incomplete-umbrella\022infini"
+    "te-recursion\027inherited-variadic-ctor\tinit-self\025initializer-overr"
+    "ides\006inline\ninline-asm\021inline-new-delete\016int-conversion\017in"
+    "t-conversions\023int-to-pointer-cast\030int-to-void-pointer-cast\020int"
+    "eger-overflow\035invalid-command-line-argument\021invalid-constexpr\020"
+    "invalid-iboutlet\020invalid-noreturn\020invalid-offsetof\013invalid-pch"
+    "\020invalid-pp-token\027invalid-source-encoding\023invalid-token-paste\016"
+    "keyword-compat\026knr-promoted-parameter\030language-extension-token\023"
+    "large-by-value-copy\022literal-conversion\015literal-range\030local-typ"
+    "e-template-args\027logical-not-parentheses\026logical-op-parentheses\tl"
+    "ong-long\015loop-analysis\017macro-redefined\004main\020main-return-typ"
+    "e\027malformed-warning-check\022memsize-comparison\021method-signatures"
+    "\tmicrosoft\020microsoft-exists\032mismatched-parameter-types\027mismat"
+    "ched-return-types\017mismatched-tags\016missing-braces\024missing-decla"
+    "rations\032missing-field-initializers\030missing-format-attribute\024mi"
+    "ssing-include-dirs\032missing-method-return-type\020missing-noreturn\022"
+    "missing-prototypes\025missing-selector-name\017missing-sysroot\035missi"
+    "ng-variable-declarations\017module-conflict\004most\014msvc-include\tmu"
+    "ltichar\023multiple-move-vbase\tnarrowing\021nested-anon-types\016neste"
+    "d-externs\020new-returns-null\013newline-eof\007non-gcc\033non-literal-"
+    "null-conversion\017non-pod-varargs\020non-virtual-dtor\007nonnull\025no"
+    "nportable-cfstrings\017null-arithmetic\016null-character\017null-conver"
+    "sion\020null-dereference+objc-autosynthesis-property-ivar-name-match\016"
+    "objc-cocoa-api\034objc-designated-initializers\037objc-forward-class-re"
+    "definition\024objc-interface-ivars\024objc-literal-compare\027objc-lite"
+    "ral-conversion\022objc-method-access\037objc-missing-property-synthesis"
+    "\030objc-missing-super-calls\"objc-noncopy-retain-block-property\032obj"
+    "c-nonunified-exceptions\034objc-property-implementation\037objc-propert"
+    "y-implicit-mismatch*objc-property-matches-cocoa-ownership-rule\032objc-"
+    "property-no-attribute\027objc-property-synthesis#objc-protocol-method-i"
+    "mplementation objc-protocol-property-synthesis\"objc-readonly-with-sett"
+    "er-property\026objc-redundant-api-use\032objc-redundant-literal-use\017"
+    "objc-root-class\023objc-string-compare\031objc-string-concatenation\003"
+    "odr\016old-style-cast\024old-style-definition\027out-of-line-declaratio"
+    "n\014over-aligned\010overflow\022overlength-strings\037overloaded-shift"
+    "-op-parentheses\022overloaded-virtual\032overriding-method-mismatch\023"
+    "overriding-t-option\006packed\006padded\013parentheses\024parentheses-e"
+    "quality\004pass\010pedantic\015pointer-arith\027pointer-bool-conversion"
+    "\014pointer-sign\023pointer-to-int-cast\025pointer-type-mismatch\007pra"
+    "gmas&predefined-identifier-outside-function\016private-extern\031profil"
+    "e-instr-out-of-date\010protocol%protocol-property-synthesis-ambiguity\032"
+    "readonly-iboutlet-property\015receiver-expr\026receiver-forward-class\020"
+    "receiver-is-weak\027redeclared-class-member\017redundant-decls\026reint"
+    "erpret-base-class\025remark-backend-plugin\007reorder\030requires-super"
+    "-attribute\035reserved-user-defined-literal\031retained-language-linkag"
+    "e\024return-stack-address\013return-type\025return-type-c-linkage\007se"
+    "ction\010selector\026selector-type-mismatch\013self-assign\021self-assi"
+    "gn-field\034semicolon-before-method-body\010sentinel\016sequence-point\026"
+    "serialized-diagnostics\006shadow\013shadow-ivar\024shift-count-negative"
+    "\024shift-count-overflow\024shift-op-parentheses\016shift-overflow\023s"
+    "hift-sign-overflow\020shorten-64-to-32\014sign-compare\017sign-conversi"
+    "on\nsign-promo\025sizeof-array-argument\022sizeof-array-decay\030sizeof"
+    "-pointer-memaccess\027sometimes-uninitialized\022source-uses-openmp\017"
+    "stack-protector\021static-float-init\020static-in-inline$static-inline-"
+    "explicit-instantiation\026static-local-in-inline\020static-self-init\017"
+    "strict-aliasing\021strict-aliasing=0\021strict-aliasing=1\021strict-ali"
+    "asing=2\017strict-overflow\021strict-overflow=0\021strict-overflow=1\021"
+    "strict-overflow=2\021strict-overflow=3\021strict-overflow=4\021strict-o"
+    "verflow=5\021strict-prototypes\025strict-selector-match\016string-compa"
+    "re\021string-conversion\020string-plus-char\017string-plus-int\024strlc"
+    "py-strlcat-size\014strncat-size\033super-class-method-mismatch\006switc"
+    "h\013switch-bool\016switch-default\013switch-enum\005synth\024tautologi"
+    "cal-compare*tautological-constant-out-of-range-compare\034tautological-"
+    "overlap-compare\034tautological-pointer-compare$tentative-definition-in"
+    "complete-type\015thread-safety\026thread-safety-analysis\030thread-safe"
+    "ty-attributes\022thread-safety-beta\025thread-safety-precise\ttrigraphs"
+    "\013type-limits\013type-safety\024typedef-redefinition\020typename-miss"
+    "ing\030unavailable-declarations\023undeclared-selector\005undef\020unde"
+    "fined-inline\022undefined-internal\032undefined-reinterpret-cast\007uni"
+    "code\022unicode-whitespace\015uninitialized\022unknown-attributes\027un"
+    "known-escape-sequence\017unknown-pragmas\026unknown-warning-option\032u"
+    "nnamed-type-template-args\035unneeded-internal-declaration\030unneeded-"
+    "member-function\020unreachable-code\033unreachable-code-aggressive\026u"
+    "nreachable-code-break\037unreachable-code-loop-increment\027unreachable"
+    "-code-return\013unsequenced\022unsupported-friend\026unsupported-visibi"
+    "lity\006unused\017unused-argument\034unused-command-line-argument\021un"
+    "used-comparison\025unused-const-variable\032unused-exception-parameter\017"
+    "unused-function\014unused-label\015unused-macros\026unused-member-funct"
+    "ion\020unused-parameter\024unused-private-field\024unused-property-ivar"
+    "\015unused-result\030unused-sanitize-argument\014unused-value\017unused"
+    "-variable\026unused-volatile-lvalue\026used-but-marked-unused\025user-d"
+    "efined-literals\007varargs\017variadic-macros\021vector-conversion\022v"
+    "ector-conversions\014vexing-parse\nvisibility\003vla\015vla-extension\025"
+    "volatile-register-var\025weak-template-vtables\014weak-vtables\015write"
+    "-strings\021zero-length-array"};
+
 #endif // GET_DIAG_ARRAYS
 
 
 #ifdef GET_DIAG_TABLE
-  { 0, "",                                               0, DiagSubGroup0 },
-  { 16, "#pragma-messages",                               DiagArray1, 0 },
-  { 9, "#warnings",                                      DiagArray2, 0 },
-  { 16, "CFString-literal",                               DiagArray3, 0 },
-  { 18, "NSObject-attribute",                             DiagArray4, 0 },
-  { 3, "abi",                                            0, 0 },
-  { 20, "abstract-final-class",                           DiagArray6, 0 },
-  { 7, "address",                                        0, 0 },
-  { 26, "address-of-array-temporary",                     DiagArray8, 0 },
-  { 20, "address-of-temporary",                           DiagArray9, 0 },
-  { 16, "aggregate-return",                               0, 0 },
-  { 3, "all",                                            0, DiagSubGroup11 },
-  { 15, "ambiguous-macro",                                DiagArray12, 0 },
-  { 25, "ambiguous-member-template",                      DiagArray13, 0 },
-  { 28, "analyzer-incompatible-plugin",                   DiagArray14, 0 },
-  { 21, "anonymous-pack-parens",                          DiagArray15, 0 },
-  { 3, "arc",                                            0, DiagSubGroup16 },
-  { 7, "arc-abi",                                        0, 0 },
-  { 37, "arc-bridge-casts-disallowed-in-nonarc",          DiagArray18, 0 },
-  { 30, "arc-maybe-repeated-use-of-weak",                 DiagArray19, 0 },
-  { 21, "arc-non-pod-memaccess",                          DiagArray20, 0 },
-  { 25, "arc-performSelector-leaks",                      DiagArray21, 0 },
-  { 24, "arc-repeated-use-of-weak",                       DiagArray22, DiagSubGroup22 },
-  { 17, "arc-retain-cycles",                              DiagArray23, 0 },
-  { 26, "arc-unsafe-retained-assign",                     DiagArray24, 0 },
-  { 12, "array-bounds",                                   DiagArray25, 0 },
-  { 31, "array-bounds-pointer-arithmetic",                DiagArray26, 0 },
-  { 3, "asm",                                            0, DiagSubGroup27 },
-  { 18, "asm-operand-widths",                             DiagArray28, 0 },
-  { 11, "assign-enum",                                    DiagArray29, 0 },
-  { 17, "atomic-properties",                              0, DiagSubGroup30 },
-  { 42, "atomic-property-with-user-defined-accessor",     DiagArray31, 0 },
-  { 10, "attributes",                                     DiagArray32, 0 },
-  { 11, "auto-import",                                    DiagArray33, 0 },
-  { 18, "auto-storage-class",                             DiagArray34, 0 },
-  { 11, "auto-var-id",                                    DiagArray35, 0 },
-  { 12, "availability",                                   DiagArray36, 0 },
-  { 24, "backslash-newline-escape",                       DiagArray37, 0 },
-  { 20, "bad-array-new-length",                           DiagArray38, 0 },
-  { 17, "bad-function-cast",                              DiagArray39, 0 },
-  { 22, "bind-to-temporary-copy",                         DiagArray40, DiagSubGroup40 },
-  { 28, "bitfield-constant-conversion",                   DiagArray41, 0 },
-  { 22, "bitwise-op-parentheses",                         DiagArray42, 0 },
-  { 15, "bool-conversion",                                DiagArray43, 0 },
-  { 16, "bool-conversions",                               0, DiagSubGroup44 },
-  { 23, "builtin-macro-redefined",                        DiagArray45, 0 },
-  { 23, "builtin-requires-header",                        DiagArray46, 0 },
-  { 10, "c++-compat",                                     DiagArray47, 0 },
-  { 12, "c++0x-compat",                                   0, DiagSubGroup48 },
-  { 16, "c++0x-extensions",                               0, DiagSubGroup49 },
-  { 15, "c++0x-narrowing",                                0, DiagSubGroup50 },
-  { 12, "c++11-compat",                                   DiagArray51, DiagSubGroup51 },
-  { 21, "c++11-compat-pedantic",                          0, DiagSubGroup52 },
-  { 42, "c++11-compat-reserved-user-defined-literal",     DiagArray53, 0 },
-  { 16, "c++11-extensions",                               DiagArray54, DiagSubGroup54 },
-  { 16, "c++11-extra-semi",                               DiagArray55, 0 },
-  { 15, "c++11-long-long",                                DiagArray56, 0 },
-  { 15, "c++11-narrowing",                                DiagArray57, 0 },
-  { 16, "c++1y-extensions",                               DiagArray58, 0 },
-  { 12, "c++98-compat",                                   DiagArray59, DiagSubGroup59 },
-  { 35, "c++98-compat-bind-to-temporary-copy",            DiagArray60, 0 },
-  { 37, "c++98-compat-local-type-template-args",          DiagArray61, 0 },
-  { 21, "c++98-compat-pedantic",                          DiagArray62, DiagSubGroup62 },
-  { 39, "c++98-compat-unnamed-type-template-args",        DiagArray63, 0 },
-  { 14, "c11-extensions",                                 DiagArray64, 0 },
-  { 10, "c99-compat",                                     DiagArray65, 0 },
-  { 14, "c99-extensions",                                 DiagArray66, 0 },
-  { 10, "cast-align",                                     DiagArray67, 0 },
-  { 16, "cast-of-sel-type",                               DiagArray68, 0 },
-  { 9, "cast-qual",                                      0, 0 },
-  { 10, "char-align",                                     0, 0 },
-  { 15, "char-subscripts",                                DiagArray71, 0 },
-  { 7, "comment",                                        DiagArray72, 0 },
-  { 8, "comments",                                       0, DiagSubGroup73 },
-  { 30, "compare-distinct-pointer-types",                 DiagArray74, 0 },
-  { 22, "complex-component-init",                         DiagArray75, 0 },
-  { 25, "conditional-type-mismatch",                      DiagArray76, 0 },
-  { 25, "conditional-uninitialized",                      DiagArray77, 0 },
-  { 13, "config-macros",                                  DiagArray78, 0 },
-  { 19, "constant-conversion",                            DiagArray79, DiagSubGroup79 },
-  { 24, "constant-logical-operand",                       DiagArray80, 0 },
-  { 19, "constexpr-not-const",                            DiagArray81, 0 },
-  { 10, "conversion",                                     DiagArray82, DiagSubGroup82 },
-  { 15, "conversion-null",                                0, DiagSubGroup83 },
-  { 22, "covered-switch-default",                         DiagArray84, 0 },
-  { 17, "ctor-dtor-privacy",                              0, 0 },
-  { 24, "custom-atomic-properties",                       DiagArray86, 0 },
-  { 18, "cxx98-cxx11-compat",                             DiagArray87, 0 },
-  { 27, "cxx98-cxx11-compat-pedantic",                    DiagArray88, DiagSubGroup88 },
-  { 13, "dangling-else",                                  DiagArray89, 0 },
-  { 14, "dangling-field",                                 DiagArray90, 0 },
-  { 25, "dangling-initializer-list",                      DiagArray91, 0 },
-  { 27, "declaration-after-statement",                    DiagArray92, 0 },
-  { 22, "delegating-ctor-cycles",                         DiagArray93, 0 },
-  { 17, "delete-incomplete",                              DiagArray94, 0 },
-  { 23, "delete-non-virtual-dtor",                        DiagArray95, 0 },
-  { 10, "deprecated",                                     DiagArray96, DiagSubGroup96 },
-  { 23, "deprecated-declarations",                        DiagArray97, 0 },
-  { 26, "deprecated-implementations",                     DiagArray98, 0 },
-  { 25, "deprecated-objc-isa-usage",                      DiagArray99, 0 },
-  { 37, "deprecated-objc-pointer-introspection",          DiagArray100, 0 },
-  { 27, "deprecated-writable-strings",                    DiagArray101, 0 },
-  { 18, "direct-ivar-access",                             DiagArray102, 0 },
-  { 24, "disabled-macro-expansion",                       DiagArray103, 0 },
-  { 21, "disabled-optimization",                          0, 0 },
-  { 12, "discard-qual",                                   0, 0 },
-  { 28, "distributed-object-modifiers",                   DiagArray106, 0 },
-  { 11, "div-by-zero",                                    0, 0 },
-  { 16, "division-by-zero",                               DiagArray108, 0 },
-  { 13, "documentation",                                  DiagArray109, DiagSubGroup109 },
-  { 29, "documentation-deprecated-sync",                  DiagArray110, 0 },
-  { 18, "documentation-html",                             DiagArray111, 0 },
-  { 22, "documentation-pedantic",                         DiagArray112, DiagSubGroup112 },
-  { 29, "documentation-unknown-command",                  DiagArray113, 0 },
-  { 30, "dollar-in-identifier-extension",                 DiagArray114, 0 },
-  { 24, "duplicate-decl-specifier",                       DiagArray115, 0 },
-  { 14, "duplicate-enum",                                 DiagArray116, 0 },
-  { 20, "duplicate-method-arg",                           DiagArray117, 0 },
-  { 22, "duplicate-method-match",                         DiagArray118, 0 },
-  { 23, "dynamic-class-memaccess",                        DiagArray119, 0 },
-  { 6, "effc++",                                         0, 0 },
-  { 18, "embedded-directive",                             DiagArray121, 0 },
-  { 10, "empty-body",                                     DiagArray122, 0 },
-  { 22, "empty-translation-unit",                         DiagArray123, 0 },
-  { 12, "endif-labels",                                   0, DiagSubGroup124 },
-  { 12, "enum-compare",                                   DiagArray125, 0 },
-  { 15, "enum-conversion",                                DiagArray126, 0 },
-  { 21, "exit-time-destructors",                          DiagArray127, 0 },
-  { 23, "explicit-ownership-type",                        DiagArray128, 0 },
-  { 17, "extended-offsetof",                              DiagArray129, 0 },
-  { 18, "extern-initializer",                             DiagArray130, 0 },
-  { 5, "extra",                                          0, DiagSubGroup131 },
-  { 10, "extra-semi",                                     DiagArray132, DiagSubGroup132 },
-  { 12, "extra-tokens",                                   DiagArray133, 0 },
-  { 25, "flexible-array-extensions",                      DiagArray134, 0 },
-  { 11, "float-equal",                                    DiagArray135, 0 },
-  { 6, "format",                                         DiagArray136, DiagSubGroup136 },
-  { 17, "format-extra-args",                              DiagArray137, 0 },
-  { 24, "format-invalid-specifier",                       DiagArray138, 0 },
-  { 14, "format-non-iso",                                 DiagArray139, 0 },
-  { 17, "format-nonliteral",                              DiagArray140, DiagSubGroup140 },
-  { 15, "format-security",                                DiagArray141, 0 },
-  { 10, "format-y2k",                                     0, 0 },
-  { 18, "format-zero-length",                             DiagArray143, 0 },
-  { 8, "format=2",                                       0, DiagSubGroup144 },
-  { 19, "four-char-constants",                            DiagArray145, 0 },
-  { 10, "gcc-compat",                                     DiagArray146, 0 },
-  { 19, "global-constructors",                            DiagArray147, 0 },
-  { 3, "gnu",                                            DiagArray148, DiagSubGroup148 },
-  { 27, "gnu-array-member-paren-init",                    DiagArray149, 0 },
-  { 14, "gnu-designator",                                 DiagArray150, 0 },
-  { 21, "gnu-static-float-init",                          DiagArray151, 0 },
-  { 14, "header-hygiene",                                 DiagArray152, 0 },
-  { 21, "idiomatic-parentheses",                          DiagArray153, 0 },
-  { 18, "ignored-attributes",                             DiagArray154, 0 },
-  { 18, "ignored-qualifiers",                             DiagArray155, 0 },
-  { 8, "implicit",                                       0, DiagSubGroup156 },
-  { 26, "implicit-atomic-properties",                     DiagArray157, 0 },
-  { 42, "implicit-conversion-floating-point-to-bool",     DiagArray158, 0 },
-  { 32, "implicit-exception-spec-mismatch",               DiagArray159, 0 },
-  { 20, "implicit-fallthrough",                           DiagArray160, DiagSubGroup160 },
-  { 33, "implicit-fallthrough-per-function",              DiagArray161, 0 },
-  { 29, "implicit-function-declaration",                  DiagArray162, 0 },
-  { 12, "implicit-int",                                   DiagArray163, 0 },
-  { 20, "implicit-retain-self",                           DiagArray164, 0 },
-  { 6, "import",                                         0, 0 },
-  { 38, "import-preprocessor-directive-pedantic",         DiagArray166, 0 },
-  { 34, "incompatible-library-redeclaration",             DiagArray167, 0 },
-  { 26, "incompatible-pointer-types",                     DiagArray168, DiagSubGroup168 },
-  { 46, "incompatible-pointer-types-discards-qualifiers", DiagArray169, 0 },
-  { 25, "incomplete-implementation",                      DiagArray170, 0 },
-  { 19, "incomplete-umbrella",                            DiagArray171, 0 },
-  { 23, "inherited-variadic-ctor",                        DiagArray172, 0 },
-  { 9, "init-self",                                      0, 0 },
-  { 21, "initializer-overrides",                          DiagArray174, 0 },
-  { 6, "inline",                                         0, 0 },
-  { 14, "int-conversion",                                 DiagArray176, 0 },
-  { 15, "int-conversions",                                0, DiagSubGroup177 },
-  { 19, "int-to-pointer-cast",                            DiagArray178, 0 },
-  { 16, "integer-overflow",                               DiagArray179, 0 },
-  { 17, "invalid-constexpr",                              DiagArray180, 0 },
-  { 16, "invalid-iboutlet",                               DiagArray181, 0 },
-  { 16, "invalid-noreturn",                               DiagArray182, 0 },
-  { 16, "invalid-offsetof",                               DiagArray183, 0 },
-  { 11, "invalid-pch",                                    0, 0 },
-  { 16, "invalid-pp-token",                               DiagArray185, 0 },
-  { 23, "invalid-source-encoding",                        DiagArray186, 0 },
-  { 19, "invalid-token-paste",                            DiagArray187, 0 },
-  { 22, "knr-promoted-parameter",                         DiagArray188, 0 },
-  { 24, "language-extension-token",                       DiagArray189, 0 },
-  { 19, "large-by-value-copy",                            DiagArray190, 0 },
-  { 18, "literal-conversion",                             DiagArray191, 0 },
-  { 13, "literal-range",                                  DiagArray192, 0 },
-  { 24, "local-type-template-args",                       DiagArray193, DiagSubGroup193 },
-  { 22, "logical-op-parentheses",                         DiagArray194, 0 },
-  { 9, "long-long",                                      DiagArray195, DiagSubGroup195 },
-  { 13, "loop-analysis",                                  DiagArray196, 0 },
-  { 4, "main",                                           DiagArray197, 0 },
-  { 16, "main-return-type",                               DiagArray198, 0 },
-  { 23, "malformed-warning-check",                        DiagArray199, 0 },
-  { 17, "method-signatures",                              DiagArray200, 0 },
-  { 9, "microsoft",                                      DiagArray201, 0 },
-  { 16, "microsoft-exists",                               DiagArray202, 0 },
-  { 28, "mismatched-method-attributes",                   DiagArray203, 0 },
-  { 26, "mismatched-parameter-types",                     DiagArray204, 0 },
-  { 23, "mismatched-return-types",                        DiagArray205, 0 },
-  { 15, "mismatched-tags",                                DiagArray206, 0 },
-  { 14, "missing-braces",                                 DiagArray207, 0 },
-  { 20, "missing-declarations",                           DiagArray208, 0 },
-  { 26, "missing-field-initializers",                     DiagArray209, 0 },
-  { 24, "missing-format-attribute",                       0, 0 },
-  { 20, "missing-include-dirs",                           0, 0 },
-  { 26, "missing-method-return-type",                     DiagArray212, 0 },
-  { 16, "missing-noreturn",                               DiagArray213, 0 },
-  { 18, "missing-prototypes",                             DiagArray214, 0 },
-  { 21, "missing-selector-name",                          DiagArray215, 0 },
-  { 15, "missing-sysroot",                                DiagArray216, 0 },
-  { 29, "missing-variable-declarations",                  DiagArray217, 0 },
-  { 15, "module-conflict",                                DiagArray218, 0 },
-  { 4, "most",                                           0, DiagSubGroup219 },
-  { 9, "multichar",                                      DiagArray220, 0 },
-  { 9, "narrowing",                                      0, DiagSubGroup221 },
-  { 17, "nested-anon-types",                              DiagArray222, 0 },
-  { 14, "nested-externs",                                 0, 0 },
-  { 11, "newline-eof",                                    DiagArray224, 0 },
-  { 7, "non-gcc",                                        0, DiagSubGroup225 },
-  { 27, "non-literal-null-conversion",                    DiagArray226, 0 },
-  { 15, "non-pod-varargs",                                DiagArray227, 0 },
-  { 16, "non-virtual-dtor",                               DiagArray228, 0 },
-  { 7, "nonnull",                                        DiagArray229, 0 },
-  { 21, "nonportable-cfstrings",                          0, 0 },
-  { 15, "null-arithmetic",                                DiagArray231, 0 },
-  { 14, "null-character",                                 DiagArray232, 0 },
-  { 15, "null-conversion",                                DiagArray233, 0 },
-  { 16, "null-dereference",                               DiagArray234, 0 },
-  { 43, "objc-autosynthesis-property-ivar-name-match",    DiagArray235, 0 },
-  { 14, "objc-cocoa-api",                                 0, DiagSubGroup236 },
-  { 31, "objc-forward-class-redefinition",                DiagArray237, 0 },
-  { 20, "objc-interface-ivars",                           DiagArray238, 0 },
-  { 20, "objc-literal-compare",                           DiagArray239, DiagSubGroup239 },
-  { 18, "objc-method-access",                             DiagArray240, 0 },
-  { 31, "objc-missing-property-synthesis",                DiagArray241, 0 },
-  { 24, "objc-missing-super-calls",                       DiagArray242, 0 },
-  { 34, "objc-noncopy-retain-block-property",             DiagArray243, 0 },
-  { 26, "objc-nonunified-exceptions",                     DiagArray244, 0 },
-  { 28, "objc-property-implementation",                   DiagArray245, 0 },
-  { 42, "objc-property-matches-cocoa-ownership-rule",     DiagArray246, 0 },
-  { 26, "objc-property-no-attribute",                     DiagArray247, 0 },
-  { 23, "objc-property-synthesis",                        DiagArray248, 0 },
-  { 35, "objc-protocol-method-implementation",            DiagArray249, 0 },
-  { 32, "objc-protocol-property-synthesis",               DiagArray250, 0 },
-  { 34, "objc-readonly-with-setter-property",             DiagArray251, 0 },
-  { 22, "objc-redundant-api-use",                         0, DiagSubGroup252 },
-  { 26, "objc-redundant-literal-use",                     DiagArray253, 0 },
-  { 15, "objc-root-class",                                DiagArray254, 0 },
-  { 19, "objc-string-compare",                            DiagArray255, 0 },
-  { 3, "odr",                                            DiagArray256, 0 },
-  { 14, "old-style-cast",                                 0, 0 },
-  { 20, "old-style-definition",                           0, 0 },
-  { 23, "out-of-line-declaration",                        DiagArray259, 0 },
-  { 12, "over-aligned",                                   DiagArray260, 0 },
-  { 8, "overflow",                                       0, 0 },
-  { 18, "overlength-strings",                             DiagArray262, 0 },
-  { 31, "overloaded-shift-op-parentheses",                DiagArray263, 0 },
-  { 18, "overloaded-virtual",                             DiagArray264, 0 },
-  { 26, "overriding-method-mismatch",                     DiagArray265, 0 },
-  { 6, "packed",                                         DiagArray266, 0 },
-  { 6, "padded",                                         DiagArray267, 0 },
-  { 11, "parentheses",                                    DiagArray268, DiagSubGroup268 },
-  { 20, "parentheses-equality",                           DiagArray269, 0 },
-  { 8, "pedantic",                                       DiagArray270, DiagSubGroup270 },
-  { 13, "pointer-arith",                                  DiagArray271, 0 },
-  { 12, "pointer-sign",                                   DiagArray272, 0 },
-  { 19, "pointer-to-int-cast",                            0, 0 },
-  { 21, "pointer-type-mismatch",                          DiagArray274, 0 },
-  { 38, "predefined-identifier-outside-function",         DiagArray275, 0 },
-  { 14, "private-extern",                                 DiagArray276, 0 },
-  { 8, "protocol",                                       DiagArray277, 0 },
-  { 26, "readonly-iboutlet-property",                     DiagArray278, 0 },
-  { 21, "readonly-setter-attrs",                          DiagArray279, 0 },
-  { 13, "receiver-expr",                                  DiagArray280, 0 },
-  { 22, "receiver-forward-class",                         DiagArray281, 0 },
-  { 16, "receiver-is-weak",                               DiagArray282, 0 },
-  { 15, "redundant-decls",                                0, 0 },
-  { 22, "reinterpret-base-class",                         DiagArray284, 0 },
-  { 7, "reorder",                                        DiagArray285, 0 },
-  { 24, "requires-super-attribute",                       DiagArray286, 0 },
-  { 29, "reserved-user-defined-literal",                  DiagArray287, DiagSubGroup287 },
-  { 20, "return-stack-address",                           DiagArray288, 0 },
-  { 11, "return-type",                                    DiagArray289, DiagSubGroup289 },
-  { 21, "return-type-c-linkage",                          DiagArray290, 0 },
-  { 7, "section",                                        DiagArray291, 0 },
-  { 8, "selector",                                       DiagArray292, 0 },
-  { 11, "self-assign",                                    DiagArray293, DiagSubGroup293 },
-  { 17, "self-assign-field",                              DiagArray294, 0 },
-  { 28, "semicolon-before-method-body",                   DiagArray295, 0 },
-  { 8, "sentinel",                                       DiagArray296, 0 },
-  { 14, "sequence-point",                                 0, DiagSubGroup297 },
-  { 22, "serialized-diagnostics",                         DiagArray298, 0 },
-  { 6, "shadow",                                         DiagArray299, 0 },
-  { 11, "shadow-ivar",                                    DiagArray300, 0 },
-  { 20, "shift-count-negative",                           DiagArray301, 0 },
-  { 20, "shift-count-overflow",                           DiagArray302, 0 },
-  { 20, "shift-op-parentheses",                           DiagArray303, 0 },
-  { 14, "shift-overflow",                                 DiagArray304, 0 },
-  { 19, "shift-sign-overflow",                            DiagArray305, 0 },
-  { 16, "shorten-64-to-32",                               DiagArray306, 0 },
-  { 12, "sign-compare",                                   DiagArray307, 0 },
-  { 15, "sign-conversion",                                DiagArray308, 0 },
-  { 10, "sign-promo",                                     0, 0 },
-  { 21, "sizeof-array-argument",                          DiagArray310, 0 },
-  { 18, "sizeof-array-decay",                             DiagArray311, 0 },
-  { 24, "sizeof-pointer-memaccess",                       DiagArray312, 0 },
-  { 23, "sometimes-uninitialized",                        DiagArray313, 0 },
-  { 18, "source-uses-openmp",                             DiagArray314, 0 },
-  { 15, "stack-protector",                                0, 0 },
-  { 17, "static-float-init",                              DiagArray316, DiagSubGroup316 },
-  { 16, "static-in-inline",                               DiagArray317, 0 },
-  { 22, "static-local-in-inline",                         DiagArray318, 0 },
-  { 16, "static-self-init",                               DiagArray319, 0 },
-  { 15, "strict-aliasing",                                0, 0 },
-  { 17, "strict-aliasing=0",                              0, 0 },
-  { 17, "strict-aliasing=1",                              0, 0 },
-  { 17, "strict-aliasing=2",                              0, 0 },
-  { 15, "strict-overflow",                                0, 0 },
-  { 17, "strict-overflow=0",                              0, 0 },
-  { 17, "strict-overflow=1",                              0, 0 },
-  { 17, "strict-overflow=2",                              0, 0 },
-  { 17, "strict-overflow=3",                              0, 0 },
-  { 17, "strict-overflow=4",                              0, 0 },
-  { 17, "strict-overflow=5",                              0, 0 },
-  { 17, "strict-prototypes",                              0, 0 },
-  { 21, "strict-selector-match",                          DiagArray332, 0 },
-  { 14, "string-compare",                                 DiagArray333, 0 },
-  { 17, "string-conversion",                              DiagArray334, 0 },
-  { 15, "string-plus-int",                                DiagArray335, 0 },
-  { 20, "strlcpy-strlcat-size",                           DiagArray336, 0 },
-  { 12, "strncat-size",                                   DiagArray337, 0 },
-  { 27, "super-class-method-mismatch",                    DiagArray338, 0 },
-  { 6, "switch",                                         DiagArray339, 0 },
-  { 14, "switch-default",                                 0, 0 },
-  { 11, "switch-enum",                                    DiagArray341, 0 },
-  { 5, "synth",                                          0, 0 },
-  { 20, "tautological-compare",                           DiagArray343, DiagSubGroup343 },
-  { 42, "tautological-constant-out-of-range-compare",     DiagArray344, 0 },
-  { 36, "tentative-definition-incomplete-type",           DiagArray345, 0 },
-  { 13, "thread-safety",                                  0, DiagSubGroup346 },
-  { 22, "thread-safety-analysis",                         DiagArray347, 0 },
-  { 24, "thread-safety-attributes",                       DiagArray348, 0 },
-  { 18, "thread-safety-beta",                             DiagArray349, 0 },
-  { 21, "thread-safety-precise",                          DiagArray350, 0 },
-  { 9, "trigraphs",                                      DiagArray351, 0 },
-  { 11, "type-limits",                                    0, 0 },
-  { 11, "type-safety",                                    DiagArray353, 0 },
-  { 20, "typedef-redefinition",                           DiagArray354, 0 },
-  { 16, "typename-missing",                               DiagArray355, 0 },
-  { 19, "undeclared-selector",                            DiagArray356, 0 },
-  { 5, "undef",                                          DiagArray357, 0 },
-  { 16, "undefined-inline",                               DiagArray358, 0 },
-  { 18, "undefined-internal",                             DiagArray359, 0 },
-  { 26, "undefined-reinterpret-cast",                     DiagArray360, 0 },
-  { 7, "unicode",                                        DiagArray361, 0 },
-  { 18, "unicode-whitespace",                             DiagArray362, 0 },
-  { 13, "uninitialized",                                  DiagArray363, DiagSubGroup363 },
-  { 15, "unknown-pragmas",                                DiagArray364, 0 },
-  { 22, "unknown-warning-option",                         DiagArray365, 0 },
-  { 26, "unnamed-type-template-args",                     DiagArray366, DiagSubGroup366 },
-  { 29, "unneeded-internal-declaration",                  DiagArray367, 0 },
-  { 24, "unneeded-member-function",                       DiagArray368, 0 },
-  { 16, "unreachable-code",                               DiagArray369, 0 },
-  { 11, "unsequenced",                                    DiagArray370, 0 },
-  { 22, "unsupported-visibility",                         DiagArray371, 0 },
-  { 6, "unused",                                         0, DiagSubGroup372 },
-  { 15, "unused-argument",                                0, 0 },
-  { 28, "unused-command-line-argument",                   DiagArray374, DiagSubGroup374 },
-  { 17, "unused-comparison",                              DiagArray375, 0 },
-  { 26, "unused-exception-parameter",                     DiagArray376, 0 },
-  { 15, "unused-function",                                DiagArray377, DiagSubGroup377 },
-  { 12, "unused-label",                                   DiagArray378, 0 },
-  { 13, "unused-macros",                                  DiagArray379, 0 },
-  { 22, "unused-member-function",                         DiagArray380, DiagSubGroup380 },
-  { 16, "unused-parameter",                               DiagArray381, 0 },
-  { 20, "unused-private-field",                           DiagArray382, 0 },
-  { 13, "unused-result",                                  DiagArray383, 0 },
-  { 24, "unused-sanitize-argument",                       DiagArray384, 0 },
-  { 12, "unused-value",                                   DiagArray385, DiagSubGroup385 },
-  { 15, "unused-variable",                                DiagArray386, 0 },
-  { 22, "unused-volatile-lvalue",                         DiagArray387, 0 },
-  { 22, "used-but-marked-unused",                         DiagArray388, 0 },
-  { 21, "user-defined-literals",                          DiagArray389, 0 },
-  { 15, "variadic-macros",                                DiagArray390, 0 },
-  { 17, "vector-conversion",                              DiagArray391, 0 },
-  { 18, "vector-conversions",                             0, DiagSubGroup392 },
-  { 12, "vexing-parse",                                   DiagArray393, 0 },
-  { 10, "visibility",                                     DiagArray394, 0 },
-  { 3, "vla",                                            DiagArray395, 0 },
-  { 13, "vla-extension",                                  DiagArray396, 0 },
-  { 21, "volatile-register-var",                          0, 0 },
-  { 21, "weak-template-vtables",                          DiagArray398, 0 },
-  { 12, "weak-vtables",                                   DiagArray399, 0 },
-  { 13, "write-strings",                                  0, DiagSubGroup400 },
-  { 17, "zero-length-array",                              DiagArray401, 0 },
+  { /*  */                                                      0, /* Empty */     0, /* DiagSubGroup0 */ 1 },
+  { /* #pragma-messages */                                      1, /* DiagArray1 */ 1, /* Empty */         0 },
+  { /* #warnings */                                             18, /* DiagArray2 */ 3, /* Empty */         0 },
+  { /* CFString-literal */                                      28, /* DiagArray3 */ 5, /* Empty */         0 },
+  { /* NSObject-attribute */                                    45, /* DiagArray4 */ 7, /* Empty */         0 },
+  { /* abi */                                                   64, /* Empty */     0, /* Empty */         0 },
+  { /* absolute-value */                                        68, /* DiagArray6 */ 9, /* Empty */         0 },
+  { /* abstract-final-class */                                  83, /* DiagArray7 */ 13, /* Empty */         0 },
+  { /* abstract-vbase-init */                                   104, /* DiagArray8 */ 15, /* Empty */         0 },
+  { /* address */                                               124, /* Empty */     0, /* DiagSubGroup9 */ 3 },
+  { /* address-of-array-temporary */                            132, /* DiagArray10 */ 17, /* Empty */         0 },
+  { /* address-of-temporary */                                  159, /* DiagArray11 */ 19, /* Empty */         0 },
+  { /* aggregate-return */                                      180, /* Empty */     0, /* Empty */         0 },
+  { /* all */                                                   197, /* Empty */     0, /* DiagSubGroup13 */ 7 },
+  { /* ambiguous-macro */                                       201, /* DiagArray14 */ 21, /* Empty */         0 },
+  { /* ambiguous-member-template */                             217, /* DiagArray15 */ 23, /* Empty */         0 },
+  { /* analyzer-incompatible-plugin */                          243, /* DiagArray16 */ 25, /* Empty */         0 },
+  { /* anonymous-pack-parens */                                 272, /* DiagArray17 */ 27, /* Empty */         0 },
+  { /* arc */                                                   294, /* Empty */     0, /* DiagSubGroup18 */ 12 },
+  { /* arc-abi */                                               298, /* Empty */     0, /* Empty */         0 },
+  { /* arc-bridge-casts-disallowed-in-nonarc */                 306, /* DiagArray20 */ 29, /* Empty */         0 },
+  { /* arc-maybe-repeated-use-of-weak */                        344, /* DiagArray21 */ 31, /* Empty */         0 },
+  { /* arc-non-pod-memaccess */                                 375, /* DiagArray22 */ 33, /* Empty */         0 },
+  { /* arc-performSelector-leaks */                             397, /* DiagArray23 */ 35, /* Empty */         0 },
+  { /* arc-repeated-use-of-weak */                              423, /* DiagArray24 */ 37, /* DiagSubGroup24 */ 16 },
+  { /* arc-retain-cycles */                                     448, /* DiagArray25 */ 39, /* Empty */         0 },
+  { /* arc-unsafe-retained-assign */                            466, /* DiagArray26 */ 41, /* Empty */         0 },
+  { /* array-bounds */                                          493, /* DiagArray27 */ 45, /* Empty */         0 },
+  { /* array-bounds-pointer-arithmetic */                       506, /* DiagArray28 */ 50, /* Empty */         0 },
+  { /* asm */                                                   538, /* Empty */     0, /* DiagSubGroup29 */ 18 },
+  { /* asm-operand-widths */                                    542, /* DiagArray30 */ 53, /* Empty */         0 },
+  { /* assign-enum */                                           561, /* DiagArray31 */ 55, /* Empty */         0 },
+  { /* atomic-memory-ordering */                                573, /* DiagArray32 */ 57, /* Empty */         0 },
+  { /* atomic-properties */                                     596, /* Empty */     0, /* DiagSubGroup33 */ 20 },
+  { /* atomic-property-with-user-defined-accessor */            614, /* DiagArray34 */ 59, /* Empty */         0 },
+  { /* attributes */                                            657, /* Empty */     0, /* DiagSubGroup35 */ 23 },
+  { /* auto-import */                                           668, /* DiagArray36 */ 61, /* Empty */         0 },
+  { /* auto-storage-class */                                    680, /* DiagArray37 */ 63, /* Empty */         0 },
+  { /* auto-var-id */                                           699, /* DiagArray38 */ 65, /* Empty */         0 },
+  { /* availability */                                          711, /* DiagArray39 */ 67, /* Empty */         0 },
+  { /* backend-plugin */                                        724, /* DiagArray40 */ 74, /* Empty */         0 },
+  { /* backslash-newline-escape */                              739, /* DiagArray41 */ 76, /* Empty */         0 },
+  { /* bad-array-new-length */                                  764, /* DiagArray42 */ 78, /* Empty */         0 },
+  { /* bad-function-cast */                                     785, /* DiagArray43 */ 81, /* Empty */         0 },
+  { /* bind-to-temporary-copy */                                803, /* DiagArray44 */ 83, /* DiagSubGroup44 */ 26 },
+  { /* bitfield-constant-conversion */                          826, /* DiagArray45 */ 86, /* Empty */         0 },
+  { /* bitwise-op-parentheses */                                855, /* DiagArray46 */ 88, /* Empty */         0 },
+  { /* bool-conversion */                                       878, /* DiagArray47 */ 90, /* DiagSubGroup47 */ 28 },
+  { /* bool-conversions */                                      894, /* Empty */     0, /* DiagSubGroup48 */ 30 },
+  { /* bridge-cast */                                           911, /* DiagArray49 */ 92, /* Empty */         0 },
+  { /* builtin-macro-redefined */                               923, /* DiagArray50 */ 95, /* Empty */         0 },
+  { /* builtin-requires-header */                               947, /* DiagArray51 */ 98, /* Empty */         0 },
+  { /* c++-compat */                                            971, /* DiagArray52 */ 102, /* Empty */         0 },
+  { /* c++0x-compat */                                          982, /* Empty */     0, /* DiagSubGroup53 */ 32 },
+  { /* c++0x-extensions */                                      995, /* Empty */     0, /* DiagSubGroup54 */ 34 },
+  { /* c++0x-narrowing */                                       1012, /* Empty */     0, /* DiagSubGroup55 */ 36 },
+  { /* c++11-compat */                                          1028, /* DiagArray56 */ 104, /* DiagSubGroup56 */ 38 },
+  { /* c++11-compat-deprecated-writable-strings */              1041, /* DiagArray57 */ 113, /* Empty */         0 },
+  { /* c++11-compat-pedantic */                                 1082, /* Empty */     0, /* DiagSubGroup58 */ 43 },
+  { /* c++11-compat-reserved-user-defined-literal */            1104, /* DiagArray59 */ 116, /* Empty */         0 },
+  { /* c++11-extensions */                                      1147, /* DiagArray60 */ 118, /* DiagSubGroup60 */ 45 },
+  { /* c++11-extra-semi */                                      1164, /* DiagArray61 */ 147, /* Empty */         0 },
+  { /* c++11-long-long */                                       1181, /* DiagArray62 */ 149, /* Empty */         0 },
+  { /* c++11-narrowing */                                       1197, /* DiagArray63 */ 151, /* Empty */         0 },
+  { /* c++1y-extensions */                                      1213, /* DiagArray64 */ 159, /* Empty */         0 },
+  { /* c++98-c++11-compat */                                    1230, /* DiagArray65 */ 168, /* Empty */         0 },
+  { /* c++98-c++11-compat-pedantic */                           1249, /* DiagArray66 */ 178, /* DiagSubGroup66 */ 48 },
+  { /* c++98-compat */                                          1277, /* DiagArray67 */ 180, /* DiagSubGroup67 */ 50 },
+  { /* c++98-compat-bind-to-temporary-copy */                   1290, /* DiagArray68 */ 242, /* Empty */         0 },
+  { /* c++98-compat-local-type-template-args */                 1326, /* DiagArray69 */ 244, /* Empty */         0 },
+  { /* c++98-compat-pedantic */                                 1364, /* DiagArray70 */ 246, /* DiagSubGroup70 */ 55 },
+  { /* c++98-compat-unnamed-type-template-args */               1386, /* DiagArray71 */ 258, /* Empty */         0 },
+  { /* c11-extensions */                                        1426, /* DiagArray72 */ 260, /* Empty */         0 },
+  { /* c99-compat */                                            1441, /* DiagArray73 */ 267, /* Empty */         0 },
+  { /* c99-extensions */                                        1452, /* DiagArray74 */ 270, /* Empty */         0 },
+  { /* cast-align */                                            1467, /* DiagArray75 */ 281, /* Empty */         0 },
+  { /* cast-of-sel-type */                                      1478, /* DiagArray76 */ 283, /* Empty */         0 },
+  { /* cast-qual */                                             1495, /* Empty */     0, /* Empty */         0 },
+  { /* char-align */                                            1505, /* Empty */     0, /* Empty */         0 },
+  { /* char-subscripts */                                       1516, /* DiagArray79 */ 285, /* Empty */         0 },
+  { /* class-varargs */                                         1532, /* DiagArray80 */ 287, /* DiagSubGroup80 */ 58 },
+  { /* comment */                                               1546, /* DiagArray81 */ 289, /* Empty */         0 },
+  { /* comments */                                              1554, /* Empty */     0, /* DiagSubGroup82 */ 60 },
+  { /* compare-distinct-pointer-types */                        1563, /* DiagArray83 */ 294, /* Empty */         0 },
+  { /* complex-component-init */                                1594, /* DiagArray84 */ 297, /* Empty */         0 },
+  { /* conditional-type-mismatch */                             1617, /* DiagArray85 */ 299, /* Empty */         0 },
+  { /* conditional-uninitialized */                             1643, /* DiagArray86 */ 301, /* Empty */         0 },
+  { /* config-macros */                                         1669, /* DiagArray87 */ 303, /* Empty */         0 },
+  { /* constant-conversion */                                   1683, /* DiagArray88 */ 305, /* DiagSubGroup88 */ 62 },
+  { /* constant-logical-operand */                              1703, /* DiagArray89 */ 307, /* Empty */         0 },
+  { /* constexpr-not-const */                                   1728, /* DiagArray90 */ 309, /* Empty */         0 },
+  { /* consumed */                                              1748, /* DiagArray91 */ 311, /* Empty */         0 },
+  { /* conversion */                                            1757, /* DiagArray92 */ 320, /* DiagSubGroup92 */ 64 },
+  { /* conversion-null */                                       1768, /* Empty */     0, /* DiagSubGroup93 */ 76 },
+  { /* covered-switch-default */                                1784, /* DiagArray94 */ 328, /* Empty */         0 },
+  { /* ctor-dtor-privacy */                                     1807, /* Empty */     0, /* Empty */         0 },
+  { /* custom-atomic-properties */                              1825, /* DiagArray96 */ 330, /* Empty */         0 },
+  { /* dangling-else */                                         1850, /* DiagArray97 */ 332, /* Empty */         0 },
+  { /* dangling-field */                                        1864, /* DiagArray98 */ 334, /* Empty */         0 },
+  { /* dangling-initializer-list */                             1879, /* DiagArray99 */ 338, /* Empty */         0 },
+  { /* dealloc-in-category */                                   1905, /* DiagArray100 */ 340, /* Empty */         0 },
+  { /* debug-compression-unavailable */                         1925, /* DiagArray101 */ 342, /* Empty */         0 },
+  { /* declaration-after-statement */                           1955, /* DiagArray102 */ 344, /* Empty */         0 },
+  { /* delegating-ctor-cycles */                                1983, /* DiagArray103 */ 346, /* Empty */         0 },
+  { /* delete-incomplete */                                     2006, /* DiagArray104 */ 348, /* Empty */         0 },
+  { /* delete-non-virtual-dtor */                               2024, /* DiagArray105 */ 350, /* Empty */         0 },
+  { /* deprecated */                                            2048, /* DiagArray106 */ 353, /* DiagSubGroup106 */ 78 },
+  { /* deprecated-declarations */                               2059, /* DiagArray107 */ 360, /* Empty */         0 },
+  { /* deprecated-implementations */                            2083, /* DiagArray108 */ 365, /* Empty */         0 },
+  { /* deprecated-increment-bool */                             2110, /* DiagArray109 */ 367, /* Empty */         0 },
+  { /* deprecated-objc-isa-usage */                             2136, /* DiagArray110 */ 369, /* Empty */         0 },
+  { /* deprecated-objc-pointer-introspection */                 2162, /* DiagArray111 */ 372, /* DiagSubGroup111 */ 82 },
+  { /* deprecated-objc-pointer-introspection-performSelector */ 2200, /* DiagArray112 */ 374, /* Empty */         0 },
+  { /* deprecated-register */                                   2254, /* DiagArray113 */ 376, /* Empty */         0 },
+  { /* deprecated-writable-strings */                           2274, /* Empty */     0, /* DiagSubGroup114 */ 84 },
+  { /* direct-ivar-access */                                    2302, /* DiagArray115 */ 378, /* Empty */         0 },
+  { /* disabled-macro-expansion */                              2321, /* DiagArray116 */ 380, /* Empty */         0 },
+  { /* disabled-optimization */                                 2346, /* Empty */     0, /* Empty */         0 },
+  { /* discard-qual */                                          2368, /* Empty */     0, /* Empty */         0 },
+  { /* distributed-object-modifiers */                          2381, /* DiagArray119 */ 382, /* Empty */         0 },
+  { /* div-by-zero */                                           2410, /* Empty */     0, /* Empty */         0 },
+  { /* division-by-zero */                                      2422, /* DiagArray121 */ 385, /* Empty */         0 },
+  { /* documentation */                                         2439, /* DiagArray122 */ 388, /* DiagSubGroup122 */ 86 },
+  { /* documentation-deprecated-sync */                         2453, /* DiagArray123 */ 408, /* Empty */         0 },
+  { /* documentation-html */                                    2483, /* DiagArray124 */ 410, /* Empty */         0 },
+  { /* documentation-pedantic */                                2502, /* DiagArray125 */ 414, /* DiagSubGroup125 */ 89 },
+  { /* documentation-unknown-command */                         2525, /* DiagArray126 */ 416, /* Empty */         0 },
+  { /* dollar-in-identifier-extension */                        2555, /* DiagArray127 */ 418, /* Empty */         0 },
+  { /* duplicate-decl-specifier */                              2586, /* DiagArray128 */ 420, /* Empty */         0 },
+  { /* duplicate-enum */                                        2611, /* DiagArray129 */ 423, /* Empty */         0 },
+  { /* duplicate-method-arg */                                  2626, /* DiagArray130 */ 425, /* Empty */         0 },
+  { /* duplicate-method-match */                                2647, /* DiagArray131 */ 427, /* Empty */         0 },
+  { /* dynamic-class-memaccess */                               2670, /* DiagArray132 */ 429, /* Empty */         0 },
+  { /* effc++ */                                                2694, /* Empty */     0, /* Empty */         0 },
+  { /* embedded-directive */                                    2701, /* DiagArray134 */ 431, /* Empty */         0 },
+  { /* empty-body */                                            2720, /* DiagArray135 */ 433, /* Empty */         0 },
+  { /* empty-translation-unit */                                2731, /* DiagArray136 */ 439, /* Empty */         0 },
+  { /* endif-labels */                                          2754, /* Empty */     0, /* DiagSubGroup137 */ 91 },
+  { /* enum-compare */                                          2767, /* DiagArray138 */ 441, /* Empty */         0 },
+  { /* enum-conversion */                                       2780, /* DiagArray139 */ 443, /* Empty */         0 },
+  { /* enum-too-large */                                        2796, /* DiagArray140 */ 445, /* Empty */         0 },
+  { /* exit-time-destructors */                                 2811, /* DiagArray141 */ 448, /* Empty */         0 },
+  { /* explicit-ownership-type */                               2833, /* DiagArray142 */ 450, /* Empty */         0 },
+  { /* extended-offsetof */                                     2857, /* DiagArray143 */ 452, /* Empty */         0 },
+  { /* extern-c-compat */                                       2875, /* DiagArray144 */ 454, /* Empty */         0 },
+  { /* extern-initializer */                                    2891, /* DiagArray145 */ 456, /* Empty */         0 },
+  { /* extra */                                                 2910, /* Empty */     0, /* DiagSubGroup146 */ 93 },
+  { /* extra-qualification */                                   2916, /* DiagArray147 */ 458, /* Empty */         0 },
+  { /* extra-semi */                                            2936, /* DiagArray148 */ 460, /* DiagSubGroup148 */ 101 },
+  { /* extra-tokens */                                          2947, /* DiagArray149 */ 463, /* Empty */         0 },
+  { /* fallback */                                              2960, /* DiagArray150 */ 466, /* Empty */         0 },
+  { /* flexible-array-extensions */                             2969, /* DiagArray151 */ 468, /* Empty */         0 },
+  { /* float-equal */                                           2995, /* DiagArray152 */ 471, /* Empty */         0 },
+  { /* format */                                                3007, /* DiagArray153 */ 473, /* DiagSubGroup153 */ 103 },
+  { /* format-extra-args */                                     3014, /* DiagArray154 */ 494, /* Empty */         0 },
+  { /* format-invalid-specifier */                              3032, /* DiagArray155 */ 496, /* Empty */         0 },
+  { /* format-non-iso */                                        3057, /* DiagArray156 */ 498, /* Empty */         0 },
+  { /* format-nonliteral */                                     3072, /* DiagArray157 */ 502, /* Empty */         0 },
+  { /* format-security */                                       3090, /* DiagArray158 */ 504, /* Empty */         0 },
+  { /* format-y2k */                                            3106, /* Empty */     0, /* Empty */         0 },
+  { /* format-zero-length */                                    3117, /* DiagArray160 */ 506, /* Empty */         0 },
+  { /* format=2 */                                              3136, /* Empty */     0, /* DiagSubGroup161 */ 110 },
+  { /* four-char-constants */                                   3145, /* DiagArray162 */ 508, /* Empty */         0 },
+  { /* frame-larger-than */                                     3165, /* DiagArray163 */ 510, /* Empty */         0 },
+  { /* gcc-compat */                                            3183, /* DiagArray164 */ 512, /* Empty */         0 },
+  { /* global-constructors */                                   3194, /* DiagArray165 */ 517, /* Empty */         0 },
+  { /* gnu */                                                   3214, /* Empty */     0, /* DiagSubGroup166 */ 114 },
+  { /* gnu-alignof-expression */                                3218, /* DiagArray167 */ 520, /* Empty */         0 },
+  { /* gnu-anonymous-struct */                                  3241, /* DiagArray168 */ 522, /* Empty */         0 },
+  { /* gnu-array-member-paren-init */                           3262, /* DiagArray169 */ 524, /* Empty */         0 },
+  { /* gnu-binary-literal */                                    3290, /* DiagArray170 */ 526, /* Empty */         0 },
+  { /* gnu-case-range */                                        3309, /* DiagArray171 */ 528, /* Empty */         0 },
+  { /* gnu-complex-integer */                                   3324, /* DiagArray172 */ 530, /* Empty */         0 },
+  { /* gnu-compound-literal-initializer */                      3344, /* DiagArray173 */ 532, /* Empty */         0 },
+  { /* gnu-conditional-omitted-operand */                       3377, /* DiagArray174 */ 534, /* Empty */         0 },
+  { /* gnu-designator */                                        3409, /* DiagArray175 */ 536, /* Empty */         0 },
+  { /* gnu-empty-initializer */                                 3424, /* DiagArray176 */ 540, /* Empty */         0 },
+  { /* gnu-empty-struct */                                      3446, /* DiagArray177 */ 542, /* Empty */         0 },
+  { /* gnu-flexible-array-initializer */                        3463, /* DiagArray178 */ 546, /* Empty */         0 },
+  { /* gnu-flexible-array-union-member */                       3494, /* DiagArray179 */ 548, /* Empty */         0 },
+  { /* gnu-folding-constant */                                  3526, /* DiagArray180 */ 550, /* Empty */         0 },
+  { /* gnu-imaginary-constant */                                3547, /* DiagArray181 */ 554, /* Empty */         0 },
+  { /* gnu-label-as-value */                                    3570, /* DiagArray182 */ 556, /* Empty */         0 },
+  { /* gnu-redeclared-enum */                                   3589, /* DiagArray183 */ 559, /* Empty */         0 },
+  { /* gnu-statement-expression */                              3609, /* DiagArray184 */ 561, /* Empty */         0 },
+  { /* gnu-static-float-init */                                 3634, /* DiagArray185 */ 563, /* Empty */         0 },
+  { /* gnu-string-literal-operator-template */                  3656, /* DiagArray186 */ 565, /* Empty */         0 },
+  { /* gnu-union-cast */                                        3693, /* DiagArray187 */ 567, /* Empty */         0 },
+  { /* gnu-variable-sized-type-not-at-end */                    3708, /* DiagArray188 */ 569, /* Empty */         0 },
+  { /* gnu-zero-line-directive */                               3743, /* DiagArray189 */ 571, /* Empty */         0 },
+  { /* gnu-zero-variadic-macro-arguments */                     3767, /* DiagArray190 */ 573, /* Empty */         0 },
+  { /* header-guard */                                          3801, /* DiagArray191 */ 576, /* Empty */         0 },
+  { /* header-hygiene */                                        3814, /* DiagArray192 */ 578, /* Empty */         0 },
+  { /* idiomatic-parentheses */                                 3829, /* DiagArray193 */ 580, /* Empty */         0 },
+  { /* ignored-attributes */                                    3851, /* DiagArray194 */ 582, /* Empty */         0 },
+  { /* ignored-pragmas */                                       3870, /* DiagArray195 */ 624, /* Empty */         0 },
+  { /* ignored-qualifiers */                                    3886, /* DiagArray196 */ 654, /* Empty */         0 },
+  { /* implicit */                                              3905, /* Empty */     0, /* DiagSubGroup197 */ 141 },
+  { /* implicit-atomic-properties */                            3914, /* DiagArray198 */ 658, /* Empty */         0 },
+  { /* implicit-conversion-floating-point-to-bool */            3941, /* DiagArray199 */ 661, /* Empty */         0 },
+  { /* implicit-exception-spec-mismatch */                      3984, /* DiagArray200 */ 663, /* Empty */         0 },
+  { /* implicit-fallthrough */                                  4017, /* DiagArray201 */ 665, /* DiagSubGroup201 */ 144 },
+  { /* implicit-fallthrough-per-function */                     4038, /* DiagArray202 */ 669, /* Empty */         0 },
+  { /* implicit-function-declaration */                         4072, /* DiagArray203 */ 671, /* Empty */         0 },
+  { /* implicit-int */                                          4102, /* DiagArray204 */ 675, /* Empty */         0 },
+  { /* implicit-retain-self */                                  4115, /* DiagArray205 */ 677, /* Empty */         0 },
+  { /* implicitly-unsigned-literal */                           4136, /* DiagArray206 */ 679, /* Empty */         0 },
+  { /* import */                                                4164, /* Empty */     0, /* Empty */         0 },
+  { /* import-preprocessor-directive-pedantic */                4171, /* DiagArray208 */ 681, /* Empty */         0 },
+  { /* incompatible-library-redeclaration */                    4210, /* DiagArray209 */ 683, /* Empty */         0 },
+  { /* incompatible-ms-struct */                                4245, /* DiagArray210 */ 685, /* Empty */         0 },
+  { /* incompatible-pointer-types */                            4268, /* DiagArray211 */ 687, /* DiagSubGroup211 */ 146 },
+  { /* incompatible-pointer-types-discards-qualifiers */        4295, /* DiagArray212 */ 689, /* Empty */         0 },
+  { /* incomplete-implementation */                             4342, /* DiagArray213 */ 692, /* Empty */         0 },
+  { /* incomplete-module */                                     4368, /* DiagArray214 */ 694, /* DiagSubGroup214 */ 148 },
+  { /* incomplete-umbrella */                                   4386, /* DiagArray215 */ 696, /* Empty */         0 },
+  { /* infinite-recursion */                                    4406, /* DiagArray216 */ 699, /* Empty */         0 },
+  { /* inherited-variadic-ctor */                               4425, /* DiagArray217 */ 701, /* Empty */         0 },
+  { /* init-self */                                             4449, /* Empty */     0, /* Empty */         0 },
+  { /* initializer-overrides */                                 4459, /* DiagArray219 */ 703, /* Empty */         0 },
+  { /* inline */                                                4481, /* Empty */     0, /* Empty */         0 },
+  { /* inline-asm */                                            4488, /* DiagArray221 */ 706, /* Empty */         0 },
+  { /* inline-new-delete */                                     4499, /* DiagArray222 */ 708, /* Empty */         0 },
+  { /* int-conversion */                                        4517, /* DiagArray223 */ 710, /* Empty */         0 },
+  { /* int-conversions */                                       4532, /* Empty */     0, /* DiagSubGroup224 */ 150 },
+  { /* int-to-pointer-cast */                                   4548, /* DiagArray225 */ 713, /* DiagSubGroup225 */ 152 },
+  { /* int-to-void-pointer-cast */                              4568, /* DiagArray226 */ 715, /* Empty */         0 },
+  { /* integer-overflow */                                      4593, /* DiagArray227 */ 717, /* Empty */         0 },
+  { /* invalid-command-line-argument */                         4610, /* DiagArray228 */ 719, /* Empty */         0 },
+  { /* invalid-constexpr */                                     4640, /* DiagArray229 */ 721, /* Empty */         0 },
+  { /* invalid-iboutlet */                                      4658, /* DiagArray230 */ 723, /* Empty */         0 },
+  { /* invalid-noreturn */                                      4675, /* DiagArray231 */ 726, /* Empty */         0 },
+  { /* invalid-offsetof */                                      4692, /* DiagArray232 */ 729, /* Empty */         0 },
+  { /* invalid-pch */                                           4709, /* Empty */     0, /* Empty */         0 },
+  { /* invalid-pp-token */                                      4721, /* DiagArray234 */ 732, /* Empty */         0 },
+  { /* invalid-source-encoding */                               4738, /* DiagArray235 */ 736, /* Empty */         0 },
+  { /* invalid-token-paste */                                   4762, /* DiagArray236 */ 739, /* Empty */         0 },
+  { /* keyword-compat */                                        4782, /* DiagArray237 */ 741, /* Empty */         0 },
+  { /* knr-promoted-parameter */                                4797, /* DiagArray238 */ 743, /* Empty */         0 },
+  { /* language-extension-token */                              4820, /* DiagArray239 */ 745, /* Empty */         0 },
+  { /* large-by-value-copy */                                   4845, /* DiagArray240 */ 747, /* Empty */         0 },
+  { /* literal-conversion */                                    4865, /* DiagArray241 */ 750, /* Empty */         0 },
+  { /* literal-range */                                         4884, /* DiagArray242 */ 752, /* Empty */         0 },
+  { /* local-type-template-args */                              4898, /* DiagArray243 */ 755, /* DiagSubGroup243 */ 154 },
+  { /* logical-not-parentheses */                               4923, /* DiagArray244 */ 757, /* Empty */         0 },
+  { /* logical-op-parentheses */                                4947, /* DiagArray245 */ 759, /* Empty */         0 },
+  { /* long-long */                                             4970, /* DiagArray246 */ 761, /* DiagSubGroup246 */ 156 },
+  { /* loop-analysis */                                         4980, /* DiagArray247 */ 763, /* Empty */         0 },
+  { /* macro-redefined */                                       4994, /* DiagArray248 */ 766, /* Empty */         0 },
+  { /* main */                                                  5010, /* DiagArray249 */ 768, /* Empty */         0 },
+  { /* main-return-type */                                      5015, /* DiagArray250 */ 773, /* Empty */         0 },
+  { /* malformed-warning-check */                               5032, /* DiagArray251 */ 775, /* Empty */         0 },
+  { /* memsize-comparison */                                    5056, /* DiagArray252 */ 777, /* Empty */         0 },
+  { /* method-signatures */                                     5075, /* DiagArray253 */ 779, /* Empty */         0 },
+  { /* microsoft */                                             5093, /* DiagArray254 */ 782, /* Empty */         0 },
+  { /* microsoft-exists */                                      5103, /* DiagArray255 */ 804, /* Empty */         0 },
+  { /* mismatched-parameter-types */                            5120, /* DiagArray256 */ 806, /* Empty */         0 },
+  { /* mismatched-return-types */                               5147, /* DiagArray257 */ 808, /* Empty */         0 },
+  { /* mismatched-tags */                                       5171, /* DiagArray258 */ 810, /* Empty */         0 },
+  { /* missing-braces */                                        5187, /* DiagArray259 */ 813, /* Empty */         0 },
+  { /* missing-declarations */                                  5202, /* DiagArray260 */ 815, /* Empty */         0 },
+  { /* missing-field-initializers */                            5223, /* DiagArray261 */ 820, /* Empty */         0 },
+  { /* missing-format-attribute */                              5250, /* Empty */     0, /* Empty */         0 },
+  { /* missing-include-dirs */                                  5275, /* Empty */     0, /* Empty */         0 },
+  { /* missing-method-return-type */                            5296, /* DiagArray264 */ 822, /* Empty */         0 },
+  { /* missing-noreturn */                                      5323, /* DiagArray265 */ 824, /* Empty */         0 },
+  { /* missing-prototypes */                                    5340, /* DiagArray266 */ 827, /* Empty */         0 },
+  { /* missing-selector-name */                                 5359, /* DiagArray267 */ 829, /* Empty */         0 },
+  { /* missing-sysroot */                                       5381, /* DiagArray268 */ 831, /* Empty */         0 },
+  { /* missing-variable-declarations */                         5397, /* DiagArray269 */ 833, /* Empty */         0 },
+  { /* module-conflict */                                       5427, /* DiagArray270 */ 835, /* Empty */         0 },
+  { /* most */                                                  5443, /* Empty */     0, /* DiagSubGroup271 */ 158 },
+  { /* msvc-include */                                          5448, /* DiagArray272 */ 837, /* Empty */         0 },
+  { /* multichar */                                             5461, /* DiagArray273 */ 839, /* Empty */         0 },
+  { /* multiple-move-vbase */                                   5471, /* DiagArray274 */ 841, /* Empty */         0 },
+  { /* narrowing */                                             5491, /* Empty */     0, /* DiagSubGroup275 */ 184 },
+  { /* nested-anon-types */                                     5501, /* DiagArray276 */ 843, /* Empty */         0 },
+  { /* nested-externs */                                        5519, /* Empty */     0, /* Empty */         0 },
+  { /* new-returns-null */                                      5534, /* DiagArray278 */ 845, /* Empty */         0 },
+  { /* newline-eof */                                           5551, /* DiagArray279 */ 847, /* Empty */         0 },
+  { /* non-gcc */                                               5563, /* Empty */     0, /* DiagSubGroup280 */ 186 },
+  { /* non-literal-null-conversion */                           5571, /* DiagArray281 */ 850, /* Empty */         0 },
+  { /* non-pod-varargs */                                       5599, /* DiagArray282 */ 852, /* Empty */         0 },
+  { /* non-virtual-dtor */                                      5615, /* DiagArray283 */ 857, /* Empty */         0 },
+  { /* nonnull */                                               5632, /* DiagArray284 */ 859, /* Empty */         0 },
+  { /* nonportable-cfstrings */                                 5640, /* Empty */     0, /* Empty */         0 },
+  { /* null-arithmetic */                                       5662, /* DiagArray286 */ 862, /* Empty */         0 },
+  { /* null-character */                                        5678, /* DiagArray287 */ 865, /* Empty */         0 },
+  { /* null-conversion */                                       5693, /* DiagArray288 */ 869, /* Empty */         0 },
+  { /* null-dereference */                                      5709, /* DiagArray289 */ 871, /* Empty */         0 },
+  { /* objc-autosynthesis-property-ivar-name-match */           5726, /* DiagArray290 */ 873, /* Empty */         0 },
+  { /* objc-cocoa-api */                                        5770, /* Empty */     0, /* DiagSubGroup291 */ 190 },
+  { /* objc-designated-initializers */                          5785, /* DiagArray292 */ 875, /* Empty */         0 },
+  { /* objc-forward-class-redefinition */                       5814, /* DiagArray293 */ 882, /* Empty */         0 },
+  { /* objc-interface-ivars */                                  5846, /* DiagArray294 */ 884, /* Empty */         0 },
+  { /* objc-literal-compare */                                  5867, /* DiagArray295 */ 886, /* DiagSubGroup295 */ 192 },
+  { /* objc-literal-conversion */                               5888, /* DiagArray296 */ 888, /* Empty */         0 },
+  { /* objc-method-access */                                    5912, /* DiagArray297 */ 890, /* Empty */         0 },
+  { /* objc-missing-property-synthesis */                       5931, /* DiagArray298 */ 897, /* Empty */         0 },
+  { /* objc-missing-super-calls */                              5963, /* DiagArray299 */ 899, /* Empty */         0 },
+  { /* objc-noncopy-retain-block-property */                    5988, /* DiagArray300 */ 901, /* Empty */         0 },
+  { /* objc-nonunified-exceptions */                            6023, /* DiagArray301 */ 903, /* Empty */         0 },
+  { /* objc-property-implementation */                          6050, /* DiagArray302 */ 905, /* Empty */         0 },
+  { /* objc-property-implicit-mismatch */                       6079, /* DiagArray303 */ 908, /* Empty */         0 },
+  { /* objc-property-matches-cocoa-ownership-rule */            6111, /* DiagArray304 */ 910, /* Empty */         0 },
+  { /* objc-property-no-attribute */                            6154, /* DiagArray305 */ 912, /* Empty */         0 },
+  { /* objc-property-synthesis */                               6181, /* DiagArray306 */ 915, /* Empty */         0 },
+  { /* objc-protocol-method-implementation */                   6205, /* DiagArray307 */ 918, /* Empty */         0 },
+  { /* objc-protocol-property-synthesis */                      6241, /* DiagArray308 */ 920, /* Empty */         0 },
+  { /* objc-readonly-with-setter-property */                    6274, /* DiagArray309 */ 922, /* Empty */         0 },
+  { /* objc-redundant-api-use */                                6309, /* Empty */     0, /* DiagSubGroup310 */ 194 },
+  { /* objc-redundant-literal-use */                            6332, /* DiagArray311 */ 924, /* Empty */         0 },
+  { /* objc-root-class */                                       6359, /* DiagArray312 */ 926, /* Empty */         0 },
+  { /* objc-string-compare */                                   6375, /* DiagArray313 */ 928, /* Empty */         0 },
+  { /* objc-string-concatenation */                             6395, /* DiagArray314 */ 930, /* Empty */         0 },
+  { /* odr */                                                   6421, /* DiagArray315 */ 932, /* Empty */         0 },
+  { /* old-style-cast */                                        6425, /* DiagArray316 */ 934, /* Empty */         0 },
+  { /* old-style-definition */                                  6440, /* Empty */     0, /* Empty */         0 },
+  { /* out-of-line-declaration */                               6461, /* DiagArray318 */ 936, /* Empty */         0 },
+  { /* over-aligned */                                          6485, /* DiagArray319 */ 938, /* Empty */         0 },
+  { /* overflow */                                              6498, /* Empty */     0, /* Empty */         0 },
+  { /* overlength-strings */                                    6507, /* DiagArray321 */ 940, /* Empty */         0 },
+  { /* overloaded-shift-op-parentheses */                       6526, /* DiagArray322 */ 942, /* Empty */         0 },
+  { /* overloaded-virtual */                                    6558, /* DiagArray323 */ 944, /* Empty */         0 },
+  { /* overriding-method-mismatch */                            6577, /* DiagArray324 */ 946, /* Empty */         0 },
+  { /* overriding-t-option */                                   6604, /* DiagArray325 */ 954, /* Empty */         0 },
+  { /* packed */                                                6624, /* DiagArray326 */ 956, /* Empty */         0 },
+  { /* padded */                                                6631, /* DiagArray327 */ 958, /* Empty */         0 },
+  { /* parentheses */                                           6638, /* DiagArray328 */ 962, /* DiagSubGroup328 */ 196 },
+  { /* parentheses-equality */                                  6650, /* DiagArray329 */ 966, /* Empty */         0 },
+  { /* pass */                                                  6671, /* DiagArray330 */ 968, /* Empty */         0 },
+  { /* pedantic */                                              6676, /* DiagArray331 */ 970, /* DiagSubGroup331 */ 204 },
+  { /* pointer-arith */                                         6685, /* DiagArray332 */ 1033, /* Empty */         0 },
+  { /* pointer-bool-conversion */                               6699, /* DiagArray333 */ 1040, /* Empty */         0 },
+  { /* pointer-sign */                                          6723, /* DiagArray334 */ 1042, /* Empty */         0 },
+  { /* pointer-to-int-cast */                                   6736, /* Empty */     0, /* Empty */         0 },
+  { /* pointer-type-mismatch */                                 6756, /* DiagArray336 */ 1044, /* Empty */         0 },
+  { /* pragmas */                                               6778, /* Empty */     0, /* DiagSubGroup337 */ 244 },
+  { /* predefined-identifier-outside-function */                6786, /* DiagArray338 */ 1046, /* Empty */         0 },
+  { /* private-extern */                                        6825, /* DiagArray339 */ 1048, /* Empty */         0 },
+  { /* profile-instr-out-of-date */                             6840, /* DiagArray340 */ 1050, /* Empty */         0 },
+  { /* protocol */                                              6866, /* DiagArray341 */ 1052, /* Empty */         0 },
+  { /* protocol-property-synthesis-ambiguity */                 6875, /* DiagArray342 */ 1054, /* Empty */         0 },
+  { /* readonly-iboutlet-property */                            6913, /* DiagArray343 */ 1056, /* Empty */         0 },
+  { /* receiver-expr */                                         6940, /* DiagArray344 */ 1058, /* Empty */         0 },
+  { /* receiver-forward-class */                                6954, /* DiagArray345 */ 1060, /* Empty */         0 },
+  { /* receiver-is-weak */                                      6977, /* DiagArray346 */ 1063, /* Empty */         0 },
+  { /* redeclared-class-member */                               6994, /* DiagArray347 */ 1065, /* Empty */         0 },
+  { /* redundant-decls */                                       7018, /* Empty */     0, /* Empty */         0 },
+  { /* reinterpret-base-class */                                7034, /* DiagArray349 */ 1067, /* Empty */         0 },
+  { /* remark-backend-plugin */                                 7057, /* DiagArray350 */ 1069, /* Empty */         0 },
+  { /* reorder */                                               7079, /* DiagArray351 */ 1071, /* Empty */         0 },
+  { /* requires-super-attribute */                              7087, /* DiagArray352 */ 1073, /* Empty */         0 },
+  { /* reserved-user-defined-literal */                         7112, /* DiagArray353 */ 1075, /* DiagSubGroup353 */ 247 },
+  { /* retained-language-linkage */                             7142, /* DiagArray354 */ 1078, /* Empty */         0 },
+  { /* return-stack-address */                                  7168, /* DiagArray355 */ 1080, /* Empty */         0 },
+  { /* return-type */                                           7189, /* DiagArray356 */ 1086, /* DiagSubGroup356 */ 249 },
+  { /* return-type-c-linkage */                                 7201, /* DiagArray357 */ 1094, /* Empty */         0 },
+  { /* section */                                               7223, /* DiagArray358 */ 1097, /* Empty */         0 },
+  { /* selector */                                              7231, /* DiagArray359 */ 1099, /* DiagSubGroup359 */ 251 },
+  { /* selector-type-mismatch */                                7240, /* DiagArray360 */ 1101, /* Empty */         0 },
+  { /* self-assign */                                           7263, /* DiagArray361 */ 1103, /* DiagSubGroup361 */ 253 },
+  { /* self-assign-field */                                     7275, /* DiagArray362 */ 1105, /* Empty */         0 },
+  { /* semicolon-before-method-body */                          7293, /* DiagArray363 */ 1107, /* Empty */         0 },
+  { /* sentinel */                                              7322, /* DiagArray364 */ 1109, /* Empty */         0 },
+  { /* sequence-point */                                        7331, /* Empty */     0, /* DiagSubGroup365 */ 255 },
+  { /* serialized-diagnostics */                                7346, /* DiagArray366 */ 1112, /* Empty */         0 },
+  { /* shadow */                                                7369, /* DiagArray367 */ 1114, /* Empty */         0 },
+  { /* shadow-ivar */                                           7376, /* DiagArray368 */ 1116, /* Empty */         0 },
+  { /* shift-count-negative */                                  7388, /* DiagArray369 */ 1118, /* Empty */         0 },
+  { /* shift-count-overflow */                                  7409, /* DiagArray370 */ 1120, /* Empty */         0 },
+  { /* shift-op-parentheses */                                  7430, /* DiagArray371 */ 1122, /* Empty */         0 },
+  { /* shift-overflow */                                        7451, /* DiagArray372 */ 1124, /* Empty */         0 },
+  { /* shift-sign-overflow */                                   7466, /* DiagArray373 */ 1126, /* Empty */         0 },
+  { /* shorten-64-to-32 */                                      7486, /* DiagArray374 */ 1128, /* Empty */         0 },
+  { /* sign-compare */                                          7503, /* DiagArray375 */ 1130, /* Empty */         0 },
+  { /* sign-conversion */                                       7516, /* DiagArray376 */ 1132, /* Empty */         0 },
+  { /* sign-promo */                                            7532, /* Empty */     0, /* Empty */         0 },
+  { /* sizeof-array-argument */                                 7543, /* DiagArray378 */ 1135, /* Empty */         0 },
+  { /* sizeof-array-decay */                                    7565, /* DiagArray379 */ 1137, /* Empty */         0 },
+  { /* sizeof-pointer-memaccess */                              7584, /* DiagArray380 */ 1139, /* Empty */         0 },
+  { /* sometimes-uninitialized */                               7609, /* DiagArray381 */ 1142, /* Empty */         0 },
+  { /* source-uses-openmp */                                    7633, /* DiagArray382 */ 1144, /* Empty */         0 },
+  { /* stack-protector */                                       7652, /* Empty */     0, /* Empty */         0 },
+  { /* static-float-init */                                     7668, /* DiagArray384 */ 1146, /* DiagSubGroup384 */ 257 },
+  { /* static-in-inline */                                      7686, /* DiagArray385 */ 1148, /* Empty */         0 },
+  { /* static-inline-explicit-instantiation */                  7703, /* DiagArray386 */ 1151, /* Empty */         0 },
+  { /* static-local-in-inline */                                7740, /* DiagArray387 */ 1153, /* Empty */         0 },
+  { /* static-self-init */                                      7763, /* DiagArray388 */ 1155, /* Empty */         0 },
+  { /* strict-aliasing */                                       7780, /* Empty */     0, /* Empty */         0 },
+  { /* strict-aliasing=0 */                                     7796, /* Empty */     0, /* Empty */         0 },
+  { /* strict-aliasing=1 */                                     7814, /* Empty */     0, /* Empty */         0 },
+  { /* strict-aliasing=2 */                                     7832, /* Empty */     0, /* Empty */         0 },
+  { /* strict-overflow */                                       7850, /* Empty */     0, /* Empty */         0 },
+  { /* strict-overflow=0 */                                     7866, /* Empty */     0, /* Empty */         0 },
+  { /* strict-overflow=1 */                                     7884, /* Empty */     0, /* Empty */         0 },
+  { /* strict-overflow=2 */                                     7902, /* Empty */     0, /* Empty */         0 },
+  { /* strict-overflow=3 */                                     7920, /* Empty */     0, /* Empty */         0 },
+  { /* strict-overflow=4 */                                     7938, /* Empty */     0, /* Empty */         0 },
+  { /* strict-overflow=5 */                                     7956, /* Empty */     0, /* Empty */         0 },
+  { /* strict-prototypes */                                     7974, /* Empty */     0, /* Empty */         0 },
+  { /* strict-selector-match */                                 7992, /* DiagArray401 */ 1157, /* Empty */         0 },
+  { /* string-compare */                                        8014, /* DiagArray402 */ 1159, /* Empty */         0 },
+  { /* string-conversion */                                     8029, /* DiagArray403 */ 1161, /* Empty */         0 },
+  { /* string-plus-char */                                      8047, /* DiagArray404 */ 1163, /* Empty */         0 },
+  { /* string-plus-int */                                       8064, /* DiagArray405 */ 1165, /* Empty */         0 },
+  { /* strlcpy-strlcat-size */                                  8080, /* DiagArray406 */ 1167, /* Empty */         0 },
+  { /* strncat-size */                                          8101, /* DiagArray407 */ 1169, /* Empty */         0 },
+  { /* super-class-method-mismatch */                           8114, /* DiagArray408 */ 1173, /* Empty */         0 },
+  { /* switch */                                                8142, /* DiagArray409 */ 1175, /* Empty */         0 },
+  { /* switch-bool */                                           8149, /* DiagArray410 */ 1182, /* Empty */         0 },
+  { /* switch-default */                                        8161, /* Empty */     0, /* Empty */         0 },
+  { /* switch-enum */                                           8176, /* DiagArray412 */ 1184, /* Empty */         0 },
+  { /* synth */                                                 8188, /* Empty */     0, /* Empty */         0 },
+  { /* tautological-compare */                                  8194, /* DiagArray414 */ 1189, /* DiagSubGroup414 */ 259 },
+  { /* tautological-constant-out-of-range-compare */            8215, /* DiagArray415 */ 1193, /* Empty */         0 },
+  { /* tautological-overlap-compare */                          8258, /* DiagArray416 */ 1195, /* Empty */         0 },
+  { /* tautological-pointer-compare */                          8287, /* DiagArray417 */ 1197, /* Empty */         0 },
+  { /* tentative-definition-incomplete-type */                  8316, /* DiagArray418 */ 1199, /* Empty */         0 },
+  { /* thread-safety */                                         8353, /* Empty */     0, /* DiagSubGroup419 */ 263 },
+  { /* thread-safety-analysis */                                8367, /* DiagArray420 */ 1201, /* Empty */         0 },
+  { /* thread-safety-attributes */                              8390, /* DiagArray421 */ 1217, /* Empty */         0 },
+  { /* thread-safety-beta */                                    8415, /* DiagArray422 */ 1223, /* Empty */         0 },
+  { /* thread-safety-precise */                                 8434, /* DiagArray423 */ 1225, /* Empty */         0 },
+  { /* trigraphs */                                             8456, /* DiagArray424 */ 1229, /* Empty */         0 },
+  { /* type-limits */                                           8466, /* Empty */     0, /* Empty */         0 },
+  { /* type-safety */                                           8478, /* DiagArray426 */ 1234, /* Empty */         0 },
+  { /* typedef-redefinition */                                  8490, /* DiagArray427 */ 1238, /* Empty */         0 },
+  { /* typename-missing */                                      8511, /* DiagArray428 */ 1240, /* Empty */         0 },
+  { /* unavailable-declarations */                              8528, /* DiagArray429 */ 1242, /* Empty */         0 },
+  { /* undeclared-selector */                                   8553, /* DiagArray430 */ 1244, /* Empty */         0 },
+  { /* undef */                                                 8573, /* DiagArray431 */ 1247, /* Empty */         0 },
+  { /* undefined-inline */                                      8579, /* DiagArray432 */ 1249, /* Empty */         0 },
+  { /* undefined-internal */                                    8596, /* DiagArray433 */ 1251, /* Empty */         0 },
+  { /* undefined-reinterpret-cast */                            8615, /* DiagArray434 */ 1253, /* Empty */         0 },
+  { /* unicode */                                               8642, /* DiagArray435 */ 1256, /* Empty */         0 },
+  { /* unicode-whitespace */                                    8650, /* DiagArray436 */ 1262, /* Empty */         0 },
+  { /* uninitialized */                                         8669, /* DiagArray437 */ 1264, /* DiagSubGroup437 */ 267 },
+  { /* unknown-attributes */                                    8683, /* DiagArray438 */ 1271, /* Empty */         0 },
+  { /* unknown-escape-sequence */                               8702, /* DiagArray439 */ 1273, /* Empty */         0 },
+  { /* unknown-pragmas */                                       8726, /* DiagArray440 */ 1275, /* Empty */         0 },
+  { /* unknown-warning-option */                                8742, /* DiagArray441 */ 1294, /* Empty */         0 },
+  { /* unnamed-type-template-args */                            8765, /* DiagArray442 */ 1300, /* DiagSubGroup442 */ 270 },
+  { /* unneeded-internal-declaration */                         8792, /* DiagArray443 */ 1302, /* Empty */         0 },
+  { /* unneeded-member-function */                              8822, /* DiagArray444 */ 1305, /* Empty */         0 },
+  { /* unreachable-code */                                      8847, /* DiagArray445 */ 1307, /* DiagSubGroup445 */ 272 },
+  { /* unreachable-code-aggressive */                           8864, /* Empty */     0, /* DiagSubGroup446 */ 274 },
+  { /* unreachable-code-break */                                8892, /* DiagArray447 */ 1309, /* Empty */         0 },
+  { /* unreachable-code-loop-increment */                       8915, /* DiagArray448 */ 1311, /* Empty */         0 },
+  { /* unreachable-code-return */                               8947, /* DiagArray449 */ 1313, /* Empty */         0 },
+  { /* unsequenced */                                           8971, /* DiagArray450 */ 1315, /* Empty */         0 },
+  { /* unsupported-friend */                                    8983, /* DiagArray451 */ 1318, /* Empty */         0 },
+  { /* unsupported-visibility */                                9002, /* DiagArray452 */ 1321, /* Empty */         0 },
+  { /* unused */                                                9025, /* Empty */     0, /* DiagSubGroup453 */ 278 },
+  { /* unused-argument */                                       9032, /* Empty */     0, /* Empty */         0 },
+  { /* unused-command-line-argument */                          9048, /* DiagArray455 */ 1323, /* DiagSubGroup455 */ 286 },
+  { /* unused-comparison */                                     9077, /* DiagArray456 */ 1329, /* Empty */         0 },
+  { /* unused-const-variable */                                 9095, /* DiagArray457 */ 1331, /* Empty */         0 },
+  { /* unused-exception-parameter */                            9117, /* DiagArray458 */ 1333, /* Empty */         0 },
+  { /* unused-function */                                       9144, /* DiagArray459 */ 1335, /* DiagSubGroup459 */ 288 },
+  { /* unused-label */                                          9160, /* DiagArray460 */ 1337, /* Empty */         0 },
+  { /* unused-macros */                                         9173, /* DiagArray461 */ 1339, /* Empty */         0 },
+  { /* unused-member-function */                                9187, /* DiagArray462 */ 1341, /* DiagSubGroup462 */ 290 },
+  { /* unused-parameter */                                      9210, /* DiagArray463 */ 1343, /* Empty */         0 },
+  { /* unused-private-field */                                  9227, /* DiagArray464 */ 1345, /* Empty */         0 },
+  { /* unused-property-ivar */                                  9248, /* DiagArray465 */ 1347, /* Empty */         0 },
+  { /* unused-result */                                         9269, /* DiagArray466 */ 1349, /* Empty */         0 },
+  { /* unused-sanitize-argument */                              9283, /* DiagArray467 */ 1351, /* Empty */         0 },
+  { /* unused-value */                                          9308, /* DiagArray468 */ 1353, /* DiagSubGroup468 */ 292 },
+  { /* unused-variable */                                       9321, /* DiagArray469 */ 1359, /* DiagSubGroup469 */ 295 },
+  { /* unused-volatile-lvalue */                                9337, /* DiagArray470 */ 1361, /* Empty */         0 },
+  { /* used-but-marked-unused */                                9360, /* DiagArray471 */ 1363, /* Empty */         0 },
+  { /* user-defined-literals */                                 9383, /* DiagArray472 */ 1365, /* Empty */         0 },
+  { /* varargs */                                               9405, /* DiagArray473 */ 1367, /* Empty */         0 },
+  { /* variadic-macros */                                       9413, /* DiagArray474 */ 1371, /* Empty */         0 },
+  { /* vector-conversion */                                     9429, /* DiagArray475 */ 1374, /* Empty */         0 },
+  { /* vector-conversions */                                    9447, /* Empty */     0, /* DiagSubGroup476 */ 297 },
+  { /* vexing-parse */                                          9466, /* DiagArray477 */ 1376, /* Empty */         0 },
+  { /* visibility */                                            9479, /* DiagArray478 */ 1379, /* Empty */         0 },
+  { /* vla */                                                   9490, /* DiagArray479 */ 1382, /* Empty */         0 },
+  { /* vla-extension */                                         9494, /* DiagArray480 */ 1384, /* Empty */         0 },
+  { /* volatile-register-var */                                 9508, /* Empty */     0, /* Empty */         0 },
+  { /* weak-template-vtables */                                 9530, /* DiagArray482 */ 1386, /* Empty */         0 },
+  { /* weak-vtables */                                          9552, /* DiagArray483 */ 1388, /* Empty */         0 },
+  { /* write-strings */                                         9565, /* Empty */     0, /* DiagSubGroup484 */ 299 },
+  { /* zero-length-array */                                     9579, /* DiagArray485 */ 1390, /* Empty */         0 },
 #endif // GET_DIAG_TABLE
 
 
@@ -814,7 +1154,10 @@ CATEGORY("ARC Parse Issue", DiagCat_ARC_Parse_Issue)
 CATEGORY("ARC Weak References", DiagCat_ARC_Weak_References)
 CATEGORY("ARC Restrictions", DiagCat_ARC_Restrictions)
 CATEGORY("Inline Assembly Issue", DiagCat_Inline_Assembly_Issue)
+CATEGORY("Backend Issue", DiagCat_Backend_Issue)
+CATEGORY("AST Deserialization Issue", DiagCat_AST_Deserialization_Issue)
 CATEGORY("Modules Issue", DiagCat_Modules_Issue)
+CATEGORY("OpenMP Issue", DiagCat_OpenMP_Issue)
 CATEGORY("User Defined Issues", DiagCat_User_Defined_Issues)
 CATEGORY("Value Conversion Issue", DiagCat_Value_Conversion_Issue)
 CATEGORY("Documentation Issue", DiagCat_Documentation_Issue)
@@ -825,6 +1168,7 @@ CATEGORY("Deprecations", DiagCat_Deprecations)
 CATEGORY("Format String Issue", DiagCat_Format_String_Issue)
 CATEGORY("Cocoa API Issue", DiagCat_Cocoa_API_Issue)
 CATEGORY("#pragma message Directive", DiagCat__pragma_message_Directive)
+CATEGORY("Instrumentation Issue", DiagCat_Instrumentation_Issue)
 CATEGORY("Unused Entity Issue", DiagCat_Unused_Entity_Issue)
 #endif // GET_CATEGORY_TABLE
 

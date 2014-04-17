@@ -17,6 +17,7 @@
 
 #include "llvm/MC/MCInst.h"
 #include "llvm/MC/MCRegisterInfo.h"
+#include "llvm/MC/MCSubtargetInfo.h"
 #include "llvm/Support/DataTypes.h"
 
 namespace llvm {
@@ -145,6 +146,10 @@ public:
   const uint16_t *ImplicitUses;  // Registers implicitly read by this instr
   const uint16_t *ImplicitDefs;  // Registers implicitly defined by this instr
   const MCOperandInfo *OpInfo;   // 'NumOperands' entries about operands
+  uint64_t DeprecatedFeatureMask;// Feature bits that this is deprecated on, if any
+  // A complex method to determine is a certain is deprecated or not, and return
+  // the reason for deprecation.
+  bool (*ComplexDeprecationInfo)(MCInst &, MCSubtargetInfo &, std::string &);
 
   /// \brief Returns the value of the specific constraint if
   /// it is set. Returns -1 if it is not set.
@@ -156,6 +161,20 @@ public:
       return (int)(OpInfo[OpNum].Constraints >> Pos) & 0xf;
     }
     return -1;
+  }
+
+  /// \brief Returns true if a certain instruction is deprecated and if so
+  /// returns the reason in \p Info.
+  bool getDeprecatedInfo(MCInst &MI, MCSubtargetInfo &STI,
+                         std::string &Info) const {
+    if (ComplexDeprecationInfo)
+      return ComplexDeprecationInfo(MI, STI, Info);
+    if ((DeprecatedFeatureMask & STI.getFeatureBits()) != 0) {
+      // FIXME: it would be nice to include the subtarget feature here.
+      Info = "deprecated";
+      return true;
+    }
+    return false;
   }
 
   /// \brief Return the opcode number for this descriptor.
@@ -268,8 +287,20 @@ public:
     if (isBranch() || isCall() || isReturn() || isIndirectBranch())
       return true;
     unsigned PC = RI.getProgramCounter();
-    if (PC == 0) return false;
-    return hasDefOfPhysReg(MI, PC, RI);
+    if (PC == 0)
+      return false;
+    if (hasDefOfPhysReg(MI, PC, RI))
+      return true;
+    // A variadic instruction may define PC in the variable operand list.
+    // There's currently no indication of which entries in a variable
+    // list are defs and which are uses. While that's the case, this function
+    // needs to assume they're defs in order to be conservatively correct.
+    for (int i = NumOperands, e = MI.getNumOperands(); i != e; ++i) {
+      if (MI.getOperand(i).isReg() &&
+          RI.isSubRegisterEq(PC, MI.getOperand(i).getReg()))
+        return true;
+    }
+    return false;
   }
 
   /// \brief Return true if this instruction has a predicate operand
@@ -473,7 +504,7 @@ public:
 
   /// \brief Return the number of implicit uses this instruction has.
   unsigned getNumImplicitUses() const {
-    if (ImplicitUses == 0) return 0;
+    if (!ImplicitUses) return 0;
     unsigned i = 0;
     for (; ImplicitUses[i]; ++i) /*empty*/;
     return i;
@@ -495,7 +526,7 @@ public:
 
   /// \brief Return the number of implicit defs this instruct has.
   unsigned getNumImplicitDefs() const {
-    if (ImplicitDefs == 0) return 0;
+    if (!ImplicitDefs) return 0;
     unsigned i = 0;
     for (; ImplicitDefs[i]; ++i) /*empty*/;
     return i;
@@ -513,7 +544,7 @@ public:
   /// \brief Return true if this instruction implicitly
   /// defines the specified physical register.
   bool hasImplicitDefOfPhysReg(unsigned Reg,
-                               const MCRegisterInfo *MRI = 0) const {
+                               const MCRegisterInfo *MRI = nullptr) const {
     if (const uint16_t *ImpDefs = ImplicitDefs)
       for (; *ImpDefs; ++ImpDefs)
         if (*ImpDefs == Reg || (MRI && MRI->isSubRegister(Reg, *ImpDefs)))

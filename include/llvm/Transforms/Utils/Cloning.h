@@ -20,8 +20,8 @@
 
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/Twine.h"
-#include "llvm/ADT/ValueMap.h"
-#include "llvm/Support/ValueHandle.h"
+#include "llvm/IR/ValueHandle.h"
+#include "llvm/IR/ValueMap.h"
 #include "llvm/Transforms/Utils/ValueMapper.h"
 
 namespace llvm {
@@ -96,8 +96,8 @@ struct ClonedCodeInfo {
 ///
 BasicBlock *CloneBasicBlock(const BasicBlock *BB,
                             ValueToValueMapTy &VMap,
-                            const Twine &NameSuffix = "", Function *F = 0,
-                            ClonedCodeInfo *CodeInfo = 0);
+                            const Twine &NameSuffix = "", Function *F = nullptr,
+                            ClonedCodeInfo *CodeInfo = nullptr);
 
 /// CloneFunction - Return a copy of the specified function, but without
 /// embedding the function into another module.  Also, any references specified
@@ -109,12 +109,12 @@ BasicBlock *CloneBasicBlock(const BasicBlock *BB,
 /// information about the cloned code if non-null.
 ///
 /// If ModuleLevelChanges is false, VMap contains no non-identity GlobalValue
-/// mappings.
+/// mappings, and debug info metadata will not be cloned.
 ///
 Function *CloneFunction(const Function *F,
                         ValueToValueMapTy &VMap,
                         bool ModuleLevelChanges,
-                        ClonedCodeInfo *CodeInfo = 0);
+                        ClonedCodeInfo *CodeInfo = nullptr);
 
 /// Clone OldFunc into NewFunc, transforming the old arguments into references
 /// to VMap values.  Note that if NewFunc already has basic blocks, the ones
@@ -130,8 +130,9 @@ void CloneFunctionInto(Function *NewFunc, const Function *OldFunc,
                        bool ModuleLevelChanges,
                        SmallVectorImpl<ReturnInst*> &Returns,
                        const char *NameSuffix = "", 
-                       ClonedCodeInfo *CodeInfo = 0,
-                       ValueMapTypeRemapper *TypeMapper = 0);
+                       ClonedCodeInfo *CodeInfo = nullptr,
+                       ValueMapTypeRemapper *TypeMapper = nullptr,
+                       ValueMaterializer *Materializer = nullptr);
 
 /// CloneAndPruneFunctionInto - This works exactly like CloneFunctionInto,
 /// except that it does some simple constant prop and DCE on the fly.  The
@@ -149,22 +150,22 @@ void CloneAndPruneFunctionInto(Function *NewFunc, const Function *OldFunc,
                                bool ModuleLevelChanges,
                                SmallVectorImpl<ReturnInst*> &Returns,
                                const char *NameSuffix = "", 
-                               ClonedCodeInfo *CodeInfo = 0,
-                               const DataLayout *TD = 0,
-                               Instruction *TheCall = 0);
+                               ClonedCodeInfo *CodeInfo = nullptr,
+                               const DataLayout *DL = nullptr,
+                               Instruction *TheCall = nullptr);
 
   
 /// InlineFunctionInfo - This class captures the data input to the
 /// InlineFunction call, and records the auxiliary results produced by it. 
 class InlineFunctionInfo {
 public:
-  explicit InlineFunctionInfo(CallGraph *cg = 0, const DataLayout *td = 0)
-    : CG(cg), TD(td) {}
+  explicit InlineFunctionInfo(CallGraph *cg = nullptr, const DataLayout *DL = nullptr)
+    : CG(cg), DL(DL) {}
   
   /// CG - If non-null, InlineFunction will update the callgraph to reflect the
   /// changes it makes.
   CallGraph *CG;
-  const DataLayout *TD;
+  const DataLayout *DL;
 
   /// StaticAllocas - InlineFunction fills this in with all static allocas that
   /// get copied into the caller.

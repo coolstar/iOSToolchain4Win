@@ -53,7 +53,7 @@ enum ExternalLoadResult {
 /// sources can resolve types and declarations from abstract IDs into
 /// actual type and declaration nodes, and read parts of declaration
 /// contexts.
-class ExternalASTSource {
+class ExternalASTSource : public RefCountedBase<ExternalASTSource> {
   /// \brief Whether this AST source also provides information for
   /// semantic analysis.
   bool SemaSource;
@@ -329,7 +329,12 @@ public:
   /// \brief Whether this pointer is non-NULL.
   ///
   /// This operation does not require the AST node to be deserialized.
-  operator bool() const { return Ptr != 0; }
+  LLVM_EXPLICIT operator bool() const { return Ptr != 0; }
+
+  /// \brief Whether this pointer is non-NULL.
+  ///
+  /// This operation does not require the AST node to be deserialized.
+  bool isValid() const { return Ptr != 0; }
 
   /// \brief Whether this pointer is currently stored as an offset.
   bool isOffset() const { return Ptr & 0x01; }

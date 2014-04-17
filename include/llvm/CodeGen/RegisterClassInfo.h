@@ -54,13 +54,15 @@ class RegisterClassInfo {
 
   // Callee saved registers of last MF. Assumed to be valid until the next
   // runOnFunction() call.
-  const uint16_t *CalleeSaved;
+  const MCPhysReg *CalleeSaved;
 
   // Map register number to CalleeSaved index + 1;
   SmallVector<uint8_t, 4> CSRNum;
 
   // Reserved registers in the current MF.
   BitVector Reserved;
+
+  OwningArrayPtr<unsigned> PSetLimits;
 
   // Compute all information about RC.
   void compute(const TargetRegisterClass *RC) const;
@@ -126,8 +128,19 @@ public:
   unsigned getLastCostChange(const TargetRegisterClass *RC) {
     return get(RC).LastCostChange;
   }
+
+  /// Get the register unit limit for the given pressure set index.
+  ///
+  /// RegisterClassInfo adjusts this limit for reserved registers.
+  unsigned getRegPressureSetLimit(unsigned Idx) const {
+    if (!PSetLimits[Idx])
+      PSetLimits[Idx] = computePSetLimit(Idx);
+    return PSetLimits[Idx];
+  }
+
+protected:
+  unsigned computePSetLimit(unsigned Idx) const;
 };
 } // end namespace llvm
 
 #endif
-
