@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "CLANG 1"
-.TH CLANG 1 "2014-04-17" "clang 3.5.0" "Clang Tools Documentation"
+.TH CLANG 1 "2014-06-13" "clang 3.6.0" "Clang Tools Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -375,8 +375,9 @@ declaration.  Further, Clang will only emit type info for a dynamic
 .Sp
 The \fB\-fstandalone\-debug\fR option turns off these optimizations.  This
 is useful when working with 3rd\-party libraries that don't come with
-debug information.  Note that Clang will never emit type information
-for types that are not referenced at all by the program.
+debug information.  This is the default on Darwin.  Note that Clang
+will never emit type information for types that are not referenced at
+all by the program.
 .IP "\fB\-fexceptions\fR" 4
 .IX Item "-fexceptions"
 Enable generation of unwind information, this allows exceptions to be thrown

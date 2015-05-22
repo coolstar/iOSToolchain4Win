@@ -5,7 +5,7 @@
 <title>clang</title>
 <link rel="stylesheet" href="manpage.css" type="text/css" />
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<link rev="made" href="mailto:Yaakov@yaakov04.nonet" />
+<link rev="made" href="mailto:ASSI@cygwin.nonet" />
 </head>
 
 <body>
@@ -400,8 +400,9 @@ declaration.  Further, Clang will only emit type info for a dynamic
 C++ class in the module that contains the vtable for the class.</p>
 <p>The <strong>-fstandalone-debug</strong> option turns off these optimizations.  This
 is useful when working with 3rd-party libraries that don't come with
-debug information.  Note that Clang will never emit type information
-for types that are not referenced at all by the program.</p>
+debug information.  This is the default on Darwin.  Note that Clang
+will never emit type information for types that are not referenced at
+all by the program.</p>
 </dd>
 <dt><strong><a name="fexceptions" class="item"><strong>-fexceptions</strong></a></strong></dt>
 

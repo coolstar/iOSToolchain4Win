@@ -10,6 +10,9 @@
 /* Define if we have libxml2 */
 /* #undef CLANG_HAVE_LIBXML */
 
+/* Multilib suffix for libdir. */
+#define CLANG_LIBDIR_SUFFIX ""
+
 /* Relative directory for resource files */
 #define CLANG_RESOURCE_DIR ""
 
@@ -39,9 +42,6 @@
 
 /* Define to 1 if you have the `ceilf' function. */
 #define HAVE_CEILF 1
-
-/* Define if the neat program is available */
-/* #undef HAVE_CIRCO */
 
 /* Define to 1 if you have the <CrashReporterClient.h> header file. */
 /* #undef HAVE_CRASHREPORTERCLIENT_H */
@@ -81,9 +81,6 @@
 /* Define if the dot program is available */
 /* #undef HAVE_DOT */
 
-/* Define if the dotty program is available */
-/* #undef HAVE_DOTTY */
-
 /* Define to 1 if you have the <errno.h> header file. */
 #define HAVE_ERRNO_H 1
 
@@ -98,9 +95,6 @@
 
 /* Define to 1 if you have the <fcntl.h> header file. */
 #define HAVE_FCNTL_H 1
-
-/* Define if the neat program is available */
-/* #undef HAVE_FDP */
 
 /* Define to 1 if you have the <fenv.h> header file. */
 #define HAVE_FENV_H 1
@@ -144,12 +138,6 @@
 /* Define to 1 if you have the `gettimeofday' function. */
 #define HAVE_GETTIMEOFDAY 1
 
-/* Define if the Graphviz program is available */
-/* #undef HAVE_GRAPHVIZ */
-
-/* Define if the gv program is available */
-/* #undef HAVE_GV */
-
 /* Define to 1 if the system has the type `int64_t'. */
 #define HAVE_INT64_T 1
 
@@ -189,14 +177,11 @@
 /* Define to 1 if you have the `shell32' library (-lshell32). */
 /* #undef HAVE_LIBSHELL32 */
 
-/* Define to 1 if you have the `udis86' library (-ludis86). */
-/* #undef HAVE_LIBUDIS86 */
-
 /* Define to 1 if you have the `z' library (-lz). */
-#define HAVE_LIBZ 1
+/* #undef HAVE_LIBZ */
 
 /* Define if you can use -rdynamic. */
-#define HAVE_LINK_EXPORT_DYNAMIC 1
+/* #undef HAVE_LINK_EXPORT_DYNAMIC */
 
 /* Define to 1 if you have the <link.h> header file. */
 /* #undef HAVE_LINK_H */
@@ -259,9 +244,6 @@
 
 /* Define to 1 if you have the `nearbyintf' function. */
 #define HAVE_NEARBYINTF 1
-
-/* Define if the neat program is available */
-/* #undef HAVE_NEATO */
 
 /* Define to 1 if you have the `posix_spawn' function. */
 #define HAVE_POSIX_SPAWN 1
@@ -403,9 +385,6 @@
 /* Define to 1 if you have the <termios.h> header file. */
 #define HAVE_TERMIOS_H 1
 
-/* Define if the neat program is available */
-/* #undef HAVE_TWOPI */
-
 /* Define to 1 if the system has the type `uint64_t'. */
 #define HAVE_UINT64_T 1
 
@@ -424,11 +403,8 @@
 /* Define to 1 if you have the `writev' function. */
 #define HAVE_WRITEV 1
 
-/* Define if the xdot program is available */
-/* #undef HAVE_XDOT */
-
 /* Define to 1 if you have the <zlib.h> header file. */
-#define HAVE_ZLIB_H 1
+/* #undef HAVE_ZLIB_H */
 
 /* Have host's _alloca */
 /* #undef HAVE__ALLOCA */
@@ -452,7 +428,7 @@
 /* #undef HAVE___DIVDI3 */
 
 /* Define to 1 if you have the `__dso_handle' function. */
-/* #undef HAVE___DSO_HANDLE */
+#define HAVE___DSO_HANDLE 1
 
 /* Have host's __fixdfdi */
 /* #undef HAVE___FIXDFDI */
@@ -482,13 +458,13 @@
 /* #undef HAVE____CHKSTK */
 
 /* Linker version detected at compile time. */
-#define HOST_LINK_VERSION "2.24.51.20140326"
+#define HOST_LINK_VERSION "2.25"
 
 /* Installation directory for binary executables */
 #define LLVM_BINDIR "/usr/local/bin"
 
 /* Time at which LLVM was configured */
-#define LLVM_CONFIGTIME "Thu Apr 17 10:20:22 PDT 2014"
+#define LLVM_CONFIGTIME "Thu May 21 18:04:40 PDT 2015"
 
 /* Installation directory for data files */
 #define LLVM_DATADIR "/usr/local/share/llvm"
@@ -550,32 +526,8 @@
 /* Define if this is Win32ish platform */
 /* #undef LLVM_ON_WIN32 */
 
-/* Define to path to circo program if found or 'echo circo' otherwise */
-/* #undef LLVM_PATH_CIRCO */
-
 /* Define to path to dot program if found or 'echo dot' otherwise */
 /* #undef LLVM_PATH_DOT */
-
-/* Define to path to dotty program if found or 'echo dotty' otherwise */
-/* #undef LLVM_PATH_DOTTY */
-
-/* Define to path to fdp program if found or 'echo fdp' otherwise */
-/* #undef LLVM_PATH_FDP */
-
-/* Define to path to Graphviz program if found or 'echo Graphviz' otherwise */
-/* #undef LLVM_PATH_GRAPHVIZ */
-
-/* Define to path to gv program if found or 'echo gv' otherwise */
-/* #undef LLVM_PATH_GV */
-
-/* Define to path to neato program if found or 'echo neato' otherwise */
-/* #undef LLVM_PATH_NEATO */
-
-/* Define to path to twopi program if found or 'echo twopi' otherwise */
-/* #undef LLVM_PATH_TWOPI */
-
-/* Define to path to xdot program if found or 'echo xdot' otherwise */
-/* #undef LLVM_PATH_XDOT */
 
 /* Installation prefix directory */
 #define LLVM_PREFIX "/usr/local"
@@ -590,10 +542,13 @@
 #define LLVM_VERSION_MAJOR 3
 
 /* Minor version of the LLVM API */
-#define LLVM_VERSION_MINOR 5
+#define LLVM_VERSION_MINOR 6
 
 /* Patch version of the LLVM API */
 #define LLVM_VERSION_PATCH 0
+
+/* LLVM version string */
+#define LLVM_VERSION_STRING "3.6.0"
 
 /* The shared library extension */
 #define LTDL_SHLIB_EXT ".dll"
@@ -609,13 +564,13 @@
 #define PACKAGE_NAME "LLVM"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "LLVM 3.5.0svn"
+#define PACKAGE_STRING "LLVM 3.6.0"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "llvm"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3.5.0svn"
+#define PACKAGE_VERSION "3.6.0"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void
@@ -631,9 +586,6 @@
 
 /* Define to 1 if your <sys/time.h> declares `struct tm'. */
 /* #undef TM_IN_SYS_TIME */
-
-/* Define if use udis86 library */
-#define USE_UDIS86 0
 
 /* Type of 1st arg on ELM Callback */
 /* #undef WIN32_ELMCB_PCSTR */
