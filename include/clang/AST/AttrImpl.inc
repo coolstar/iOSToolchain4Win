@@ -1,6 +1,6 @@
 /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
 |*                                                                            *|
-|*Attribute classes' member function definitions                              *|
+|* Attribute classes' member function definitions                             *|
 |*                                                                            *|
 |* Automatically generated file, do not edit!                                 *|
 |*                                                                            *|
@@ -362,7 +362,7 @@ bool AlignedAttr::isAlignmentDependent() const {
 unsigned AlignedAttr::getAlignment(ASTContext &Ctx) const {
   assert(!isAlignmentDependent());
   if (isalignmentExpr)
-    return (alignmentExpr ? alignmentExpr->EvaluateKnownConstInt(Ctx).getZExtValue() : 16)* Ctx.getCharWidth();
+    return alignmentExpr ? alignmentExpr->EvaluateKnownConstInt(Ctx).getZExtValue() * Ctx.getCharWidth() : Ctx.getTargetDefaultAlignForAttributeAligned();
   else
     return 0; // FIXME
 }
@@ -2082,6 +2082,36 @@ const char *FinalAttr::getSpelling() const {
   }
 }
 
+FlagEnumAttr *FlagEnumAttr::clone(ASTContext &C) const {
+  auto *A = new (C) FlagEnumAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void FlagEnumAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((flag_enum))";
+    break;
+  }
+}
+}
+
+const char *FlagEnumAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "flag_enum";
+  }
+}
+
 FlattenAttr *FlattenAttr::clone(ASTContext &C) const {
   auto *A = new (C) FlattenAttr(getLocation(), C, getSpellingListIndex());
   A->Inherited = Inherited;
@@ -2699,6 +2729,36 @@ const char *MSInheritanceAttr::getSpelling() const {
   }
 }
 
+MSNoVTableAttr *MSNoVTableAttr::clone(ASTContext &C) const {
+  auto *A = new (C) MSNoVTableAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void MSNoVTableAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __declspec(novtable)";
+    break;
+  }
+}
+}
+
+const char *MSNoVTableAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "novtable";
+  }
+}
+
 MSP430InterruptAttr *MSP430InterruptAttr::clone(ASTContext &C) const {
   auto *A = new (C) MSP430InterruptAttr(getLocation(), C, number, getSpellingListIndex());
   A->Inherited = Inherited;
@@ -2729,6 +2789,42 @@ const char *MSP430InterruptAttr::getSpelling() const {
   }
 }
 
+MSStructAttr *MSStructAttr::clone(ASTContext &C) const {
+  auto *A = new (C) MSStructAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void MSStructAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((ms_struct))";
+    break;
+  }
+  case 1 : {
+    OS << " [[gnu::ms_struct]]";
+    break;
+  }
+}
+}
+
+const char *MSStructAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "ms_struct";
+  case 1:
+    return "ms_struct";
+  }
+}
+
 MSVtorDispAttr *MSVtorDispAttr::clone(ASTContext &C) const {
   auto *A = new (C) MSVtorDispAttr(getLocation(), C, vdm, getSpellingListIndex());
   A->Inherited = Inherited;
@@ -2742,42 +2838,6 @@ void MSVtorDispAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
 
 const char *MSVtorDispAttr::getSpelling() const {
   return "(No spelling)";
-}
-
-MallocAttr *MallocAttr::clone(ASTContext &C) const {
-  auto *A = new (C) MallocAttr(getLocation(), C, getSpellingListIndex());
-  A->Inherited = Inherited;
-  A->IsPackExpansion = IsPackExpansion;
-  A->Implicit = Implicit;
-  return A;
-}
-
-void MallocAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __attribute__((malloc))";
-    break;
-  }
-  case 1 : {
-    OS << " [[gnu::malloc]]";
-    break;
-  }
-}
-}
-
-const char *MallocAttr::getSpelling() const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    return "(No spelling)";
-  case 0:
-    return "malloc";
-  case 1:
-    return "malloc";
-  }
 }
 
 MaxFieldAlignmentAttr *MaxFieldAlignmentAttr::clone(ASTContext &C) const {
@@ -2930,42 +2990,6 @@ const char *ModeAttr::getSpelling() const {
     return "mode";
   case 1:
     return "mode";
-  }
-}
-
-MsStructAttr *MsStructAttr::clone(ASTContext &C) const {
-  auto *A = new (C) MsStructAttr(getLocation(), C, getSpellingListIndex());
-  A->Inherited = Inherited;
-  A->IsPackExpansion = IsPackExpansion;
-  A->Implicit = Implicit;
-  return A;
-}
-
-void MsStructAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __attribute__((ms_struct))";
-    break;
-  }
-  case 1 : {
-    OS << " [[gnu::ms_struct]]";
-    break;
-  }
-}
-}
-
-const char *MsStructAttr::getSpelling() const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    return "(No spelling)";
-  case 0:
-    return "ms_struct";
-  case 1:
-    return "ms_struct";
   }
 }
 
@@ -3425,111 +3449,53 @@ const char *NoReturnAttr::getSpelling() const {
   }
 }
 
-NoSanitizeAddressAttr *NoSanitizeAddressAttr::clone(ASTContext &C) const {
-  auto *A = new (C) NoSanitizeAddressAttr(getLocation(), C, getSpellingListIndex());
+NoSanitizeAttr *NoSanitizeAttr::clone(ASTContext &C) const {
+  auto *A = new (C) NoSanitizeAttr(getLocation(), C, sanitizers_, sanitizers_Size, getSpellingListIndex());
   A->Inherited = Inherited;
   A->IsPackExpansion = IsPackExpansion;
   A->Implicit = Implicit;
   return A;
 }
 
-void NoSanitizeAddressAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+void NoSanitizeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((no_address_safety_analysis))";
+    OS << " __attribute__((no_sanitize(";
+  bool isFirst = true;
+  for (const auto &Val : sanitizers()) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << "\"" << Val << "\"";
+  }
+  OS << ")))";
     break;
   }
   case 1 : {
-    OS << " [[gnu::no_address_safety_analysis]]";
-    break;
+    OS << " [[clang::no_sanitize(";
+  bool isFirst = true;
+  for (const auto &Val : sanitizers()) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << "\"" << Val << "\"";
   }
-  case 2 : {
-    OS << " __attribute__((no_sanitize_address))";
-    break;
-  }
-  case 3 : {
-    OS << " [[gnu::no_sanitize_address]]";
+  OS << ")]]";
     break;
   }
 }
 }
 
-const char *NoSanitizeAddressAttr::getSpelling() const {
+const char *NoSanitizeAttr::getSpelling() const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
     return "(No spelling)";
   case 0:
-    return "no_address_safety_analysis";
+    return "no_sanitize";
   case 1:
-    return "no_address_safety_analysis";
-  case 2:
-    return "no_sanitize_address";
-  case 3:
-    return "no_sanitize_address";
-  }
-}
-
-NoSanitizeMemoryAttr *NoSanitizeMemoryAttr::clone(ASTContext &C) const {
-  auto *A = new (C) NoSanitizeMemoryAttr(getLocation(), C, getSpellingListIndex());
-  A->Inherited = Inherited;
-  A->IsPackExpansion = IsPackExpansion;
-  A->Implicit = Implicit;
-  return A;
-}
-
-void NoSanitizeMemoryAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __attribute__((no_sanitize_memory))";
-    break;
-  }
-}
-}
-
-const char *NoSanitizeMemoryAttr::getSpelling() const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    return "(No spelling)";
-  case 0:
-    return "no_sanitize_memory";
-  }
-}
-
-NoSanitizeThreadAttr *NoSanitizeThreadAttr::clone(ASTContext &C) const {
-  auto *A = new (C) NoSanitizeThreadAttr(getLocation(), C, getSpellingListIndex());
-  A->Inherited = Inherited;
-  A->IsPackExpansion = IsPackExpansion;
-  A->Implicit = Implicit;
-  return A;
-}
-
-void NoSanitizeThreadAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __attribute__((no_sanitize_thread))";
-    break;
-  }
-}
-}
-
-const char *NoSanitizeThreadAttr::getSpelling() const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    return "(No spelling)";
-  case 0:
-    return "no_sanitize_thread";
+    return "no_sanitize";
   }
 }
 
@@ -3704,6 +3670,36 @@ void OMPThreadPrivateDeclAttr::printPretty(raw_ostream &OS, const PrintingPolicy
 
 const char *OMPThreadPrivateDeclAttr::getSpelling() const {
   return "(No spelling)";
+}
+
+ObjCBoxableAttr *ObjCBoxableAttr::clone(ASTContext &C) const {
+  auto *A = new (C) ObjCBoxableAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void ObjCBoxableAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((objc_boxable))";
+    break;
+  }
+}
+}
+
+const char *ObjCBoxableAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_boxable";
+  }
 }
 
 ObjCBridgeAttr *ObjCBridgeAttr::clone(ASTContext &C) const {
@@ -3883,6 +3879,36 @@ const char *ObjCExplicitProtocolImplAttr::getSpelling() const {
     return "(No spelling)";
   case 0:
     return "objc_protocol_requires_explicit_implementation";
+  }
+}
+
+ObjCIndependentClassAttr *ObjCIndependentClassAttr::clone(ASTContext &C) const {
+  auto *A = new (C) ObjCIndependentClassAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void ObjCIndependentClassAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((objc_independent_class))";
+    break;
+  }
+}
+}
+
+const char *ObjCIndependentClassAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_independent_class";
   }
 }
 
@@ -4525,36 +4551,6 @@ const char *PcsAttr::getSpelling() const {
   }
 }
 
-PnaclCallAttr *PnaclCallAttr::clone(ASTContext &C) const {
-  auto *A = new (C) PnaclCallAttr(getLocation(), C, getSpellingListIndex());
-  A->Inherited = Inherited;
-  A->IsPackExpansion = IsPackExpansion;
-  A->Implicit = Implicit;
-  return A;
-}
-
-void PnaclCallAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __attribute__((pnaclcall))";
-    break;
-  }
-}
-}
-
-const char *PnaclCallAttr::getSpelling() const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    return "(No spelling)";
-  case 0:
-    return "pnaclcall";
-  }
-}
-
 PtGuardedByAttr *PtGuardedByAttr::clone(ASTContext &C) const {
   auto *A = new (C) PtGuardedByAttr(getLocation(), C, arg, getSpellingListIndex());
   A->Inherited = Inherited;
@@ -4895,6 +4891,48 @@ const char *RequiresCapabilityAttr::getSpelling() const {
     return "requires_shared_capability";
   case 5:
     return "shared_locks_required";
+  }
+}
+
+RestrictAttr *RestrictAttr::clone(ASTContext &C) const {
+  auto *A = new (C) RestrictAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void RestrictAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __declspec(restrict)";
+    break;
+  }
+  case 1 : {
+    OS << " __attribute__((malloc))";
+    break;
+  }
+  case 2 : {
+    OS << " [[gnu::malloc]]";
+    break;
+  }
+}
+}
+
+const char *RestrictAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "restrict";
+  case 1:
+    return "malloc";
+  case 2:
+    return "malloc";
   }
 }
 
@@ -5322,6 +5360,42 @@ const char *TLSModelAttr::getSpelling() const {
     return "tls_model";
   case 1:
     return "tls_model";
+  }
+}
+
+TargetAttr *TargetAttr::clone(ASTContext &C) const {
+  auto *A = new (C) TargetAttr(getLocation(), C, getFeatures(), getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void TargetAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((target(\"" << getFeatures() << "\")))";
+    break;
+  }
+  case 1 : {
+    OS << " [[gnu::target(\"" << getFeatures() << "\")]]";
+    break;
+  }
+}
+}
+
+const char *TargetAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "target";
+  case 1:
+    return "target";
   }
 }
 
@@ -6113,5 +6187,1067 @@ const char *X86ForceAlignArgPointerAttr::getSpelling() const {
   case 0:
     return "force_align_arg_pointer";
   }
+}
+
+const char *Attr::getSpelling() const {
+  switch (getKind()) {
+  case attr::AMDGPUNumSGPR:
+    return cast<AMDGPUNumSGPRAttr>(this)->getSpelling();
+  case attr::AMDGPUNumVGPR:
+    return cast<AMDGPUNumVGPRAttr>(this)->getSpelling();
+  case attr::ARMInterrupt:
+    return cast<ARMInterruptAttr>(this)->getSpelling();
+  case attr::AcquireCapability:
+    return cast<AcquireCapabilityAttr>(this)->getSpelling();
+  case attr::AcquiredAfter:
+    return cast<AcquiredAfterAttr>(this)->getSpelling();
+  case attr::AcquiredBefore:
+    return cast<AcquiredBeforeAttr>(this)->getSpelling();
+  case attr::Alias:
+    return cast<AliasAttr>(this)->getSpelling();
+  case attr::AlignMac68k:
+    return cast<AlignMac68kAttr>(this)->getSpelling();
+  case attr::AlignValue:
+    return cast<AlignValueAttr>(this)->getSpelling();
+  case attr::Aligned:
+    return cast<AlignedAttr>(this)->getSpelling();
+  case attr::AlwaysInline:
+    return cast<AlwaysInlineAttr>(this)->getSpelling();
+  case attr::AnalyzerNoReturn:
+    return cast<AnalyzerNoReturnAttr>(this)->getSpelling();
+  case attr::Annotate:
+    return cast<AnnotateAttr>(this)->getSpelling();
+  case attr::ArcWeakrefUnavailable:
+    return cast<ArcWeakrefUnavailableAttr>(this)->getSpelling();
+  case attr::ArgumentWithTypeTag:
+    return cast<ArgumentWithTypeTagAttr>(this)->getSpelling();
+  case attr::AsmLabel:
+    return cast<AsmLabelAttr>(this)->getSpelling();
+  case attr::AssertCapability:
+    return cast<AssertCapabilityAttr>(this)->getSpelling();
+  case attr::AssertExclusiveLock:
+    return cast<AssertExclusiveLockAttr>(this)->getSpelling();
+  case attr::AssertSharedLock:
+    return cast<AssertSharedLockAttr>(this)->getSpelling();
+  case attr::AssumeAligned:
+    return cast<AssumeAlignedAttr>(this)->getSpelling();
+  case attr::Availability:
+    return cast<AvailabilityAttr>(this)->getSpelling();
+  case attr::Blocks:
+    return cast<BlocksAttr>(this)->getSpelling();
+  case attr::C11NoReturn:
+    return cast<C11NoReturnAttr>(this)->getSpelling();
+  case attr::CDecl:
+    return cast<CDeclAttr>(this)->getSpelling();
+  case attr::CFAuditedTransfer:
+    return cast<CFAuditedTransferAttr>(this)->getSpelling();
+  case attr::CFConsumed:
+    return cast<CFConsumedAttr>(this)->getSpelling();
+  case attr::CFReturnsNotRetained:
+    return cast<CFReturnsNotRetainedAttr>(this)->getSpelling();
+  case attr::CFReturnsRetained:
+    return cast<CFReturnsRetainedAttr>(this)->getSpelling();
+  case attr::CFUnknownTransfer:
+    return cast<CFUnknownTransferAttr>(this)->getSpelling();
+  case attr::CUDAConstant:
+    return cast<CUDAConstantAttr>(this)->getSpelling();
+  case attr::CUDADevice:
+    return cast<CUDADeviceAttr>(this)->getSpelling();
+  case attr::CUDAGlobal:
+    return cast<CUDAGlobalAttr>(this)->getSpelling();
+  case attr::CUDAHost:
+    return cast<CUDAHostAttr>(this)->getSpelling();
+  case attr::CUDAInvalidTarget:
+    return cast<CUDAInvalidTargetAttr>(this)->getSpelling();
+  case attr::CUDALaunchBounds:
+    return cast<CUDALaunchBoundsAttr>(this)->getSpelling();
+  case attr::CUDAShared:
+    return cast<CUDASharedAttr>(this)->getSpelling();
+  case attr::CXX11NoReturn:
+    return cast<CXX11NoReturnAttr>(this)->getSpelling();
+  case attr::CallableWhen:
+    return cast<CallableWhenAttr>(this)->getSpelling();
+  case attr::Capability:
+    return cast<CapabilityAttr>(this)->getSpelling();
+  case attr::CapturedRecord:
+    return cast<CapturedRecordAttr>(this)->getSpelling();
+  case attr::CarriesDependency:
+    return cast<CarriesDependencyAttr>(this)->getSpelling();
+  case attr::Cleanup:
+    return cast<CleanupAttr>(this)->getSpelling();
+  case attr::Cold:
+    return cast<ColdAttr>(this)->getSpelling();
+  case attr::Common:
+    return cast<CommonAttr>(this)->getSpelling();
+  case attr::Const:
+    return cast<ConstAttr>(this)->getSpelling();
+  case attr::Constructor:
+    return cast<ConstructorAttr>(this)->getSpelling();
+  case attr::Consumable:
+    return cast<ConsumableAttr>(this)->getSpelling();
+  case attr::ConsumableAutoCast:
+    return cast<ConsumableAutoCastAttr>(this)->getSpelling();
+  case attr::ConsumableSetOnRead:
+    return cast<ConsumableSetOnReadAttr>(this)->getSpelling();
+  case attr::DLLExport:
+    return cast<DLLExportAttr>(this)->getSpelling();
+  case attr::DLLImport:
+    return cast<DLLImportAttr>(this)->getSpelling();
+  case attr::Deprecated:
+    return cast<DeprecatedAttr>(this)->getSpelling();
+  case attr::Destructor:
+    return cast<DestructorAttr>(this)->getSpelling();
+  case attr::EnableIf:
+    return cast<EnableIfAttr>(this)->getSpelling();
+  case attr::ExclusiveTrylockFunction:
+    return cast<ExclusiveTrylockFunctionAttr>(this)->getSpelling();
+  case attr::FallThrough:
+    return cast<FallThroughAttr>(this)->getSpelling();
+  case attr::FastCall:
+    return cast<FastCallAttr>(this)->getSpelling();
+  case attr::Final:
+    return cast<FinalAttr>(this)->getSpelling();
+  case attr::FlagEnum:
+    return cast<FlagEnumAttr>(this)->getSpelling();
+  case attr::Flatten:
+    return cast<FlattenAttr>(this)->getSpelling();
+  case attr::Format:
+    return cast<FormatAttr>(this)->getSpelling();
+  case attr::FormatArg:
+    return cast<FormatArgAttr>(this)->getSpelling();
+  case attr::GNUInline:
+    return cast<GNUInlineAttr>(this)->getSpelling();
+  case attr::GuardedBy:
+    return cast<GuardedByAttr>(this)->getSpelling();
+  case attr::GuardedVar:
+    return cast<GuardedVarAttr>(this)->getSpelling();
+  case attr::Hot:
+    return cast<HotAttr>(this)->getSpelling();
+  case attr::IBAction:
+    return cast<IBActionAttr>(this)->getSpelling();
+  case attr::IBOutlet:
+    return cast<IBOutletAttr>(this)->getSpelling();
+  case attr::IBOutletCollection:
+    return cast<IBOutletCollectionAttr>(this)->getSpelling();
+  case attr::InitPriority:
+    return cast<InitPriorityAttr>(this)->getSpelling();
+  case attr::InitSeg:
+    return cast<InitSegAttr>(this)->getSpelling();
+  case attr::IntelOclBicc:
+    return cast<IntelOclBiccAttr>(this)->getSpelling();
+  case attr::LockReturned:
+    return cast<LockReturnedAttr>(this)->getSpelling();
+  case attr::LocksExcluded:
+    return cast<LocksExcludedAttr>(this)->getSpelling();
+  case attr::LoopHint:
+    return cast<LoopHintAttr>(this)->getSpelling();
+  case attr::MSABI:
+    return cast<MSABIAttr>(this)->getSpelling();
+  case attr::MSInheritance:
+    return cast<MSInheritanceAttr>(this)->getSpelling();
+  case attr::MSNoVTable:
+    return cast<MSNoVTableAttr>(this)->getSpelling();
+  case attr::MSP430Interrupt:
+    return cast<MSP430InterruptAttr>(this)->getSpelling();
+  case attr::MSStruct:
+    return cast<MSStructAttr>(this)->getSpelling();
+  case attr::MSVtorDisp:
+    return cast<MSVtorDispAttr>(this)->getSpelling();
+  case attr::MaxFieldAlignment:
+    return cast<MaxFieldAlignmentAttr>(this)->getSpelling();
+  case attr::MayAlias:
+    return cast<MayAliasAttr>(this)->getSpelling();
+  case attr::MinSize:
+    return cast<MinSizeAttr>(this)->getSpelling();
+  case attr::Mips16:
+    return cast<Mips16Attr>(this)->getSpelling();
+  case attr::Mode:
+    return cast<ModeAttr>(this)->getSpelling();
+  case attr::NSConsumed:
+    return cast<NSConsumedAttr>(this)->getSpelling();
+  case attr::NSConsumesSelf:
+    return cast<NSConsumesSelfAttr>(this)->getSpelling();
+  case attr::NSReturnsAutoreleased:
+    return cast<NSReturnsAutoreleasedAttr>(this)->getSpelling();
+  case attr::NSReturnsNotRetained:
+    return cast<NSReturnsNotRetainedAttr>(this)->getSpelling();
+  case attr::NSReturnsRetained:
+    return cast<NSReturnsRetainedAttr>(this)->getSpelling();
+  case attr::Naked:
+    return cast<NakedAttr>(this)->getSpelling();
+  case attr::NoCommon:
+    return cast<NoCommonAttr>(this)->getSpelling();
+  case attr::NoDebug:
+    return cast<NoDebugAttr>(this)->getSpelling();
+  case attr::NoDuplicate:
+    return cast<NoDuplicateAttr>(this)->getSpelling();
+  case attr::NoInline:
+    return cast<NoInlineAttr>(this)->getSpelling();
+  case attr::NoInstrumentFunction:
+    return cast<NoInstrumentFunctionAttr>(this)->getSpelling();
+  case attr::NoMips16:
+    return cast<NoMips16Attr>(this)->getSpelling();
+  case attr::NoReturn:
+    return cast<NoReturnAttr>(this)->getSpelling();
+  case attr::NoSanitize:
+    return cast<NoSanitizeAttr>(this)->getSpelling();
+  case attr::NoSplitStack:
+    return cast<NoSplitStackAttr>(this)->getSpelling();
+  case attr::NoThreadSafetyAnalysis:
+    return cast<NoThreadSafetyAnalysisAttr>(this)->getSpelling();
+  case attr::NoThrow:
+    return cast<NoThrowAttr>(this)->getSpelling();
+  case attr::NonNull:
+    return cast<NonNullAttr>(this)->getSpelling();
+  case attr::OMPThreadPrivateDecl:
+    return cast<OMPThreadPrivateDeclAttr>(this)->getSpelling();
+  case attr::ObjCBoxable:
+    return cast<ObjCBoxableAttr>(this)->getSpelling();
+  case attr::ObjCBridge:
+    return cast<ObjCBridgeAttr>(this)->getSpelling();
+  case attr::ObjCBridgeMutable:
+    return cast<ObjCBridgeMutableAttr>(this)->getSpelling();
+  case attr::ObjCBridgeRelated:
+    return cast<ObjCBridgeRelatedAttr>(this)->getSpelling();
+  case attr::ObjCDesignatedInitializer:
+    return cast<ObjCDesignatedInitializerAttr>(this)->getSpelling();
+  case attr::ObjCException:
+    return cast<ObjCExceptionAttr>(this)->getSpelling();
+  case attr::ObjCExplicitProtocolImpl:
+    return cast<ObjCExplicitProtocolImplAttr>(this)->getSpelling();
+  case attr::ObjCIndependentClass:
+    return cast<ObjCIndependentClassAttr>(this)->getSpelling();
+  case attr::ObjCMethodFamily:
+    return cast<ObjCMethodFamilyAttr>(this)->getSpelling();
+  case attr::ObjCNSObject:
+    return cast<ObjCNSObjectAttr>(this)->getSpelling();
+  case attr::ObjCPreciseLifetime:
+    return cast<ObjCPreciseLifetimeAttr>(this)->getSpelling();
+  case attr::ObjCRequiresPropertyDefs:
+    return cast<ObjCRequiresPropertyDefsAttr>(this)->getSpelling();
+  case attr::ObjCRequiresSuper:
+    return cast<ObjCRequiresSuperAttr>(this)->getSpelling();
+  case attr::ObjCReturnsInnerPointer:
+    return cast<ObjCReturnsInnerPointerAttr>(this)->getSpelling();
+  case attr::ObjCRootClass:
+    return cast<ObjCRootClassAttr>(this)->getSpelling();
+  case attr::ObjCRuntimeName:
+    return cast<ObjCRuntimeNameAttr>(this)->getSpelling();
+  case attr::OpenCLImageAccess:
+    return cast<OpenCLImageAccessAttr>(this)->getSpelling();
+  case attr::OpenCLKernel:
+    return cast<OpenCLKernelAttr>(this)->getSpelling();
+  case attr::OptimizeNone:
+    return cast<OptimizeNoneAttr>(this)->getSpelling();
+  case attr::Overloadable:
+    return cast<OverloadableAttr>(this)->getSpelling();
+  case attr::Override:
+    return cast<OverrideAttr>(this)->getSpelling();
+  case attr::Ownership:
+    return cast<OwnershipAttr>(this)->getSpelling();
+  case attr::Packed:
+    return cast<PackedAttr>(this)->getSpelling();
+  case attr::ParamTypestate:
+    return cast<ParamTypestateAttr>(this)->getSpelling();
+  case attr::Pascal:
+    return cast<PascalAttr>(this)->getSpelling();
+  case attr::Pcs:
+    return cast<PcsAttr>(this)->getSpelling();
+  case attr::PtGuardedBy:
+    return cast<PtGuardedByAttr>(this)->getSpelling();
+  case attr::PtGuardedVar:
+    return cast<PtGuardedVarAttr>(this)->getSpelling();
+  case attr::Pure:
+    return cast<PureAttr>(this)->getSpelling();
+  case attr::ReleaseCapability:
+    return cast<ReleaseCapabilityAttr>(this)->getSpelling();
+  case attr::ReqdWorkGroupSize:
+    return cast<ReqdWorkGroupSizeAttr>(this)->getSpelling();
+  case attr::RequiresCapability:
+    return cast<RequiresCapabilityAttr>(this)->getSpelling();
+  case attr::Restrict:
+    return cast<RestrictAttr>(this)->getSpelling();
+  case attr::ReturnTypestate:
+    return cast<ReturnTypestateAttr>(this)->getSpelling();
+  case attr::ReturnsNonNull:
+    return cast<ReturnsNonNullAttr>(this)->getSpelling();
+  case attr::ReturnsTwice:
+    return cast<ReturnsTwiceAttr>(this)->getSpelling();
+  case attr::ScopedLockable:
+    return cast<ScopedLockableAttr>(this)->getSpelling();
+  case attr::Section:
+    return cast<SectionAttr>(this)->getSpelling();
+  case attr::SelectAny:
+    return cast<SelectAnyAttr>(this)->getSpelling();
+  case attr::Sentinel:
+    return cast<SentinelAttr>(this)->getSpelling();
+  case attr::SetTypestate:
+    return cast<SetTypestateAttr>(this)->getSpelling();
+  case attr::SharedTrylockFunction:
+    return cast<SharedTrylockFunctionAttr>(this)->getSpelling();
+  case attr::StdCall:
+    return cast<StdCallAttr>(this)->getSpelling();
+  case attr::SysVABI:
+    return cast<SysVABIAttr>(this)->getSpelling();
+  case attr::TLSModel:
+    return cast<TLSModelAttr>(this)->getSpelling();
+  case attr::Target:
+    return cast<TargetAttr>(this)->getSpelling();
+  case attr::TestTypestate:
+    return cast<TestTypestateAttr>(this)->getSpelling();
+  case attr::ThisCall:
+    return cast<ThisCallAttr>(this)->getSpelling();
+  case attr::Thread:
+    return cast<ThreadAttr>(this)->getSpelling();
+  case attr::TransparentUnion:
+    return cast<TransparentUnionAttr>(this)->getSpelling();
+  case attr::TryAcquireCapability:
+    return cast<TryAcquireCapabilityAttr>(this)->getSpelling();
+  case attr::TypeTagForDatatype:
+    return cast<TypeTagForDatatypeAttr>(this)->getSpelling();
+  case attr::TypeVisibility:
+    return cast<TypeVisibilityAttr>(this)->getSpelling();
+  case attr::Unavailable:
+    return cast<UnavailableAttr>(this)->getSpelling();
+  case attr::Unused:
+    return cast<UnusedAttr>(this)->getSpelling();
+  case attr::Used:
+    return cast<UsedAttr>(this)->getSpelling();
+  case attr::Uuid:
+    return cast<UuidAttr>(this)->getSpelling();
+  case attr::VecReturn:
+    return cast<VecReturnAttr>(this)->getSpelling();
+  case attr::VecTypeHint:
+    return cast<VecTypeHintAttr>(this)->getSpelling();
+  case attr::VectorCall:
+    return cast<VectorCallAttr>(this)->getSpelling();
+  case attr::Visibility:
+    return cast<VisibilityAttr>(this)->getSpelling();
+  case attr::WarnUnused:
+    return cast<WarnUnusedAttr>(this)->getSpelling();
+  case attr::WarnUnusedResult:
+    return cast<WarnUnusedResultAttr>(this)->getSpelling();
+  case attr::Weak:
+    return cast<WeakAttr>(this)->getSpelling();
+  case attr::WeakImport:
+    return cast<WeakImportAttr>(this)->getSpelling();
+  case attr::WeakRef:
+    return cast<WeakRefAttr>(this)->getSpelling();
+  case attr::WorkGroupSizeHint:
+    return cast<WorkGroupSizeHintAttr>(this)->getSpelling();
+  case attr::X86ForceAlignArgPointer:
+    return cast<X86ForceAlignArgPointerAttr>(this)->getSpelling();
+  case attr::NUM_ATTRS:
+    break;
+  }
+  llvm_unreachable("Unexpected attribute kind!");
+}
+
+Attr *Attr::clone(ASTContext &C) const {
+  switch (getKind()) {
+  case attr::AMDGPUNumSGPR:
+    return cast<AMDGPUNumSGPRAttr>(this)->clone(C);
+  case attr::AMDGPUNumVGPR:
+    return cast<AMDGPUNumVGPRAttr>(this)->clone(C);
+  case attr::ARMInterrupt:
+    return cast<ARMInterruptAttr>(this)->clone(C);
+  case attr::AcquireCapability:
+    return cast<AcquireCapabilityAttr>(this)->clone(C);
+  case attr::AcquiredAfter:
+    return cast<AcquiredAfterAttr>(this)->clone(C);
+  case attr::AcquiredBefore:
+    return cast<AcquiredBeforeAttr>(this)->clone(C);
+  case attr::Alias:
+    return cast<AliasAttr>(this)->clone(C);
+  case attr::AlignMac68k:
+    return cast<AlignMac68kAttr>(this)->clone(C);
+  case attr::AlignValue:
+    return cast<AlignValueAttr>(this)->clone(C);
+  case attr::Aligned:
+    return cast<AlignedAttr>(this)->clone(C);
+  case attr::AlwaysInline:
+    return cast<AlwaysInlineAttr>(this)->clone(C);
+  case attr::AnalyzerNoReturn:
+    return cast<AnalyzerNoReturnAttr>(this)->clone(C);
+  case attr::Annotate:
+    return cast<AnnotateAttr>(this)->clone(C);
+  case attr::ArcWeakrefUnavailable:
+    return cast<ArcWeakrefUnavailableAttr>(this)->clone(C);
+  case attr::ArgumentWithTypeTag:
+    return cast<ArgumentWithTypeTagAttr>(this)->clone(C);
+  case attr::AsmLabel:
+    return cast<AsmLabelAttr>(this)->clone(C);
+  case attr::AssertCapability:
+    return cast<AssertCapabilityAttr>(this)->clone(C);
+  case attr::AssertExclusiveLock:
+    return cast<AssertExclusiveLockAttr>(this)->clone(C);
+  case attr::AssertSharedLock:
+    return cast<AssertSharedLockAttr>(this)->clone(C);
+  case attr::AssumeAligned:
+    return cast<AssumeAlignedAttr>(this)->clone(C);
+  case attr::Availability:
+    return cast<AvailabilityAttr>(this)->clone(C);
+  case attr::Blocks:
+    return cast<BlocksAttr>(this)->clone(C);
+  case attr::C11NoReturn:
+    return cast<C11NoReturnAttr>(this)->clone(C);
+  case attr::CDecl:
+    return cast<CDeclAttr>(this)->clone(C);
+  case attr::CFAuditedTransfer:
+    return cast<CFAuditedTransferAttr>(this)->clone(C);
+  case attr::CFConsumed:
+    return cast<CFConsumedAttr>(this)->clone(C);
+  case attr::CFReturnsNotRetained:
+    return cast<CFReturnsNotRetainedAttr>(this)->clone(C);
+  case attr::CFReturnsRetained:
+    return cast<CFReturnsRetainedAttr>(this)->clone(C);
+  case attr::CFUnknownTransfer:
+    return cast<CFUnknownTransferAttr>(this)->clone(C);
+  case attr::CUDAConstant:
+    return cast<CUDAConstantAttr>(this)->clone(C);
+  case attr::CUDADevice:
+    return cast<CUDADeviceAttr>(this)->clone(C);
+  case attr::CUDAGlobal:
+    return cast<CUDAGlobalAttr>(this)->clone(C);
+  case attr::CUDAHost:
+    return cast<CUDAHostAttr>(this)->clone(C);
+  case attr::CUDAInvalidTarget:
+    return cast<CUDAInvalidTargetAttr>(this)->clone(C);
+  case attr::CUDALaunchBounds:
+    return cast<CUDALaunchBoundsAttr>(this)->clone(C);
+  case attr::CUDAShared:
+    return cast<CUDASharedAttr>(this)->clone(C);
+  case attr::CXX11NoReturn:
+    return cast<CXX11NoReturnAttr>(this)->clone(C);
+  case attr::CallableWhen:
+    return cast<CallableWhenAttr>(this)->clone(C);
+  case attr::Capability:
+    return cast<CapabilityAttr>(this)->clone(C);
+  case attr::CapturedRecord:
+    return cast<CapturedRecordAttr>(this)->clone(C);
+  case attr::CarriesDependency:
+    return cast<CarriesDependencyAttr>(this)->clone(C);
+  case attr::Cleanup:
+    return cast<CleanupAttr>(this)->clone(C);
+  case attr::Cold:
+    return cast<ColdAttr>(this)->clone(C);
+  case attr::Common:
+    return cast<CommonAttr>(this)->clone(C);
+  case attr::Const:
+    return cast<ConstAttr>(this)->clone(C);
+  case attr::Constructor:
+    return cast<ConstructorAttr>(this)->clone(C);
+  case attr::Consumable:
+    return cast<ConsumableAttr>(this)->clone(C);
+  case attr::ConsumableAutoCast:
+    return cast<ConsumableAutoCastAttr>(this)->clone(C);
+  case attr::ConsumableSetOnRead:
+    return cast<ConsumableSetOnReadAttr>(this)->clone(C);
+  case attr::DLLExport:
+    return cast<DLLExportAttr>(this)->clone(C);
+  case attr::DLLImport:
+    return cast<DLLImportAttr>(this)->clone(C);
+  case attr::Deprecated:
+    return cast<DeprecatedAttr>(this)->clone(C);
+  case attr::Destructor:
+    return cast<DestructorAttr>(this)->clone(C);
+  case attr::EnableIf:
+    return cast<EnableIfAttr>(this)->clone(C);
+  case attr::ExclusiveTrylockFunction:
+    return cast<ExclusiveTrylockFunctionAttr>(this)->clone(C);
+  case attr::FallThrough:
+    return cast<FallThroughAttr>(this)->clone(C);
+  case attr::FastCall:
+    return cast<FastCallAttr>(this)->clone(C);
+  case attr::Final:
+    return cast<FinalAttr>(this)->clone(C);
+  case attr::FlagEnum:
+    return cast<FlagEnumAttr>(this)->clone(C);
+  case attr::Flatten:
+    return cast<FlattenAttr>(this)->clone(C);
+  case attr::Format:
+    return cast<FormatAttr>(this)->clone(C);
+  case attr::FormatArg:
+    return cast<FormatArgAttr>(this)->clone(C);
+  case attr::GNUInline:
+    return cast<GNUInlineAttr>(this)->clone(C);
+  case attr::GuardedBy:
+    return cast<GuardedByAttr>(this)->clone(C);
+  case attr::GuardedVar:
+    return cast<GuardedVarAttr>(this)->clone(C);
+  case attr::Hot:
+    return cast<HotAttr>(this)->clone(C);
+  case attr::IBAction:
+    return cast<IBActionAttr>(this)->clone(C);
+  case attr::IBOutlet:
+    return cast<IBOutletAttr>(this)->clone(C);
+  case attr::IBOutletCollection:
+    return cast<IBOutletCollectionAttr>(this)->clone(C);
+  case attr::InitPriority:
+    return cast<InitPriorityAttr>(this)->clone(C);
+  case attr::InitSeg:
+    return cast<InitSegAttr>(this)->clone(C);
+  case attr::IntelOclBicc:
+    return cast<IntelOclBiccAttr>(this)->clone(C);
+  case attr::LockReturned:
+    return cast<LockReturnedAttr>(this)->clone(C);
+  case attr::LocksExcluded:
+    return cast<LocksExcludedAttr>(this)->clone(C);
+  case attr::LoopHint:
+    return cast<LoopHintAttr>(this)->clone(C);
+  case attr::MSABI:
+    return cast<MSABIAttr>(this)->clone(C);
+  case attr::MSInheritance:
+    return cast<MSInheritanceAttr>(this)->clone(C);
+  case attr::MSNoVTable:
+    return cast<MSNoVTableAttr>(this)->clone(C);
+  case attr::MSP430Interrupt:
+    return cast<MSP430InterruptAttr>(this)->clone(C);
+  case attr::MSStruct:
+    return cast<MSStructAttr>(this)->clone(C);
+  case attr::MSVtorDisp:
+    return cast<MSVtorDispAttr>(this)->clone(C);
+  case attr::MaxFieldAlignment:
+    return cast<MaxFieldAlignmentAttr>(this)->clone(C);
+  case attr::MayAlias:
+    return cast<MayAliasAttr>(this)->clone(C);
+  case attr::MinSize:
+    return cast<MinSizeAttr>(this)->clone(C);
+  case attr::Mips16:
+    return cast<Mips16Attr>(this)->clone(C);
+  case attr::Mode:
+    return cast<ModeAttr>(this)->clone(C);
+  case attr::NSConsumed:
+    return cast<NSConsumedAttr>(this)->clone(C);
+  case attr::NSConsumesSelf:
+    return cast<NSConsumesSelfAttr>(this)->clone(C);
+  case attr::NSReturnsAutoreleased:
+    return cast<NSReturnsAutoreleasedAttr>(this)->clone(C);
+  case attr::NSReturnsNotRetained:
+    return cast<NSReturnsNotRetainedAttr>(this)->clone(C);
+  case attr::NSReturnsRetained:
+    return cast<NSReturnsRetainedAttr>(this)->clone(C);
+  case attr::Naked:
+    return cast<NakedAttr>(this)->clone(C);
+  case attr::NoCommon:
+    return cast<NoCommonAttr>(this)->clone(C);
+  case attr::NoDebug:
+    return cast<NoDebugAttr>(this)->clone(C);
+  case attr::NoDuplicate:
+    return cast<NoDuplicateAttr>(this)->clone(C);
+  case attr::NoInline:
+    return cast<NoInlineAttr>(this)->clone(C);
+  case attr::NoInstrumentFunction:
+    return cast<NoInstrumentFunctionAttr>(this)->clone(C);
+  case attr::NoMips16:
+    return cast<NoMips16Attr>(this)->clone(C);
+  case attr::NoReturn:
+    return cast<NoReturnAttr>(this)->clone(C);
+  case attr::NoSanitize:
+    return cast<NoSanitizeAttr>(this)->clone(C);
+  case attr::NoSplitStack:
+    return cast<NoSplitStackAttr>(this)->clone(C);
+  case attr::NoThreadSafetyAnalysis:
+    return cast<NoThreadSafetyAnalysisAttr>(this)->clone(C);
+  case attr::NoThrow:
+    return cast<NoThrowAttr>(this)->clone(C);
+  case attr::NonNull:
+    return cast<NonNullAttr>(this)->clone(C);
+  case attr::OMPThreadPrivateDecl:
+    return cast<OMPThreadPrivateDeclAttr>(this)->clone(C);
+  case attr::ObjCBoxable:
+    return cast<ObjCBoxableAttr>(this)->clone(C);
+  case attr::ObjCBridge:
+    return cast<ObjCBridgeAttr>(this)->clone(C);
+  case attr::ObjCBridgeMutable:
+    return cast<ObjCBridgeMutableAttr>(this)->clone(C);
+  case attr::ObjCBridgeRelated:
+    return cast<ObjCBridgeRelatedAttr>(this)->clone(C);
+  case attr::ObjCDesignatedInitializer:
+    return cast<ObjCDesignatedInitializerAttr>(this)->clone(C);
+  case attr::ObjCException:
+    return cast<ObjCExceptionAttr>(this)->clone(C);
+  case attr::ObjCExplicitProtocolImpl:
+    return cast<ObjCExplicitProtocolImplAttr>(this)->clone(C);
+  case attr::ObjCIndependentClass:
+    return cast<ObjCIndependentClassAttr>(this)->clone(C);
+  case attr::ObjCMethodFamily:
+    return cast<ObjCMethodFamilyAttr>(this)->clone(C);
+  case attr::ObjCNSObject:
+    return cast<ObjCNSObjectAttr>(this)->clone(C);
+  case attr::ObjCPreciseLifetime:
+    return cast<ObjCPreciseLifetimeAttr>(this)->clone(C);
+  case attr::ObjCRequiresPropertyDefs:
+    return cast<ObjCRequiresPropertyDefsAttr>(this)->clone(C);
+  case attr::ObjCRequiresSuper:
+    return cast<ObjCRequiresSuperAttr>(this)->clone(C);
+  case attr::ObjCReturnsInnerPointer:
+    return cast<ObjCReturnsInnerPointerAttr>(this)->clone(C);
+  case attr::ObjCRootClass:
+    return cast<ObjCRootClassAttr>(this)->clone(C);
+  case attr::ObjCRuntimeName:
+    return cast<ObjCRuntimeNameAttr>(this)->clone(C);
+  case attr::OpenCLImageAccess:
+    return cast<OpenCLImageAccessAttr>(this)->clone(C);
+  case attr::OpenCLKernel:
+    return cast<OpenCLKernelAttr>(this)->clone(C);
+  case attr::OptimizeNone:
+    return cast<OptimizeNoneAttr>(this)->clone(C);
+  case attr::Overloadable:
+    return cast<OverloadableAttr>(this)->clone(C);
+  case attr::Override:
+    return cast<OverrideAttr>(this)->clone(C);
+  case attr::Ownership:
+    return cast<OwnershipAttr>(this)->clone(C);
+  case attr::Packed:
+    return cast<PackedAttr>(this)->clone(C);
+  case attr::ParamTypestate:
+    return cast<ParamTypestateAttr>(this)->clone(C);
+  case attr::Pascal:
+    return cast<PascalAttr>(this)->clone(C);
+  case attr::Pcs:
+    return cast<PcsAttr>(this)->clone(C);
+  case attr::PtGuardedBy:
+    return cast<PtGuardedByAttr>(this)->clone(C);
+  case attr::PtGuardedVar:
+    return cast<PtGuardedVarAttr>(this)->clone(C);
+  case attr::Pure:
+    return cast<PureAttr>(this)->clone(C);
+  case attr::ReleaseCapability:
+    return cast<ReleaseCapabilityAttr>(this)->clone(C);
+  case attr::ReqdWorkGroupSize:
+    return cast<ReqdWorkGroupSizeAttr>(this)->clone(C);
+  case attr::RequiresCapability:
+    return cast<RequiresCapabilityAttr>(this)->clone(C);
+  case attr::Restrict:
+    return cast<RestrictAttr>(this)->clone(C);
+  case attr::ReturnTypestate:
+    return cast<ReturnTypestateAttr>(this)->clone(C);
+  case attr::ReturnsNonNull:
+    return cast<ReturnsNonNullAttr>(this)->clone(C);
+  case attr::ReturnsTwice:
+    return cast<ReturnsTwiceAttr>(this)->clone(C);
+  case attr::ScopedLockable:
+    return cast<ScopedLockableAttr>(this)->clone(C);
+  case attr::Section:
+    return cast<SectionAttr>(this)->clone(C);
+  case attr::SelectAny:
+    return cast<SelectAnyAttr>(this)->clone(C);
+  case attr::Sentinel:
+    return cast<SentinelAttr>(this)->clone(C);
+  case attr::SetTypestate:
+    return cast<SetTypestateAttr>(this)->clone(C);
+  case attr::SharedTrylockFunction:
+    return cast<SharedTrylockFunctionAttr>(this)->clone(C);
+  case attr::StdCall:
+    return cast<StdCallAttr>(this)->clone(C);
+  case attr::SysVABI:
+    return cast<SysVABIAttr>(this)->clone(C);
+  case attr::TLSModel:
+    return cast<TLSModelAttr>(this)->clone(C);
+  case attr::Target:
+    return cast<TargetAttr>(this)->clone(C);
+  case attr::TestTypestate:
+    return cast<TestTypestateAttr>(this)->clone(C);
+  case attr::ThisCall:
+    return cast<ThisCallAttr>(this)->clone(C);
+  case attr::Thread:
+    return cast<ThreadAttr>(this)->clone(C);
+  case attr::TransparentUnion:
+    return cast<TransparentUnionAttr>(this)->clone(C);
+  case attr::TryAcquireCapability:
+    return cast<TryAcquireCapabilityAttr>(this)->clone(C);
+  case attr::TypeTagForDatatype:
+    return cast<TypeTagForDatatypeAttr>(this)->clone(C);
+  case attr::TypeVisibility:
+    return cast<TypeVisibilityAttr>(this)->clone(C);
+  case attr::Unavailable:
+    return cast<UnavailableAttr>(this)->clone(C);
+  case attr::Unused:
+    return cast<UnusedAttr>(this)->clone(C);
+  case attr::Used:
+    return cast<UsedAttr>(this)->clone(C);
+  case attr::Uuid:
+    return cast<UuidAttr>(this)->clone(C);
+  case attr::VecReturn:
+    return cast<VecReturnAttr>(this)->clone(C);
+  case attr::VecTypeHint:
+    return cast<VecTypeHintAttr>(this)->clone(C);
+  case attr::VectorCall:
+    return cast<VectorCallAttr>(this)->clone(C);
+  case attr::Visibility:
+    return cast<VisibilityAttr>(this)->clone(C);
+  case attr::WarnUnused:
+    return cast<WarnUnusedAttr>(this)->clone(C);
+  case attr::WarnUnusedResult:
+    return cast<WarnUnusedResultAttr>(this)->clone(C);
+  case attr::Weak:
+    return cast<WeakAttr>(this)->clone(C);
+  case attr::WeakImport:
+    return cast<WeakImportAttr>(this)->clone(C);
+  case attr::WeakRef:
+    return cast<WeakRefAttr>(this)->clone(C);
+  case attr::WorkGroupSizeHint:
+    return cast<WorkGroupSizeHintAttr>(this)->clone(C);
+  case attr::X86ForceAlignArgPointer:
+    return cast<X86ForceAlignArgPointerAttr>(this)->clone(C);
+  case attr::NUM_ATTRS:
+    break;
+  }
+  llvm_unreachable("Unexpected attribute kind!");
+}
+
+void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (getKind()) {
+  case attr::AMDGPUNumSGPR:
+    return cast<AMDGPUNumSGPRAttr>(this)->printPretty(OS, Policy);
+  case attr::AMDGPUNumVGPR:
+    return cast<AMDGPUNumVGPRAttr>(this)->printPretty(OS, Policy);
+  case attr::ARMInterrupt:
+    return cast<ARMInterruptAttr>(this)->printPretty(OS, Policy);
+  case attr::AcquireCapability:
+    return cast<AcquireCapabilityAttr>(this)->printPretty(OS, Policy);
+  case attr::AcquiredAfter:
+    return cast<AcquiredAfterAttr>(this)->printPretty(OS, Policy);
+  case attr::AcquiredBefore:
+    return cast<AcquiredBeforeAttr>(this)->printPretty(OS, Policy);
+  case attr::Alias:
+    return cast<AliasAttr>(this)->printPretty(OS, Policy);
+  case attr::AlignMac68k:
+    return cast<AlignMac68kAttr>(this)->printPretty(OS, Policy);
+  case attr::AlignValue:
+    return cast<AlignValueAttr>(this)->printPretty(OS, Policy);
+  case attr::Aligned:
+    return cast<AlignedAttr>(this)->printPretty(OS, Policy);
+  case attr::AlwaysInline:
+    return cast<AlwaysInlineAttr>(this)->printPretty(OS, Policy);
+  case attr::AnalyzerNoReturn:
+    return cast<AnalyzerNoReturnAttr>(this)->printPretty(OS, Policy);
+  case attr::Annotate:
+    return cast<AnnotateAttr>(this)->printPretty(OS, Policy);
+  case attr::ArcWeakrefUnavailable:
+    return cast<ArcWeakrefUnavailableAttr>(this)->printPretty(OS, Policy);
+  case attr::ArgumentWithTypeTag:
+    return cast<ArgumentWithTypeTagAttr>(this)->printPretty(OS, Policy);
+  case attr::AsmLabel:
+    return cast<AsmLabelAttr>(this)->printPretty(OS, Policy);
+  case attr::AssertCapability:
+    return cast<AssertCapabilityAttr>(this)->printPretty(OS, Policy);
+  case attr::AssertExclusiveLock:
+    return cast<AssertExclusiveLockAttr>(this)->printPretty(OS, Policy);
+  case attr::AssertSharedLock:
+    return cast<AssertSharedLockAttr>(this)->printPretty(OS, Policy);
+  case attr::AssumeAligned:
+    return cast<AssumeAlignedAttr>(this)->printPretty(OS, Policy);
+  case attr::Availability:
+    return cast<AvailabilityAttr>(this)->printPretty(OS, Policy);
+  case attr::Blocks:
+    return cast<BlocksAttr>(this)->printPretty(OS, Policy);
+  case attr::C11NoReturn:
+    return cast<C11NoReturnAttr>(this)->printPretty(OS, Policy);
+  case attr::CDecl:
+    return cast<CDeclAttr>(this)->printPretty(OS, Policy);
+  case attr::CFAuditedTransfer:
+    return cast<CFAuditedTransferAttr>(this)->printPretty(OS, Policy);
+  case attr::CFConsumed:
+    return cast<CFConsumedAttr>(this)->printPretty(OS, Policy);
+  case attr::CFReturnsNotRetained:
+    return cast<CFReturnsNotRetainedAttr>(this)->printPretty(OS, Policy);
+  case attr::CFReturnsRetained:
+    return cast<CFReturnsRetainedAttr>(this)->printPretty(OS, Policy);
+  case attr::CFUnknownTransfer:
+    return cast<CFUnknownTransferAttr>(this)->printPretty(OS, Policy);
+  case attr::CUDAConstant:
+    return cast<CUDAConstantAttr>(this)->printPretty(OS, Policy);
+  case attr::CUDADevice:
+    return cast<CUDADeviceAttr>(this)->printPretty(OS, Policy);
+  case attr::CUDAGlobal:
+    return cast<CUDAGlobalAttr>(this)->printPretty(OS, Policy);
+  case attr::CUDAHost:
+    return cast<CUDAHostAttr>(this)->printPretty(OS, Policy);
+  case attr::CUDAInvalidTarget:
+    return cast<CUDAInvalidTargetAttr>(this)->printPretty(OS, Policy);
+  case attr::CUDALaunchBounds:
+    return cast<CUDALaunchBoundsAttr>(this)->printPretty(OS, Policy);
+  case attr::CUDAShared:
+    return cast<CUDASharedAttr>(this)->printPretty(OS, Policy);
+  case attr::CXX11NoReturn:
+    return cast<CXX11NoReturnAttr>(this)->printPretty(OS, Policy);
+  case attr::CallableWhen:
+    return cast<CallableWhenAttr>(this)->printPretty(OS, Policy);
+  case attr::Capability:
+    return cast<CapabilityAttr>(this)->printPretty(OS, Policy);
+  case attr::CapturedRecord:
+    return cast<CapturedRecordAttr>(this)->printPretty(OS, Policy);
+  case attr::CarriesDependency:
+    return cast<CarriesDependencyAttr>(this)->printPretty(OS, Policy);
+  case attr::Cleanup:
+    return cast<CleanupAttr>(this)->printPretty(OS, Policy);
+  case attr::Cold:
+    return cast<ColdAttr>(this)->printPretty(OS, Policy);
+  case attr::Common:
+    return cast<CommonAttr>(this)->printPretty(OS, Policy);
+  case attr::Const:
+    return cast<ConstAttr>(this)->printPretty(OS, Policy);
+  case attr::Constructor:
+    return cast<ConstructorAttr>(this)->printPretty(OS, Policy);
+  case attr::Consumable:
+    return cast<ConsumableAttr>(this)->printPretty(OS, Policy);
+  case attr::ConsumableAutoCast:
+    return cast<ConsumableAutoCastAttr>(this)->printPretty(OS, Policy);
+  case attr::ConsumableSetOnRead:
+    return cast<ConsumableSetOnReadAttr>(this)->printPretty(OS, Policy);
+  case attr::DLLExport:
+    return cast<DLLExportAttr>(this)->printPretty(OS, Policy);
+  case attr::DLLImport:
+    return cast<DLLImportAttr>(this)->printPretty(OS, Policy);
+  case attr::Deprecated:
+    return cast<DeprecatedAttr>(this)->printPretty(OS, Policy);
+  case attr::Destructor:
+    return cast<DestructorAttr>(this)->printPretty(OS, Policy);
+  case attr::EnableIf:
+    return cast<EnableIfAttr>(this)->printPretty(OS, Policy);
+  case attr::ExclusiveTrylockFunction:
+    return cast<ExclusiveTrylockFunctionAttr>(this)->printPretty(OS, Policy);
+  case attr::FallThrough:
+    return cast<FallThroughAttr>(this)->printPretty(OS, Policy);
+  case attr::FastCall:
+    return cast<FastCallAttr>(this)->printPretty(OS, Policy);
+  case attr::Final:
+    return cast<FinalAttr>(this)->printPretty(OS, Policy);
+  case attr::FlagEnum:
+    return cast<FlagEnumAttr>(this)->printPretty(OS, Policy);
+  case attr::Flatten:
+    return cast<FlattenAttr>(this)->printPretty(OS, Policy);
+  case attr::Format:
+    return cast<FormatAttr>(this)->printPretty(OS, Policy);
+  case attr::FormatArg:
+    return cast<FormatArgAttr>(this)->printPretty(OS, Policy);
+  case attr::GNUInline:
+    return cast<GNUInlineAttr>(this)->printPretty(OS, Policy);
+  case attr::GuardedBy:
+    return cast<GuardedByAttr>(this)->printPretty(OS, Policy);
+  case attr::GuardedVar:
+    return cast<GuardedVarAttr>(this)->printPretty(OS, Policy);
+  case attr::Hot:
+    return cast<HotAttr>(this)->printPretty(OS, Policy);
+  case attr::IBAction:
+    return cast<IBActionAttr>(this)->printPretty(OS, Policy);
+  case attr::IBOutlet:
+    return cast<IBOutletAttr>(this)->printPretty(OS, Policy);
+  case attr::IBOutletCollection:
+    return cast<IBOutletCollectionAttr>(this)->printPretty(OS, Policy);
+  case attr::InitPriority:
+    return cast<InitPriorityAttr>(this)->printPretty(OS, Policy);
+  case attr::InitSeg:
+    return cast<InitSegAttr>(this)->printPretty(OS, Policy);
+  case attr::IntelOclBicc:
+    return cast<IntelOclBiccAttr>(this)->printPretty(OS, Policy);
+  case attr::LockReturned:
+    return cast<LockReturnedAttr>(this)->printPretty(OS, Policy);
+  case attr::LocksExcluded:
+    return cast<LocksExcludedAttr>(this)->printPretty(OS, Policy);
+  case attr::LoopHint:
+    return cast<LoopHintAttr>(this)->printPretty(OS, Policy);
+  case attr::MSABI:
+    return cast<MSABIAttr>(this)->printPretty(OS, Policy);
+  case attr::MSInheritance:
+    return cast<MSInheritanceAttr>(this)->printPretty(OS, Policy);
+  case attr::MSNoVTable:
+    return cast<MSNoVTableAttr>(this)->printPretty(OS, Policy);
+  case attr::MSP430Interrupt:
+    return cast<MSP430InterruptAttr>(this)->printPretty(OS, Policy);
+  case attr::MSStruct:
+    return cast<MSStructAttr>(this)->printPretty(OS, Policy);
+  case attr::MSVtorDisp:
+    return cast<MSVtorDispAttr>(this)->printPretty(OS, Policy);
+  case attr::MaxFieldAlignment:
+    return cast<MaxFieldAlignmentAttr>(this)->printPretty(OS, Policy);
+  case attr::MayAlias:
+    return cast<MayAliasAttr>(this)->printPretty(OS, Policy);
+  case attr::MinSize:
+    return cast<MinSizeAttr>(this)->printPretty(OS, Policy);
+  case attr::Mips16:
+    return cast<Mips16Attr>(this)->printPretty(OS, Policy);
+  case attr::Mode:
+    return cast<ModeAttr>(this)->printPretty(OS, Policy);
+  case attr::NSConsumed:
+    return cast<NSConsumedAttr>(this)->printPretty(OS, Policy);
+  case attr::NSConsumesSelf:
+    return cast<NSConsumesSelfAttr>(this)->printPretty(OS, Policy);
+  case attr::NSReturnsAutoreleased:
+    return cast<NSReturnsAutoreleasedAttr>(this)->printPretty(OS, Policy);
+  case attr::NSReturnsNotRetained:
+    return cast<NSReturnsNotRetainedAttr>(this)->printPretty(OS, Policy);
+  case attr::NSReturnsRetained:
+    return cast<NSReturnsRetainedAttr>(this)->printPretty(OS, Policy);
+  case attr::Naked:
+    return cast<NakedAttr>(this)->printPretty(OS, Policy);
+  case attr::NoCommon:
+    return cast<NoCommonAttr>(this)->printPretty(OS, Policy);
+  case attr::NoDebug:
+    return cast<NoDebugAttr>(this)->printPretty(OS, Policy);
+  case attr::NoDuplicate:
+    return cast<NoDuplicateAttr>(this)->printPretty(OS, Policy);
+  case attr::NoInline:
+    return cast<NoInlineAttr>(this)->printPretty(OS, Policy);
+  case attr::NoInstrumentFunction:
+    return cast<NoInstrumentFunctionAttr>(this)->printPretty(OS, Policy);
+  case attr::NoMips16:
+    return cast<NoMips16Attr>(this)->printPretty(OS, Policy);
+  case attr::NoReturn:
+    return cast<NoReturnAttr>(this)->printPretty(OS, Policy);
+  case attr::NoSanitize:
+    return cast<NoSanitizeAttr>(this)->printPretty(OS, Policy);
+  case attr::NoSplitStack:
+    return cast<NoSplitStackAttr>(this)->printPretty(OS, Policy);
+  case attr::NoThreadSafetyAnalysis:
+    return cast<NoThreadSafetyAnalysisAttr>(this)->printPretty(OS, Policy);
+  case attr::NoThrow:
+    return cast<NoThrowAttr>(this)->printPretty(OS, Policy);
+  case attr::NonNull:
+    return cast<NonNullAttr>(this)->printPretty(OS, Policy);
+  case attr::OMPThreadPrivateDecl:
+    return cast<OMPThreadPrivateDeclAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCBoxable:
+    return cast<ObjCBoxableAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCBridge:
+    return cast<ObjCBridgeAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCBridgeMutable:
+    return cast<ObjCBridgeMutableAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCBridgeRelated:
+    return cast<ObjCBridgeRelatedAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCDesignatedInitializer:
+    return cast<ObjCDesignatedInitializerAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCException:
+    return cast<ObjCExceptionAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCExplicitProtocolImpl:
+    return cast<ObjCExplicitProtocolImplAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCIndependentClass:
+    return cast<ObjCIndependentClassAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCMethodFamily:
+    return cast<ObjCMethodFamilyAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCNSObject:
+    return cast<ObjCNSObjectAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCPreciseLifetime:
+    return cast<ObjCPreciseLifetimeAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCRequiresPropertyDefs:
+    return cast<ObjCRequiresPropertyDefsAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCRequiresSuper:
+    return cast<ObjCRequiresSuperAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCReturnsInnerPointer:
+    return cast<ObjCReturnsInnerPointerAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCRootClass:
+    return cast<ObjCRootClassAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCRuntimeName:
+    return cast<ObjCRuntimeNameAttr>(this)->printPretty(OS, Policy);
+  case attr::OpenCLImageAccess:
+    return cast<OpenCLImageAccessAttr>(this)->printPretty(OS, Policy);
+  case attr::OpenCLKernel:
+    return cast<OpenCLKernelAttr>(this)->printPretty(OS, Policy);
+  case attr::OptimizeNone:
+    return cast<OptimizeNoneAttr>(this)->printPretty(OS, Policy);
+  case attr::Overloadable:
+    return cast<OverloadableAttr>(this)->printPretty(OS, Policy);
+  case attr::Override:
+    return cast<OverrideAttr>(this)->printPretty(OS, Policy);
+  case attr::Ownership:
+    return cast<OwnershipAttr>(this)->printPretty(OS, Policy);
+  case attr::Packed:
+    return cast<PackedAttr>(this)->printPretty(OS, Policy);
+  case attr::ParamTypestate:
+    return cast<ParamTypestateAttr>(this)->printPretty(OS, Policy);
+  case attr::Pascal:
+    return cast<PascalAttr>(this)->printPretty(OS, Policy);
+  case attr::Pcs:
+    return cast<PcsAttr>(this)->printPretty(OS, Policy);
+  case attr::PtGuardedBy:
+    return cast<PtGuardedByAttr>(this)->printPretty(OS, Policy);
+  case attr::PtGuardedVar:
+    return cast<PtGuardedVarAttr>(this)->printPretty(OS, Policy);
+  case attr::Pure:
+    return cast<PureAttr>(this)->printPretty(OS, Policy);
+  case attr::ReleaseCapability:
+    return cast<ReleaseCapabilityAttr>(this)->printPretty(OS, Policy);
+  case attr::ReqdWorkGroupSize:
+    return cast<ReqdWorkGroupSizeAttr>(this)->printPretty(OS, Policy);
+  case attr::RequiresCapability:
+    return cast<RequiresCapabilityAttr>(this)->printPretty(OS, Policy);
+  case attr::Restrict:
+    return cast<RestrictAttr>(this)->printPretty(OS, Policy);
+  case attr::ReturnTypestate:
+    return cast<ReturnTypestateAttr>(this)->printPretty(OS, Policy);
+  case attr::ReturnsNonNull:
+    return cast<ReturnsNonNullAttr>(this)->printPretty(OS, Policy);
+  case attr::ReturnsTwice:
+    return cast<ReturnsTwiceAttr>(this)->printPretty(OS, Policy);
+  case attr::ScopedLockable:
+    return cast<ScopedLockableAttr>(this)->printPretty(OS, Policy);
+  case attr::Section:
+    return cast<SectionAttr>(this)->printPretty(OS, Policy);
+  case attr::SelectAny:
+    return cast<SelectAnyAttr>(this)->printPretty(OS, Policy);
+  case attr::Sentinel:
+    return cast<SentinelAttr>(this)->printPretty(OS, Policy);
+  case attr::SetTypestate:
+    return cast<SetTypestateAttr>(this)->printPretty(OS, Policy);
+  case attr::SharedTrylockFunction:
+    return cast<SharedTrylockFunctionAttr>(this)->printPretty(OS, Policy);
+  case attr::StdCall:
+    return cast<StdCallAttr>(this)->printPretty(OS, Policy);
+  case attr::SysVABI:
+    return cast<SysVABIAttr>(this)->printPretty(OS, Policy);
+  case attr::TLSModel:
+    return cast<TLSModelAttr>(this)->printPretty(OS, Policy);
+  case attr::Target:
+    return cast<TargetAttr>(this)->printPretty(OS, Policy);
+  case attr::TestTypestate:
+    return cast<TestTypestateAttr>(this)->printPretty(OS, Policy);
+  case attr::ThisCall:
+    return cast<ThisCallAttr>(this)->printPretty(OS, Policy);
+  case attr::Thread:
+    return cast<ThreadAttr>(this)->printPretty(OS, Policy);
+  case attr::TransparentUnion:
+    return cast<TransparentUnionAttr>(this)->printPretty(OS, Policy);
+  case attr::TryAcquireCapability:
+    return cast<TryAcquireCapabilityAttr>(this)->printPretty(OS, Policy);
+  case attr::TypeTagForDatatype:
+    return cast<TypeTagForDatatypeAttr>(this)->printPretty(OS, Policy);
+  case attr::TypeVisibility:
+    return cast<TypeVisibilityAttr>(this)->printPretty(OS, Policy);
+  case attr::Unavailable:
+    return cast<UnavailableAttr>(this)->printPretty(OS, Policy);
+  case attr::Unused:
+    return cast<UnusedAttr>(this)->printPretty(OS, Policy);
+  case attr::Used:
+    return cast<UsedAttr>(this)->printPretty(OS, Policy);
+  case attr::Uuid:
+    return cast<UuidAttr>(this)->printPretty(OS, Policy);
+  case attr::VecReturn:
+    return cast<VecReturnAttr>(this)->printPretty(OS, Policy);
+  case attr::VecTypeHint:
+    return cast<VecTypeHintAttr>(this)->printPretty(OS, Policy);
+  case attr::VectorCall:
+    return cast<VectorCallAttr>(this)->printPretty(OS, Policy);
+  case attr::Visibility:
+    return cast<VisibilityAttr>(this)->printPretty(OS, Policy);
+  case attr::WarnUnused:
+    return cast<WarnUnusedAttr>(this)->printPretty(OS, Policy);
+  case attr::WarnUnusedResult:
+    return cast<WarnUnusedResultAttr>(this)->printPretty(OS, Policy);
+  case attr::Weak:
+    return cast<WeakAttr>(this)->printPretty(OS, Policy);
+  case attr::WeakImport:
+    return cast<WeakImportAttr>(this)->printPretty(OS, Policy);
+  case attr::WeakRef:
+    return cast<WeakRefAttr>(this)->printPretty(OS, Policy);
+  case attr::WorkGroupSizeHint:
+    return cast<WorkGroupSizeHintAttr>(this)->printPretty(OS, Policy);
+  case attr::X86ForceAlignArgPointer:
+    return cast<X86ForceAlignArgPointerAttr>(this)->printPretty(OS, Policy);
+  case attr::NUM_ATTRS:
+    break;
+  }
+  llvm_unreachable("Unexpected attribute kind!");
 }
 

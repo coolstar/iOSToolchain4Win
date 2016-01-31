@@ -23,6 +23,7 @@ DIAG(err_pch_langopt_mismatch, CLASS_ERROR, (unsigned)diag::Severity::Error, "%0
 DIAG(err_pch_langopt_value_mismatch, CLASS_ERROR, (unsigned)diag::Severity::Error, "%0 differs in PCH file vs. current file", 0, SFINAE_SubstitutionFailure, false, true, 13)
 DIAG(err_pch_macro_def_conflict, CLASS_ERROR, (unsigned)diag::Severity::Error, "definition of macro '%0' differs between the precompiled header ('%1') and the command line ('%2')", 0, SFINAE_SubstitutionFailure, false, true, 13)
 DIAG(err_pch_macro_def_undef, CLASS_ERROR, (unsigned)diag::Severity::Error, "macro '%0' was %select{defined|undef'd}1 in the precompiled header but %select{undef'd|defined}1 on the command line", 0, SFINAE_SubstitutionFailure, false, true, 13)
+DIAG(err_pch_modulecache_mismatch, CLASS_ERROR, (unsigned)diag::Severity::Error, "PCH was compiled with module cache path '%0', but the path is currently '%1'", 0, SFINAE_SubstitutionFailure, false, true, 13)
 DIAG(err_pch_pp_detailed_record, CLASS_ERROR, (unsigned)diag::Severity::Error, "%select{command line contains|precompiled header was built with}0 '-detailed-preprocessing-record' but %select{precompiled header was not built with it|it is not present on the command line}0", 0, SFINAE_SubstitutionFailure, false, true, 13)
 DIAG(err_pch_targetopt_feature_mismatch, CLASS_ERROR, (unsigned)diag::Severity::Error, "%select{AST file|current translation unit}0 was compiled with the target feature'%1' but the %select{current translation unit is|AST file was}0 not", 0, SFINAE_SubstitutionFailure, false, true, 13)
 DIAG(err_pch_targetopt_mismatch, CLASS_ERROR, (unsigned)diag::Severity::Error, "PCH file was compiled for the %0 '%1' but the current translation unit is being compiled for target '%2'", 0, SFINAE_SubstitutionFailure, false, true, 13)
@@ -36,4 +37,3 @@ DIAG(note_module_odr_violation_no_possible_decls, CLASS_NOTE, (unsigned)diag::Se
 DIAG(note_module_odr_violation_possible_decl, CLASS_NOTE, (unsigned)diag::Severity::Fatal, "declaration of %0 does not match", 0, SFINAE_Suppress, false, false, 13)
 DIAG(note_pch_rebuild_required, CLASS_NOTE, (unsigned)diag::Severity::Fatal, "please rebuild precompiled header '%0'", 0, SFINAE_Suppress, false, false, 13)
 DIAG(note_pch_required_by, CLASS_NOTE, (unsigned)diag::Severity::Fatal, "'%0' required by '%1'", 0, SFINAE_Suppress, false, false, 13)
-DIAG(warn_module_conflict, CLASS_WARNING, (unsigned)diag::Severity::Warning, "module '%0' conflicts with already-imported module '%1': %2", 297, SFINAE_Suppress, false, false, 13)

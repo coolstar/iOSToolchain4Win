@@ -1,6 +1,6 @@
 /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
 |*                                                                            *|
-|*List of AST nodes of a particular kind                                      *|
+|* List of AST nodes of a particular kind                                     *|
 |*                                                                            *|
 |* Automatically generated file, do not edit!                                 *|
 |*                                                                            *|
@@ -439,6 +439,12 @@ DEPENDENTSCOPEDECLREFEXPR(DependentScopeDeclRefExpr, Expr)
 DESIGNATEDINITEXPR(DesignatedInitExpr, Expr)
 #undef DESIGNATEDINITEXPR
 
+#ifndef DESIGNATEDINITUPDATEEXPR
+#  define DESIGNATEDINITUPDATEEXPR(Type, Base) EXPR(Type, Base)
+#endif
+DESIGNATEDINITUPDATEEXPR(DesignatedInitUpdateExpr, Expr)
+#undef DESIGNATEDINITUPDATEEXPR
+
 #ifndef EXPRWITHCLEANUPS
 #  define EXPRWITHCLEANUPS(Type, Base) EXPR(Type, Base)
 #endif
@@ -528,6 +534,12 @@ MATERIALIZETEMPORARYEXPR(MaterializeTemporaryExpr, Expr)
 #endif
 MEMBEREXPR(MemberExpr, Expr)
 #undef MEMBEREXPR
+
+#ifndef NOINITEXPR
+#  define NOINITEXPR(Type, Base) EXPR(Type, Base)
+#endif
+NOINITEXPR(NoInitExpr, Expr)
+#undef NOINITEXPR
 
 #ifndef OBJCARRAYLITERAL
 #  define OBJCARRAYLITERAL(Type, Base) EXPR(Type, Base)
@@ -803,6 +815,18 @@ OMPATOMICDIRECTIVE(OMPAtomicDirective, OMPExecutableDirective)
 OMPBARRIERDIRECTIVE(OMPBarrierDirective, OMPExecutableDirective)
 #undef OMPBARRIERDIRECTIVE
 
+#ifndef OMPCANCELDIRECTIVE
+#  define OMPCANCELDIRECTIVE(Type, Base) OMPEXECUTABLEDIRECTIVE(Type, Base)
+#endif
+OMPCANCELDIRECTIVE(OMPCancelDirective, OMPExecutableDirective)
+#undef OMPCANCELDIRECTIVE
+
+#ifndef OMPCANCELLATIONPOINTDIRECTIVE
+#  define OMPCANCELLATIONPOINTDIRECTIVE(Type, Base) OMPEXECUTABLEDIRECTIVE(Type, Base)
+#endif
+OMPCANCELLATIONPOINTDIRECTIVE(OMPCancellationPointDirective, OMPExecutableDirective)
+#undef OMPCANCELLATIONPOINTDIRECTIVE
+
 #ifndef OMPCRITICALDIRECTIVE
 #  define OMPCRITICALDIRECTIVE(Type, Base) OMPEXECUTABLEDIRECTIVE(Type, Base)
 #endif
@@ -906,6 +930,12 @@ OMPTARGETDIRECTIVE(OMPTargetDirective, OMPExecutableDirective)
 #endif
 OMPTASKDIRECTIVE(OMPTaskDirective, OMPExecutableDirective)
 #undef OMPTASKDIRECTIVE
+
+#ifndef OMPTASKGROUPDIRECTIVE
+#  define OMPTASKGROUPDIRECTIVE(Type, Base) OMPEXECUTABLEDIRECTIVE(Type, Base)
+#endif
+OMPTASKGROUPDIRECTIVE(OMPTaskgroupDirective, OMPExecutableDirective)
+#undef OMPTASKGROUPDIRECTIVE
 
 #ifndef OMPTASKWAITDIRECTIVE
 #  define OMPTASKWAITDIRECTIVE(Type, Base) OMPEXECUTABLEDIRECTIVE(Type, Base)

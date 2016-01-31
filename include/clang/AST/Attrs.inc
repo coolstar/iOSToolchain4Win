@@ -1,6 +1,6 @@
 /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
 |*                                                                            *|
-|*Attribute classes' definitions                                              *|
+|* Attribute classes' definitions                                             *|
 |*                                                                            *|
 |* Automatically generated file, do not edit!                                 *|
 |*                                                                            *|
@@ -24,16 +24,16 @@ public:
               , unsigned NumSGPR
               , unsigned SI
              )
-    : InheritableAttr(attr::AMDGPUNumSGPR, R, SI)
+    : InheritableAttr(attr::AMDGPUNumSGPR, R, SI, 0, 0)
               , numSGPR(NumSGPR)
   {
 
   }
 
-  AMDGPUNumSGPRAttr *clone(ASTContext &C) const override;
+  AMDGPUNumSGPRAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   unsigned getNumSGPR() const {
     return numSGPR;
   }
@@ -41,7 +41,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AMDGPUNumSGPR; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class AMDGPUNumVGPRAttr : public InheritableAttr {
@@ -59,16 +58,16 @@ public:
               , unsigned NumVGPR
               , unsigned SI
              )
-    : InheritableAttr(attr::AMDGPUNumVGPR, R, SI)
+    : InheritableAttr(attr::AMDGPUNumVGPR, R, SI, 0, 0)
               , numVGPR(NumVGPR)
   {
 
   }
 
-  AMDGPUNumVGPRAttr *clone(ASTContext &C) const override;
+  AMDGPUNumVGPRAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   unsigned getNumVGPR() const {
     return numVGPR;
   }
@@ -76,7 +75,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AMDGPUNumVGPR; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ARMInterruptAttr : public InheritableAttr {
@@ -104,7 +102,7 @@ public:
               , InterruptType Interrupt
               , unsigned SI
              )
-    : InheritableAttr(attr::ARMInterrupt, R, SI)
+    : InheritableAttr(attr::ARMInterrupt, R, SI, 0, 0)
               , interrupt(Interrupt)
   {
 
@@ -113,15 +111,15 @@ public:
   ARMInterruptAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ARMInterrupt, R, SI)
+    : InheritableAttr(attr::ARMInterrupt, R, SI, 0, 0)
               , interrupt(InterruptType(0))
   {
   }
 
-  ARMInterruptAttr *clone(ASTContext &C) const override;
+  ARMInterruptAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   InterruptType getInterrupt() const {
     return interrupt;
   }
@@ -156,7 +154,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ARMInterrupt; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class AcquireCapabilityAttr : public InheritableAttr {
@@ -166,12 +163,12 @@ class AcquireCapabilityAttr : public InheritableAttr {
 
 public:
   enum Spelling {
-    GNU_acquire_capability,
-    CXX11_clang_acquire_capability,
-    GNU_acquire_shared_capability,
-    CXX11_clang_acquire_shared_capability,
-    GNU_exclusive_lock_function,
-    GNU_shared_lock_function
+    GNU_acquire_capability = 0,
+    CXX11_clang_acquire_capability = 1,
+    GNU_acquire_shared_capability = 2,
+    CXX11_clang_acquire_shared_capability = 3,
+    GNU_exclusive_lock_function = 4,
+    GNU_shared_lock_function = 5
   };
 
   static AcquireCapabilityAttr *CreateImplicit(ASTContext &Ctx, Spelling S, Expr * *Args, unsigned ArgsSize, SourceRange Loc = SourceRange()) {
@@ -184,7 +181,7 @@ public:
               , Expr * *Args, unsigned ArgsSize
               , unsigned SI
              )
-    : InheritableAttr(attr::AcquireCapability, R, SI)
+    : InheritableAttr(attr::AcquireCapability, R, SI, 1, 1)
               , args_Size(ArgsSize), args_(new (Ctx, 16) Expr *[args_Size])
   {
     std::copy(Args, Args + args_Size, args_);
@@ -193,15 +190,15 @@ public:
   AcquireCapabilityAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::AcquireCapability, R, SI)
+    : InheritableAttr(attr::AcquireCapability, R, SI, 1, 1)
               , args_Size(0), args_(nullptr)
   {
   }
 
-  AcquireCapabilityAttr *clone(ASTContext &C) const override;
+  AcquireCapabilityAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Spelling getSemanticSpelling() const {
   switch (SpellingListIndex) {
     default: llvm_unreachable("Unknown spelling list index");
@@ -226,9 +223,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AcquireCapability; }
-  bool isLateParsed() const override { return 1; }
-  bool duplicatesAllowed() const override { return true; }
-
 };
 
 class AcquiredAfterAttr : public InheritableAttr {
@@ -247,7 +241,7 @@ public:
               , Expr * *Args, unsigned ArgsSize
               , unsigned SI
              )
-    : InheritableAttr(attr::AcquiredAfter, R, SI)
+    : InheritableAttr(attr::AcquiredAfter, R, SI, 1, 1)
               , args_Size(ArgsSize), args_(new (Ctx, 16) Expr *[args_Size])
   {
     std::copy(Args, Args + args_Size, args_);
@@ -256,15 +250,15 @@ public:
   AcquiredAfterAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::AcquiredAfter, R, SI)
+    : InheritableAttr(attr::AcquiredAfter, R, SI, 1, 1)
               , args_Size(0), args_(nullptr)
   {
   }
 
-  AcquiredAfterAttr *clone(ASTContext &C) const override;
+  AcquiredAfterAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   typedef Expr ** args_iterator;
   args_iterator args_begin() const { return args_; }
   args_iterator args_end() const { return args_ + args_Size; }
@@ -275,9 +269,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AcquiredAfter; }
-  bool isLateParsed() const override { return 1; }
-  bool duplicatesAllowed() const override { return true; }
-
 };
 
 class AcquiredBeforeAttr : public InheritableAttr {
@@ -296,7 +287,7 @@ public:
               , Expr * *Args, unsigned ArgsSize
               , unsigned SI
              )
-    : InheritableAttr(attr::AcquiredBefore, R, SI)
+    : InheritableAttr(attr::AcquiredBefore, R, SI, 1, 1)
               , args_Size(ArgsSize), args_(new (Ctx, 16) Expr *[args_Size])
   {
     std::copy(Args, Args + args_Size, args_);
@@ -305,15 +296,15 @@ public:
   AcquiredBeforeAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::AcquiredBefore, R, SI)
+    : InheritableAttr(attr::AcquiredBefore, R, SI, 1, 1)
               , args_Size(0), args_(nullptr)
   {
   }
 
-  AcquiredBeforeAttr *clone(ASTContext &C) const override;
+  AcquiredBeforeAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   typedef Expr ** args_iterator;
   args_iterator args_begin() const { return args_; }
   args_iterator args_end() const { return args_ + args_Size; }
@@ -324,9 +315,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AcquiredBefore; }
-  bool isLateParsed() const override { return 1; }
-  bool duplicatesAllowed() const override { return true; }
-
 };
 
 class AliasAttr : public Attr {
@@ -345,16 +333,17 @@ public:
               , llvm::StringRef Aliasee
               , unsigned SI
              )
-    : Attr(attr::Alias, R, SI)
+    : Attr(attr::Alias, R, SI, 0, 0)
               , aliaseeLength(Aliasee.size()),aliasee(new (Ctx, 1) char[aliaseeLength])
   {
-      std::memcpy(aliasee, Aliasee.data(), aliaseeLength);
+      if (!Aliasee.empty())
+        std::memcpy(aliasee, Aliasee.data(), aliaseeLength);
   }
 
-  AliasAttr *clone(ASTContext &C) const override;
+  AliasAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   llvm::StringRef getAliasee() const {
     return llvm::StringRef(aliasee, aliaseeLength);
   }
@@ -364,13 +353,13 @@ public:
   void setAliasee(ASTContext &C, llvm::StringRef S) {
     aliaseeLength = S.size();
     this->aliasee = new (C, 1) char [aliaseeLength];
-    std::memcpy(this->aliasee, S.data(), aliaseeLength);
+    if (!S.empty())
+      std::memcpy(this->aliasee, S.data(), aliaseeLength);
   }
 
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Alias; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class AlignMac68kAttr : public InheritableAttr {
@@ -385,18 +374,17 @@ public:
   AlignMac68kAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::AlignMac68k, R, SI)
+    : InheritableAttr(attr::AlignMac68k, R, SI, 0, 0)
   {
   }
 
-  AlignMac68kAttr *clone(ASTContext &C) const override;
+  AlignMac68kAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AlignMac68k; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class AlignValueAttr : public Attr {
@@ -414,16 +402,16 @@ public:
               , Expr * Alignment
               , unsigned SI
              )
-    : Attr(attr::AlignValue, R, SI)
+    : Attr(attr::AlignValue, R, SI, 0, 0)
               , alignment(Alignment)
   {
 
   }
 
-  AlignValueAttr *clone(ASTContext &C) const override;
+  AlignValueAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Expr * getAlignment() const {
     return alignment;
   }
@@ -431,7 +419,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AlignValue; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class AlignedAttr : public InheritableAttr {
@@ -444,11 +431,11 @@ TypeSourceInfo *alignmentType;
 
 public:
   enum Spelling {
-    GNU_aligned,
-    CXX11_gnu_aligned,
-    Declspec_align,
-    Keyword_alignas,
-    Keyword_Alignas
+    GNU_aligned = 0,
+    CXX11_gnu_aligned = 1,
+    Declspec_align = 2,
+    Keyword_alignas = 3,
+    Keyword_Alignas = 4
   };
 
   static AlignedAttr *CreateImplicit(ASTContext &Ctx, Spelling S, bool IsAlignmentExpr, void *Alignment, SourceRange Loc = SourceRange()) {
@@ -461,7 +448,7 @@ public:
               , bool IsAlignmentExpr, void *Alignment
               , unsigned SI
              )
-    : InheritableAttr(attr::Aligned, R, SI)
+    : InheritableAttr(attr::Aligned, R, SI, 0, 0)
               , isalignmentExpr(IsAlignmentExpr)
   {
     if (isalignmentExpr)
@@ -473,15 +460,15 @@ public:
   AlignedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Aligned, R, SI)
+    : InheritableAttr(attr::Aligned, R, SI, 0, 0)
               , isalignmentExpr(false)
   {
   }
 
-  AlignedAttr *clone(ASTContext &C) const override;
+  AlignedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Spelling getSemanticSpelling() const {
   switch (SpellingListIndex) {
     default: llvm_unreachable("Unknown spelling list index");
@@ -515,16 +502,15 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Aligned; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class AlwaysInlineAttr : public InheritableAttr {
 
 public:
   enum Spelling {
-    GNU_always_inline,
-    CXX11_gnu_always_inline,
-    Keyword_forceinline
+    GNU_always_inline = 0,
+    CXX11_gnu_always_inline = 1,
+    Keyword_forceinline = 2
   };
 
   static AlwaysInlineAttr *CreateImplicit(ASTContext &Ctx, Spelling S, SourceRange Loc = SourceRange()) {
@@ -536,14 +522,14 @@ public:
   AlwaysInlineAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::AlwaysInline, R, SI)
+    : InheritableAttr(attr::AlwaysInline, R, SI, 0, 0)
   {
   }
 
-  AlwaysInlineAttr *clone(ASTContext &C) const override;
+  AlwaysInlineAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Spelling getSemanticSpelling() const {
   switch (SpellingListIndex) {
     default: llvm_unreachable("Unknown spelling list index");
@@ -555,7 +541,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AlwaysInline; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class AnalyzerNoReturnAttr : public InheritableAttr {
@@ -570,18 +555,17 @@ public:
   AnalyzerNoReturnAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::AnalyzerNoReturn, R, SI)
+    : InheritableAttr(attr::AnalyzerNoReturn, R, SI, 0, 0)
   {
   }
 
-  AnalyzerNoReturnAttr *clone(ASTContext &C) const override;
+  AnalyzerNoReturnAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AnalyzerNoReturn; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class AnnotateAttr : public InheritableParamAttr {
@@ -600,16 +584,17 @@ public:
               , llvm::StringRef Annotation
               , unsigned SI
              )
-    : InheritableParamAttr(attr::Annotate, R, SI)
+    : InheritableParamAttr(attr::Annotate, R, SI, 0, 0)
               , annotationLength(Annotation.size()),annotation(new (Ctx, 1) char[annotationLength])
   {
-      std::memcpy(annotation, Annotation.data(), annotationLength);
+      if (!Annotation.empty())
+        std::memcpy(annotation, Annotation.data(), annotationLength);
   }
 
-  AnnotateAttr *clone(ASTContext &C) const override;
+  AnnotateAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   llvm::StringRef getAnnotation() const {
     return llvm::StringRef(annotation, annotationLength);
   }
@@ -619,13 +604,13 @@ public:
   void setAnnotation(ASTContext &C, llvm::StringRef S) {
     annotationLength = S.size();
     this->annotation = new (C, 1) char [annotationLength];
-    std::memcpy(this->annotation, S.data(), annotationLength);
+    if (!S.empty())
+      std::memcpy(this->annotation, S.data(), annotationLength);
   }
 
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Annotate; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ArcWeakrefUnavailableAttr : public InheritableAttr {
@@ -640,18 +625,17 @@ public:
   ArcWeakrefUnavailableAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ArcWeakrefUnavailable, R, SI)
+    : InheritableAttr(attr::ArcWeakrefUnavailable, R, SI, 0, 0)
   {
   }
 
-  ArcWeakrefUnavailableAttr *clone(ASTContext &C) const override;
+  ArcWeakrefUnavailableAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ArcWeakrefUnavailable; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ArgumentWithTypeTagAttr : public InheritableAttr {
@@ -666,8 +650,8 @@ bool isPointer;
 
 public:
   enum Spelling {
-    GNU_argument_with_type_tag,
-    GNU_pointer_with_type_tag
+    GNU_argument_with_type_tag = 0,
+    GNU_pointer_with_type_tag = 1
   };
 
   static ArgumentWithTypeTagAttr *CreateImplicit(ASTContext &Ctx, Spelling S, IdentifierInfo * ArgumentKind, unsigned ArgumentIdx, unsigned TypeTagIdx, bool IsPointer, SourceRange Loc = SourceRange()) {
@@ -683,7 +667,7 @@ public:
               , bool IsPointer
               , unsigned SI
              )
-    : InheritableAttr(attr::ArgumentWithTypeTag, R, SI)
+    : InheritableAttr(attr::ArgumentWithTypeTag, R, SI, 0, 0)
               , argumentKind(ArgumentKind)
               , argumentIdx(ArgumentIdx)
               , typeTagIdx(TypeTagIdx)
@@ -695,10 +679,10 @@ public:
 
   }
 
-  ArgumentWithTypeTagAttr *clone(ASTContext &C) const override;
+  ArgumentWithTypeTagAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Spelling getSemanticSpelling() const {
   switch (SpellingListIndex) {
     default: llvm_unreachable("Unknown spelling list index");
@@ -725,7 +709,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ArgumentWithTypeTag; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class AsmLabelAttr : public InheritableAttr {
@@ -744,16 +727,17 @@ public:
               , llvm::StringRef Label
               , unsigned SI
              )
-    : InheritableAttr(attr::AsmLabel, R, SI)
+    : InheritableAttr(attr::AsmLabel, R, SI, 0, 0)
               , labelLength(Label.size()),label(new (Ctx, 1) char[labelLength])
   {
-      std::memcpy(label, Label.data(), labelLength);
+      if (!Label.empty())
+        std::memcpy(label, Label.data(), labelLength);
   }
 
-  AsmLabelAttr *clone(ASTContext &C) const override;
+  AsmLabelAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   llvm::StringRef getLabel() const {
     return llvm::StringRef(label, labelLength);
   }
@@ -763,13 +747,13 @@ public:
   void setLabel(ASTContext &C, llvm::StringRef S) {
     labelLength = S.size();
     this->label = new (C, 1) char [labelLength];
-    std::memcpy(this->label, S.data(), labelLength);
+    if (!S.empty())
+      std::memcpy(this->label, S.data(), labelLength);
   }
 
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AsmLabel; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class AssertCapabilityAttr : public InheritableAttr {
@@ -778,10 +762,10 @@ Expr * expr;
 
 public:
   enum Spelling {
-    GNU_assert_capability,
-    CXX11_clang_assert_capability,
-    GNU_assert_shared_capability,
-    CXX11_clang_assert_shared_capability
+    GNU_assert_capability = 0,
+    CXX11_clang_assert_capability = 1,
+    GNU_assert_shared_capability = 2,
+    CXX11_clang_assert_shared_capability = 3
   };
 
   static AssertCapabilityAttr *CreateImplicit(ASTContext &Ctx, Spelling S, Expr * Expr, SourceRange Loc = SourceRange()) {
@@ -794,16 +778,16 @@ public:
               , Expr * Expr
               , unsigned SI
              )
-    : InheritableAttr(attr::AssertCapability, R, SI)
+    : InheritableAttr(attr::AssertCapability, R, SI, 1, 1)
               , expr(Expr)
   {
 
   }
 
-  AssertCapabilityAttr *clone(ASTContext &C) const override;
+  AssertCapabilityAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Spelling getSemanticSpelling() const {
   switch (SpellingListIndex) {
     default: llvm_unreachable("Unknown spelling list index");
@@ -822,9 +806,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AssertCapability; }
-  bool isLateParsed() const override { return 1; }
-  bool duplicatesAllowed() const override { return true; }
-
 };
 
 class AssertExclusiveLockAttr : public InheritableAttr {
@@ -843,7 +824,7 @@ public:
               , Expr * *Args, unsigned ArgsSize
               , unsigned SI
              )
-    : InheritableAttr(attr::AssertExclusiveLock, R, SI)
+    : InheritableAttr(attr::AssertExclusiveLock, R, SI, 1, 1)
               , args_Size(ArgsSize), args_(new (Ctx, 16) Expr *[args_Size])
   {
     std::copy(Args, Args + args_Size, args_);
@@ -852,15 +833,15 @@ public:
   AssertExclusiveLockAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::AssertExclusiveLock, R, SI)
+    : InheritableAttr(attr::AssertExclusiveLock, R, SI, 1, 1)
               , args_Size(0), args_(nullptr)
   {
   }
 
-  AssertExclusiveLockAttr *clone(ASTContext &C) const override;
+  AssertExclusiveLockAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   typedef Expr ** args_iterator;
   args_iterator args_begin() const { return args_; }
   args_iterator args_end() const { return args_ + args_Size; }
@@ -871,9 +852,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AssertExclusiveLock; }
-  bool isLateParsed() const override { return 1; }
-  bool duplicatesAllowed() const override { return true; }
-
 };
 
 class AssertSharedLockAttr : public InheritableAttr {
@@ -892,7 +870,7 @@ public:
               , Expr * *Args, unsigned ArgsSize
               , unsigned SI
              )
-    : InheritableAttr(attr::AssertSharedLock, R, SI)
+    : InheritableAttr(attr::AssertSharedLock, R, SI, 1, 1)
               , args_Size(ArgsSize), args_(new (Ctx, 16) Expr *[args_Size])
   {
     std::copy(Args, Args + args_Size, args_);
@@ -901,15 +879,15 @@ public:
   AssertSharedLockAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::AssertSharedLock, R, SI)
+    : InheritableAttr(attr::AssertSharedLock, R, SI, 1, 1)
               , args_Size(0), args_(nullptr)
   {
   }
 
-  AssertSharedLockAttr *clone(ASTContext &C) const override;
+  AssertSharedLockAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   typedef Expr ** args_iterator;
   args_iterator args_begin() const { return args_; }
   args_iterator args_end() const { return args_ + args_Size; }
@@ -920,9 +898,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AssertSharedLock; }
-  bool isLateParsed() const override { return 1; }
-  bool duplicatesAllowed() const override { return true; }
-
 };
 
 class AssumeAlignedAttr : public InheritableAttr {
@@ -943,7 +918,7 @@ public:
               , Expr * Offset
               , unsigned SI
              )
-    : InheritableAttr(attr::AssumeAligned, R, SI)
+    : InheritableAttr(attr::AssumeAligned, R, SI, 0, 0)
               , alignment(Alignment)
               , offset(Offset)
   {
@@ -955,17 +930,17 @@ public:
               , Expr * Alignment
               , unsigned SI
              )
-    : InheritableAttr(attr::AssumeAligned, R, SI)
+    : InheritableAttr(attr::AssumeAligned, R, SI, 0, 0)
               , alignment()
               , offset()
   {
 
   }
 
-  AssumeAlignedAttr *clone(ASTContext &C) const override;
+  AssumeAlignedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Expr * getAlignment() const {
     return alignment;
   }
@@ -977,7 +952,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AssumeAligned; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class AvailabilityAttr : public InheritableAttr {
@@ -1014,7 +988,7 @@ public:
               , llvm::StringRef Message
               , unsigned SI
              )
-    : InheritableAttr(attr::Availability, R, SI)
+    : InheritableAttr(attr::Availability, R, SI, 0, 1)
               , platform(Platform)
               , introduced(Introduced)
               , deprecated(Deprecated)
@@ -1027,13 +1001,14 @@ public:
 
 
 
-      std::memcpy(message, Message.data(), messageLength);
+      if (!Message.empty())
+        std::memcpy(message, Message.data(), messageLength);
   }
 
-  AvailabilityAttr *clone(ASTContext &C) const override;
+  AvailabilityAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   IdentifierInfo * getPlatform() const {
     return platform;
   }
@@ -1072,20 +1047,21 @@ public:
   void setMessage(ASTContext &C, llvm::StringRef S) {
     messageLength = S.size();
     this->message = new (C, 1) char [messageLength];
-    std::memcpy(this->message, S.data(), messageLength);
+    if (!S.empty())
+      std::memcpy(this->message, S.data(), messageLength);
   }
 
 static llvm::StringRef getPrettyPlatformName(llvm::StringRef Platform) {
     return llvm::StringSwitch<llvm::StringRef>(Platform)
+             .Case("android", "Android")
              .Case("ios", "iOS")
              .Case("macosx", "OS X")
+             .Case("ios_app_extension", "iOS (App Extension)")
+             .Case("macosx_app_extension", "OS X (App Extension)")
              .Default(llvm::StringRef());
 } 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Availability; }
-  bool isLateParsed() const override { return 0; }
-  bool duplicatesAllowed() const override { return true; }
-
 };
 
 class BlocksAttr : public InheritableAttr {
@@ -1108,16 +1084,16 @@ public:
               , BlockType Type
               , unsigned SI
              )
-    : InheritableAttr(attr::Blocks, R, SI)
+    : InheritableAttr(attr::Blocks, R, SI, 0, 0)
               , type(Type)
   {
 
   }
 
-  BlocksAttr *clone(ASTContext &C) const override;
+  BlocksAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   BlockType getType() const {
     return type;
   }
@@ -1142,7 +1118,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Blocks; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class C11NoReturnAttr : public InheritableAttr {
@@ -1157,18 +1132,17 @@ public:
   C11NoReturnAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::C11NoReturn, R, SI)
+    : InheritableAttr(attr::C11NoReturn, R, SI, 0, 0)
   {
   }
 
-  C11NoReturnAttr *clone(ASTContext &C) const override;
+  C11NoReturnAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::C11NoReturn; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CDeclAttr : public InheritableAttr {
@@ -1183,18 +1157,17 @@ public:
   CDeclAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::CDecl, R, SI)
+    : InheritableAttr(attr::CDecl, R, SI, 0, 0)
   {
   }
 
-  CDeclAttr *clone(ASTContext &C) const override;
+  CDeclAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CDecl; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CFAuditedTransferAttr : public InheritableAttr {
@@ -1209,18 +1182,17 @@ public:
   CFAuditedTransferAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::CFAuditedTransfer, R, SI)
+    : InheritableAttr(attr::CFAuditedTransfer, R, SI, 0, 0)
   {
   }
 
-  CFAuditedTransferAttr *clone(ASTContext &C) const override;
+  CFAuditedTransferAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CFAuditedTransfer; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CFConsumedAttr : public InheritableParamAttr {
@@ -1235,18 +1207,17 @@ public:
   CFConsumedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableParamAttr(attr::CFConsumed, R, SI)
+    : InheritableParamAttr(attr::CFConsumed, R, SI, 0, 0)
   {
   }
 
-  CFConsumedAttr *clone(ASTContext &C) const override;
+  CFConsumedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CFConsumed; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CFReturnsNotRetainedAttr : public InheritableAttr {
@@ -1261,18 +1232,17 @@ public:
   CFReturnsNotRetainedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::CFReturnsNotRetained, R, SI)
+    : InheritableAttr(attr::CFReturnsNotRetained, R, SI, 0, 0)
   {
   }
 
-  CFReturnsNotRetainedAttr *clone(ASTContext &C) const override;
+  CFReturnsNotRetainedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CFReturnsNotRetained; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CFReturnsRetainedAttr : public InheritableAttr {
@@ -1287,18 +1257,17 @@ public:
   CFReturnsRetainedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::CFReturnsRetained, R, SI)
+    : InheritableAttr(attr::CFReturnsRetained, R, SI, 0, 0)
   {
   }
 
-  CFReturnsRetainedAttr *clone(ASTContext &C) const override;
+  CFReturnsRetainedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CFReturnsRetained; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CFUnknownTransferAttr : public InheritableAttr {
@@ -1313,18 +1282,17 @@ public:
   CFUnknownTransferAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::CFUnknownTransfer, R, SI)
+    : InheritableAttr(attr::CFUnknownTransfer, R, SI, 0, 0)
   {
   }
 
-  CFUnknownTransferAttr *clone(ASTContext &C) const override;
+  CFUnknownTransferAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CFUnknownTransfer; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CUDAConstantAttr : public InheritableAttr {
@@ -1339,18 +1307,17 @@ public:
   CUDAConstantAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::CUDAConstant, R, SI)
+    : InheritableAttr(attr::CUDAConstant, R, SI, 0, 0)
   {
   }
 
-  CUDAConstantAttr *clone(ASTContext &C) const override;
+  CUDAConstantAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CUDAConstant; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CUDADeviceAttr : public InheritableAttr {
@@ -1365,18 +1332,17 @@ public:
   CUDADeviceAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::CUDADevice, R, SI)
+    : InheritableAttr(attr::CUDADevice, R, SI, 0, 0)
   {
   }
 
-  CUDADeviceAttr *clone(ASTContext &C) const override;
+  CUDADeviceAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CUDADevice; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CUDAGlobalAttr : public InheritableAttr {
@@ -1391,18 +1357,17 @@ public:
   CUDAGlobalAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::CUDAGlobal, R, SI)
+    : InheritableAttr(attr::CUDAGlobal, R, SI, 0, 0)
   {
   }
 
-  CUDAGlobalAttr *clone(ASTContext &C) const override;
+  CUDAGlobalAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CUDAGlobal; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CUDAHostAttr : public InheritableAttr {
@@ -1417,18 +1382,17 @@ public:
   CUDAHostAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::CUDAHost, R, SI)
+    : InheritableAttr(attr::CUDAHost, R, SI, 0, 0)
   {
   }
 
-  CUDAHostAttr *clone(ASTContext &C) const override;
+  CUDAHostAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CUDAHost; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CUDAInvalidTargetAttr : public InheritableAttr {
@@ -1443,39 +1407,38 @@ public:
   CUDAInvalidTargetAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::CUDAInvalidTarget, R, SI)
+    : InheritableAttr(attr::CUDAInvalidTarget, R, SI, 0, 0)
   {
   }
 
-  CUDAInvalidTargetAttr *clone(ASTContext &C) const override;
+  CUDAInvalidTargetAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CUDAInvalidTarget; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CUDALaunchBoundsAttr : public InheritableAttr {
-int maxThreads;
+Expr * maxThreads;
 
-int minBlocks;
+Expr * minBlocks;
 
 
 public:
-  static CUDALaunchBoundsAttr *CreateImplicit(ASTContext &Ctx, int MaxThreads, int MinBlocks, SourceRange Loc = SourceRange()) {
+  static CUDALaunchBoundsAttr *CreateImplicit(ASTContext &Ctx, Expr * MaxThreads, Expr * MinBlocks, SourceRange Loc = SourceRange()) {
     CUDALaunchBoundsAttr *A = new (Ctx) CUDALaunchBoundsAttr(Loc, Ctx, MaxThreads, MinBlocks, 0);
     A->setImplicit(true);
     return A;
   }
 
   CUDALaunchBoundsAttr(SourceRange R, ASTContext &Ctx
-              , int MaxThreads
-              , int MinBlocks
+              , Expr * MaxThreads
+              , Expr * MinBlocks
               , unsigned SI
              )
-    : InheritableAttr(attr::CUDALaunchBounds, R, SI)
+    : InheritableAttr(attr::CUDALaunchBounds, R, SI, 0, 0)
               , maxThreads(MaxThreads)
               , minBlocks(MinBlocks)
   {
@@ -1484,34 +1447,31 @@ public:
   }
 
   CUDALaunchBoundsAttr(SourceRange R, ASTContext &Ctx
-              , int MaxThreads
+              , Expr * MaxThreads
               , unsigned SI
              )
-    : InheritableAttr(attr::CUDALaunchBounds, R, SI)
+    : InheritableAttr(attr::CUDALaunchBounds, R, SI, 0, 0)
               , maxThreads()
               , minBlocks()
   {
 
   }
 
-  CUDALaunchBoundsAttr *clone(ASTContext &C) const override;
+  CUDALaunchBoundsAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
-  int getMaxThreads() const {
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+  Expr * getMaxThreads() const {
     return maxThreads;
   }
 
-  int getMinBlocks() const {
+  Expr * getMinBlocks() const {
     return minBlocks;
   }
-
-  static const int DefaultMinBlocks = 0;
 
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CUDALaunchBounds; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CUDASharedAttr : public InheritableAttr {
@@ -1526,18 +1486,17 @@ public:
   CUDASharedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::CUDAShared, R, SI)
+    : InheritableAttr(attr::CUDAShared, R, SI, 0, 0)
   {
   }
 
-  CUDASharedAttr *clone(ASTContext &C) const override;
+  CUDASharedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CUDAShared; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CXX11NoReturnAttr : public InheritableAttr {
@@ -1552,18 +1511,17 @@ public:
   CXX11NoReturnAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::CXX11NoReturn, R, SI)
+    : InheritableAttr(attr::CXX11NoReturn, R, SI, 0, 0)
   {
   }
 
-  CXX11NoReturnAttr *clone(ASTContext &C) const override;
+  CXX11NoReturnAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CXX11NoReturn; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CallableWhenAttr : public InheritableAttr {
@@ -1589,7 +1547,7 @@ public:
               , ConsumedState *CallableStates, unsigned CallableStatesSize
               , unsigned SI
              )
-    : InheritableAttr(attr::CallableWhen, R, SI)
+    : InheritableAttr(attr::CallableWhen, R, SI, 0, 0)
               , callableStates_Size(CallableStatesSize), callableStates_(new (Ctx, 16) ConsumedState[callableStates_Size])
   {
     std::copy(CallableStates, CallableStates + callableStates_Size, callableStates_);
@@ -1598,15 +1556,15 @@ public:
   CallableWhenAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::CallableWhen, R, SI)
+    : InheritableAttr(attr::CallableWhen, R, SI, 0, 0)
               , callableStates_Size(0), callableStates_(nullptr)
   {
   }
 
-  CallableWhenAttr *clone(ASTContext &C) const override;
+  CallableWhenAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   typedef ConsumedState* callableStates_iterator;
   callableStates_iterator callableStates_begin() const { return callableStates_; }
   callableStates_iterator callableStates_end() const { return callableStates_ + callableStates_Size; }
@@ -1638,7 +1596,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CallableWhen; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CapabilityAttr : public InheritableAttr {
@@ -1648,10 +1605,10 @@ char *name;
 
 public:
   enum Spelling {
-    GNU_capability,
-    CXX11_clang_capability,
-    GNU_shared_capability,
-    CXX11_clang_shared_capability
+    GNU_capability = 0,
+    CXX11_clang_capability = 1,
+    GNU_shared_capability = 2,
+    CXX11_clang_shared_capability = 3
   };
 
   static CapabilityAttr *CreateImplicit(ASTContext &Ctx, Spelling S, llvm::StringRef Name, SourceRange Loc = SourceRange()) {
@@ -1664,16 +1621,17 @@ public:
               , llvm::StringRef Name
               , unsigned SI
              )
-    : InheritableAttr(attr::Capability, R, SI)
+    : InheritableAttr(attr::Capability, R, SI, 0, 0)
               , nameLength(Name.size()),name(new (Ctx, 1) char[nameLength])
   {
-      std::memcpy(name, Name.data(), nameLength);
+      if (!Name.empty())
+        std::memcpy(name, Name.data(), nameLength);
   }
 
-  CapabilityAttr *clone(ASTContext &C) const override;
+  CapabilityAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Spelling getSemanticSpelling() const {
   switch (SpellingListIndex) {
     default: llvm_unreachable("Unknown spelling list index");
@@ -1694,7 +1652,8 @@ public:
   void setName(ASTContext &C, llvm::StringRef S) {
     nameLength = S.size();
     this->name = new (C, 1) char [nameLength];
-    std::memcpy(this->name, S.data(), nameLength);
+    if (!S.empty())
+      std::memcpy(this->name, S.data(), nameLength);
   }
 
 
@@ -1703,7 +1662,6 @@ public:
   
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Capability; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CapturedRecordAttr : public InheritableAttr {
@@ -1718,18 +1676,17 @@ public:
   CapturedRecordAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::CapturedRecord, R, SI)
+    : InheritableAttr(attr::CapturedRecord, R, SI, 0, 0)
   {
   }
 
-  CapturedRecordAttr *clone(ASTContext &C) const override;
+  CapturedRecordAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CapturedRecord; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CarriesDependencyAttr : public InheritableParamAttr {
@@ -1744,18 +1701,17 @@ public:
   CarriesDependencyAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableParamAttr(attr::CarriesDependency, R, SI)
+    : InheritableParamAttr(attr::CarriesDependency, R, SI, 0, 0)
   {
   }
 
-  CarriesDependencyAttr *clone(ASTContext &C) const override;
+  CarriesDependencyAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::CarriesDependency; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CleanupAttr : public InheritableAttr {
@@ -1773,16 +1729,16 @@ public:
               , FunctionDecl * FunctionDecl
               , unsigned SI
              )
-    : InheritableAttr(attr::Cleanup, R, SI)
+    : InheritableAttr(attr::Cleanup, R, SI, 0, 0)
               , functionDecl(FunctionDecl)
   {
 
   }
 
-  CleanupAttr *clone(ASTContext &C) const override;
+  CleanupAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   FunctionDecl * getFunctionDecl() const {
     return functionDecl;
   }
@@ -1790,7 +1746,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Cleanup; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ColdAttr : public InheritableAttr {
@@ -1805,18 +1760,17 @@ public:
   ColdAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Cold, R, SI)
+    : InheritableAttr(attr::Cold, R, SI, 0, 0)
   {
   }
 
-  ColdAttr *clone(ASTContext &C) const override;
+  ColdAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Cold; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class CommonAttr : public InheritableAttr {
@@ -1831,18 +1785,17 @@ public:
   CommonAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Common, R, SI)
+    : InheritableAttr(attr::Common, R, SI, 0, 0)
   {
   }
 
-  CommonAttr *clone(ASTContext &C) const override;
+  CommonAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Common; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ConstAttr : public InheritableAttr {
@@ -1857,18 +1810,17 @@ public:
   ConstAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Const, R, SI)
+    : InheritableAttr(attr::Const, R, SI, 0, 0)
   {
   }
 
-  ConstAttr *clone(ASTContext &C) const override;
+  ConstAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Const; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ConstructorAttr : public InheritableAttr {
@@ -1886,7 +1838,7 @@ public:
               , int Priority
               , unsigned SI
              )
-    : InheritableAttr(attr::Constructor, R, SI)
+    : InheritableAttr(attr::Constructor, R, SI, 0, 0)
               , priority(Priority)
   {
 
@@ -1895,15 +1847,15 @@ public:
   ConstructorAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Constructor, R, SI)
+    : InheritableAttr(attr::Constructor, R, SI, 0, 0)
               , priority()
   {
   }
 
-  ConstructorAttr *clone(ASTContext &C) const override;
+  ConstructorAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   int getPriority() const {
     return priority;
   }
@@ -1913,7 +1865,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Constructor; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ConsumableAttr : public InheritableAttr {
@@ -1938,16 +1889,16 @@ public:
               , ConsumedState DefaultState
               , unsigned SI
              )
-    : InheritableAttr(attr::Consumable, R, SI)
+    : InheritableAttr(attr::Consumable, R, SI, 0, 0)
               , defaultState(DefaultState)
   {
 
   }
 
-  ConsumableAttr *clone(ASTContext &C) const override;
+  ConsumableAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   ConsumedState getDefaultState() const {
     return defaultState;
   }
@@ -1976,7 +1927,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Consumable; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ConsumableAutoCastAttr : public InheritableAttr {
@@ -1991,18 +1941,17 @@ public:
   ConsumableAutoCastAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ConsumableAutoCast, R, SI)
+    : InheritableAttr(attr::ConsumableAutoCast, R, SI, 0, 0)
   {
   }
 
-  ConsumableAutoCastAttr *clone(ASTContext &C) const override;
+  ConsumableAutoCastAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ConsumableAutoCast; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ConsumableSetOnReadAttr : public InheritableAttr {
@@ -2017,18 +1966,17 @@ public:
   ConsumableSetOnReadAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ConsumableSetOnRead, R, SI)
+    : InheritableAttr(attr::ConsumableSetOnRead, R, SI, 0, 0)
   {
   }
 
-  ConsumableSetOnReadAttr *clone(ASTContext &C) const override;
+  ConsumableSetOnReadAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ConsumableSetOnRead; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class DLLExportAttr : public InheritableAttr {
@@ -2043,18 +1991,17 @@ public:
   DLLExportAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::DLLExport, R, SI)
+    : InheritableAttr(attr::DLLExport, R, SI, 0, 0)
   {
   }
 
-  DLLExportAttr *clone(ASTContext &C) const override;
+  DLLExportAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::DLLExport; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class DLLImportAttr : public InheritableAttr {
@@ -2069,18 +2016,17 @@ public:
   DLLImportAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::DLLImport, R, SI)
+    : InheritableAttr(attr::DLLImport, R, SI, 0, 0)
   {
   }
 
-  DLLImportAttr *clone(ASTContext &C) const override;
+  DLLImportAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::DLLImport; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class DeprecatedAttr : public InheritableAttr {
@@ -2099,24 +2045,25 @@ public:
               , llvm::StringRef Message
               , unsigned SI
              )
-    : InheritableAttr(attr::Deprecated, R, SI)
+    : InheritableAttr(attr::Deprecated, R, SI, 0, 0)
               , messageLength(Message.size()),message(new (Ctx, 1) char[messageLength])
   {
-      std::memcpy(message, Message.data(), messageLength);
+      if (!Message.empty())
+        std::memcpy(message, Message.data(), messageLength);
   }
 
   DeprecatedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Deprecated, R, SI)
+    : InheritableAttr(attr::Deprecated, R, SI, 0, 0)
               , messageLength(0),message(0)
   {
   }
 
-  DeprecatedAttr *clone(ASTContext &C) const override;
+  DeprecatedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   llvm::StringRef getMessage() const {
     return llvm::StringRef(message, messageLength);
   }
@@ -2126,13 +2073,13 @@ public:
   void setMessage(ASTContext &C, llvm::StringRef S) {
     messageLength = S.size();
     this->message = new (C, 1) char [messageLength];
-    std::memcpy(this->message, S.data(), messageLength);
+    if (!S.empty())
+      std::memcpy(this->message, S.data(), messageLength);
   }
 
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Deprecated; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class DestructorAttr : public InheritableAttr {
@@ -2150,7 +2097,7 @@ public:
               , int Priority
               , unsigned SI
              )
-    : InheritableAttr(attr::Destructor, R, SI)
+    : InheritableAttr(attr::Destructor, R, SI, 0, 0)
               , priority(Priority)
   {
 
@@ -2159,15 +2106,15 @@ public:
   DestructorAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Destructor, R, SI)
+    : InheritableAttr(attr::Destructor, R, SI, 0, 0)
               , priority()
   {
   }
 
-  DestructorAttr *clone(ASTContext &C) const override;
+  DestructorAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   int getPriority() const {
     return priority;
   }
@@ -2177,7 +2124,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Destructor; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class EnableIfAttr : public InheritableAttr {
@@ -2199,18 +2145,19 @@ public:
               , llvm::StringRef Message
               , unsigned SI
              )
-    : InheritableAttr(attr::EnableIf, R, SI)
+    : InheritableAttr(attr::EnableIf, R, SI, 0, 0)
               , cond(Cond)
               , messageLength(Message.size()),message(new (Ctx, 1) char[messageLength])
   {
 
-      std::memcpy(message, Message.data(), messageLength);
+      if (!Message.empty())
+        std::memcpy(message, Message.data(), messageLength);
   }
 
-  EnableIfAttr *clone(ASTContext &C) const override;
+  EnableIfAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Expr * getCond() const {
     return cond;
   }
@@ -2224,13 +2171,13 @@ public:
   void setMessage(ASTContext &C, llvm::StringRef S) {
     messageLength = S.size();
     this->message = new (C, 1) char [messageLength];
-    std::memcpy(this->message, S.data(), messageLength);
+    if (!S.empty())
+      std::memcpy(this->message, S.data(), messageLength);
   }
 
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::EnableIf; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ExclusiveTrylockFunctionAttr : public InheritableAttr {
@@ -2252,7 +2199,7 @@ public:
               , Expr * *Args, unsigned ArgsSize
               , unsigned SI
              )
-    : InheritableAttr(attr::ExclusiveTrylockFunction, R, SI)
+    : InheritableAttr(attr::ExclusiveTrylockFunction, R, SI, 1, 1)
               , successValue(SuccessValue)
               , args_Size(ArgsSize), args_(new (Ctx, 16) Expr *[args_Size])
   {
@@ -2264,17 +2211,17 @@ public:
               , Expr * SuccessValue
               , unsigned SI
              )
-    : InheritableAttr(attr::ExclusiveTrylockFunction, R, SI)
+    : InheritableAttr(attr::ExclusiveTrylockFunction, R, SI, 1, 1)
               , successValue()
               , args_Size(0), args_(nullptr)
   {
 
   }
 
-  ExclusiveTrylockFunctionAttr *clone(ASTContext &C) const override;
+  ExclusiveTrylockFunctionAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Expr * getSuccessValue() const {
     return successValue;
   }
@@ -2289,9 +2236,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ExclusiveTrylockFunction; }
-  bool isLateParsed() const override { return 1; }
-  bool duplicatesAllowed() const override { return true; }
-
 };
 
 class FallThroughAttr : public Attr {
@@ -2306,18 +2250,17 @@ public:
   FallThroughAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : Attr(attr::FallThrough, R, SI)
+    : Attr(attr::FallThrough, R, SI, 0, 0)
   {
   }
 
-  FallThroughAttr *clone(ASTContext &C) const override;
+  FallThroughAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::FallThrough; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class FastCallAttr : public InheritableAttr {
@@ -2332,26 +2275,25 @@ public:
   FastCallAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::FastCall, R, SI)
+    : InheritableAttr(attr::FastCall, R, SI, 0, 0)
   {
   }
 
-  FastCallAttr *clone(ASTContext &C) const override;
+  FastCallAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::FastCall; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class FinalAttr : public InheritableAttr {
 
 public:
   enum Spelling {
-    Keyword_final,
-    Keyword_sealed
+    Keyword_final = 0,
+    Keyword_sealed = 1
   };
 
   static FinalAttr *CreateImplicit(ASTContext &Ctx, Spelling S, SourceRange Loc = SourceRange()) {
@@ -2363,14 +2305,14 @@ public:
   FinalAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Final, R, SI)
+    : InheritableAttr(attr::Final, R, SI, 0, 0)
   {
   }
 
-  FinalAttr *clone(ASTContext &C) const override;
+  FinalAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Spelling getSemanticSpelling() const {
   switch (SpellingListIndex) {
     default: llvm_unreachable("Unknown spelling list index");
@@ -2382,7 +2324,42 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Final; }
-  bool isLateParsed() const override { return 0; }
+};
+
+class FlagEnumAttr : public InheritableAttr {
+
+public:
+  static FlagEnumAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    FlagEnumAttr *A = new (Ctx) FlagEnumAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  FlagEnumAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : InheritableAttr(attr::FlagEnum, R, SI, 0, 0)
+  {
+  }
+
+  FlagEnumAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+private:
+    llvm::APInt FlagBits;
+public:
+    llvm::APInt &getFlagBits() {
+      return FlagBits;
+    }
+
+    const llvm::APInt &getFlagBits() const {
+      return FlagBits;
+    }
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::FlagEnum; }
 };
 
 class FlattenAttr : public InheritableAttr {
@@ -2397,18 +2374,17 @@ public:
   FlattenAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Flatten, R, SI)
+    : InheritableAttr(attr::Flatten, R, SI, 0, 0)
   {
   }
 
-  FlattenAttr *clone(ASTContext &C) const override;
+  FlattenAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Flatten; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class FormatAttr : public InheritableAttr {
@@ -2432,7 +2408,7 @@ public:
               , int FirstArg
               , unsigned SI
              )
-    : InheritableAttr(attr::Format, R, SI)
+    : InheritableAttr(attr::Format, R, SI, 0, 0)
               , type(Type)
               , formatIdx(FormatIdx)
               , firstArg(FirstArg)
@@ -2442,10 +2418,10 @@ public:
 
   }
 
-  FormatAttr *clone(ASTContext &C) const override;
+  FormatAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   IdentifierInfo * getType() const {
     return type;
   }
@@ -2461,7 +2437,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Format; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class FormatArgAttr : public InheritableAttr {
@@ -2479,16 +2454,16 @@ public:
               , int FormatIdx
               , unsigned SI
              )
-    : InheritableAttr(attr::FormatArg, R, SI)
+    : InheritableAttr(attr::FormatArg, R, SI, 0, 0)
               , formatIdx(FormatIdx)
   {
 
   }
 
-  FormatArgAttr *clone(ASTContext &C) const override;
+  FormatArgAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   int getFormatIdx() const {
     return formatIdx;
   }
@@ -2496,7 +2471,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::FormatArg; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class GNUInlineAttr : public InheritableAttr {
@@ -2511,18 +2485,17 @@ public:
   GNUInlineAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::GNUInline, R, SI)
+    : InheritableAttr(attr::GNUInline, R, SI, 0, 0)
   {
   }
 
-  GNUInlineAttr *clone(ASTContext &C) const override;
+  GNUInlineAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::GNUInline; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class GuardedByAttr : public InheritableAttr {
@@ -2540,16 +2513,16 @@ public:
               , Expr * Arg
               , unsigned SI
              )
-    : InheritableAttr(attr::GuardedBy, R, SI)
+    : InheritableAttr(attr::GuardedBy, R, SI, 1, 1)
               , arg(Arg)
   {
 
   }
 
-  GuardedByAttr *clone(ASTContext &C) const override;
+  GuardedByAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Expr * getArg() const {
     return arg;
   }
@@ -2557,9 +2530,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::GuardedBy; }
-  bool isLateParsed() const override { return 1; }
-  bool duplicatesAllowed() const override { return true; }
-
 };
 
 class GuardedVarAttr : public InheritableAttr {
@@ -2574,18 +2544,17 @@ public:
   GuardedVarAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::GuardedVar, R, SI)
+    : InheritableAttr(attr::GuardedVar, R, SI, 0, 0)
   {
   }
 
-  GuardedVarAttr *clone(ASTContext &C) const override;
+  GuardedVarAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::GuardedVar; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class HotAttr : public InheritableAttr {
@@ -2600,18 +2569,17 @@ public:
   HotAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Hot, R, SI)
+    : InheritableAttr(attr::Hot, R, SI, 0, 0)
   {
   }
 
-  HotAttr *clone(ASTContext &C) const override;
+  HotAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Hot; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class IBActionAttr : public InheritableAttr {
@@ -2626,18 +2594,17 @@ public:
   IBActionAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::IBAction, R, SI)
+    : InheritableAttr(attr::IBAction, R, SI, 0, 0)
   {
   }
 
-  IBActionAttr *clone(ASTContext &C) const override;
+  IBActionAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::IBAction; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class IBOutletAttr : public InheritableAttr {
@@ -2652,18 +2619,17 @@ public:
   IBOutletAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::IBOutlet, R, SI)
+    : InheritableAttr(attr::IBOutlet, R, SI, 0, 0)
   {
   }
 
-  IBOutletAttr *clone(ASTContext &C) const override;
+  IBOutletAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::IBOutlet; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class IBOutletCollectionAttr : public InheritableAttr {
@@ -2681,7 +2647,7 @@ public:
               , TypeSourceInfo * Interface
               , unsigned SI
              )
-    : InheritableAttr(attr::IBOutletCollection, R, SI)
+    : InheritableAttr(attr::IBOutletCollection, R, SI, 0, 0)
               , interface(Interface)
   {
 
@@ -2690,15 +2656,15 @@ public:
   IBOutletCollectionAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::IBOutletCollection, R, SI)
+    : InheritableAttr(attr::IBOutletCollection, R, SI, 0, 0)
               , interface()
   {
   }
 
-  IBOutletCollectionAttr *clone(ASTContext &C) const override;
+  IBOutletCollectionAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   QualType getInterface() const {
     return interface->getType();
   }  TypeSourceInfo * getInterfaceLoc() const {
@@ -2708,7 +2674,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::IBOutletCollection; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class InitPriorityAttr : public InheritableAttr {
@@ -2726,16 +2691,16 @@ public:
               , unsigned Priority
               , unsigned SI
              )
-    : InheritableAttr(attr::InitPriority, R, SI)
+    : InheritableAttr(attr::InitPriority, R, SI, 0, 0)
               , priority(Priority)
   {
 
   }
 
-  InitPriorityAttr *clone(ASTContext &C) const override;
+  InitPriorityAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   unsigned getPriority() const {
     return priority;
   }
@@ -2743,7 +2708,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::InitPriority; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class InitSegAttr : public Attr {
@@ -2762,16 +2726,17 @@ public:
               , llvm::StringRef Section
               , unsigned SI
              )
-    : Attr(attr::InitSeg, R, SI)
+    : Attr(attr::InitSeg, R, SI, 0, 0)
               , sectionLength(Section.size()),section(new (Ctx, 1) char[sectionLength])
   {
-      std::memcpy(section, Section.data(), sectionLength);
+      if (!Section.empty())
+        std::memcpy(section, Section.data(), sectionLength);
   }
 
-  InitSegAttr *clone(ASTContext &C) const override;
+  InitSegAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   llvm::StringRef getSection() const {
     return llvm::StringRef(section, sectionLength);
   }
@@ -2781,7 +2746,8 @@ public:
   void setSection(ASTContext &C, llvm::StringRef S) {
     sectionLength = S.size();
     this->section = new (C, 1) char [sectionLength];
-    std::memcpy(this->section, S.data(), sectionLength);
+    if (!S.empty())
+      std::memcpy(this->section, S.data(), sectionLength);
   }
 
 
@@ -2791,7 +2757,6 @@ public:
   
 
   static bool classof(const Attr *A) { return A->getKind() == attr::InitSeg; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class IntelOclBiccAttr : public InheritableAttr {
@@ -2806,18 +2771,17 @@ public:
   IntelOclBiccAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::IntelOclBicc, R, SI)
+    : InheritableAttr(attr::IntelOclBicc, R, SI, 0, 0)
   {
   }
 
-  IntelOclBiccAttr *clone(ASTContext &C) const override;
+  IntelOclBiccAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::IntelOclBicc; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class LockReturnedAttr : public InheritableAttr {
@@ -2835,16 +2799,16 @@ public:
               , Expr * Arg
               , unsigned SI
              )
-    : InheritableAttr(attr::LockReturned, R, SI)
+    : InheritableAttr(attr::LockReturned, R, SI, 1, 0)
               , arg(Arg)
   {
 
   }
 
-  LockReturnedAttr *clone(ASTContext &C) const override;
+  LockReturnedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Expr * getArg() const {
     return arg;
   }
@@ -2852,7 +2816,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::LockReturned; }
-  bool isLateParsed() const override { return 1; }
 };
 
 class LocksExcludedAttr : public InheritableAttr {
@@ -2871,7 +2834,7 @@ public:
               , Expr * *Args, unsigned ArgsSize
               , unsigned SI
              )
-    : InheritableAttr(attr::LocksExcluded, R, SI)
+    : InheritableAttr(attr::LocksExcluded, R, SI, 1, 1)
               , args_Size(ArgsSize), args_(new (Ctx, 16) Expr *[args_Size])
   {
     std::copy(Args, Args + args_Size, args_);
@@ -2880,15 +2843,15 @@ public:
   LocksExcludedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::LocksExcluded, R, SI)
+    : InheritableAttr(attr::LocksExcluded, R, SI, 1, 1)
               , args_Size(0), args_(nullptr)
   {
   }
 
-  LocksExcludedAttr *clone(ASTContext &C) const override;
+  LocksExcludedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   typedef Expr ** args_iterator;
   args_iterator args_begin() const { return args_; }
   args_iterator args_end() const { return args_ + args_Size; }
@@ -2899,9 +2862,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::LocksExcluded; }
-  bool isLateParsed() const override { return 1; }
-  bool duplicatesAllowed() const override { return true; }
-
 };
 
 class LoopHintAttr : public Attr {
@@ -2921,7 +2881,8 @@ public:
   enum LoopHintState {
     Default,
     Enable,
-    Disable
+    Disable,
+    AssumeSafety
   };
 private:
   LoopHintState state;
@@ -2931,9 +2892,9 @@ Expr * value;
 
 public:
   enum Spelling {
-    Pragma_clang_loop,
-    Pragma_unroll,
-    Pragma_nounroll
+    Pragma_clang_loop = 0,
+    Pragma_unroll = 1,
+    Pragma_nounroll = 2
   };
 
   static LoopHintAttr *CreateImplicit(ASTContext &Ctx, Spelling S, OptionType Option, LoopHintState State, Expr * Value, SourceRange Loc = SourceRange()) {
@@ -2948,7 +2909,7 @@ public:
               , Expr * Value
               , unsigned SI
              )
-    : Attr(attr::LoopHint, R, SI)
+    : Attr(attr::LoopHint, R, SI, 0, 0)
               , option(Option)
               , state(State)
               , value(Value)
@@ -2958,10 +2919,10 @@ public:
 
   }
 
-  LoopHintAttr *clone(ASTContext &C) const override;
+  LoopHintAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Spelling getSemanticSpelling() const {
   switch (SpellingListIndex) {
     default: llvm_unreachable("Unknown spelling list index");
@@ -3010,6 +2971,7 @@ public:
       .Case("default", LoopHintAttr::Default)
       .Case("enable", LoopHintAttr::Enable)
       .Case("disable", LoopHintAttr::Disable)
+      .Case("assume_safety", LoopHintAttr::AssumeSafety)
       .Default(Optional<LoopHintState>());
     if (R) {
       Out = *R;
@@ -3023,6 +2985,7 @@ public:
     case LoopHintAttr::Default: return "default";
     case LoopHintAttr::Enable: return "enable";
     case LoopHintAttr::Disable: return "disable";
+    case LoopHintAttr::AssumeSafety: return "assume_safety";
     }
     llvm_unreachable("No enumerator with that value");
   }
@@ -3073,6 +3036,8 @@ public:
       return "";
     else if (state == Enable)
       OS << (option == Unroll ? "full" : "enable");
+    else if (state == AssumeSafety)
+      OS << "assume_safety";
     else
       OS << "disable";
     OS << ")";
@@ -3093,7 +3058,6 @@ public:
   
 
   static bool classof(const Attr *A) { return A->getKind() == attr::LoopHint; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class MSABIAttr : public InheritableAttr {
@@ -3108,18 +3072,17 @@ public:
   MSABIAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::MSABI, R, SI)
+    : InheritableAttr(attr::MSABI, R, SI, 0, 0)
   {
   }
 
-  MSABIAttr *clone(ASTContext &C) const override;
+  MSABIAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MSABI; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class MSInheritanceAttr : public InheritableAttr {
@@ -3128,10 +3091,10 @@ bool bestCase;
 
 public:
   enum Spelling {
-    Keyword_single_inheritance,
-    Keyword_multiple_inheritance,
-    Keyword_virtual_inheritance,
-    Keyword_unspecified_inheritance
+    Keyword_single_inheritance = 0,
+    Keyword_multiple_inheritance = 1,
+    Keyword_virtual_inheritance = 2,
+    Keyword_unspecified_inheritance = 3
   };
 
   static MSInheritanceAttr *CreateImplicit(ASTContext &Ctx, Spelling S, bool BestCase, SourceRange Loc = SourceRange()) {
@@ -3144,7 +3107,7 @@ public:
               , bool BestCase
               , unsigned SI
              )
-    : InheritableAttr(attr::MSInheritance, R, SI)
+    : InheritableAttr(attr::MSInheritance, R, SI, 0, 0)
               , bestCase(BestCase)
   {
 
@@ -3153,15 +3116,15 @@ public:
   MSInheritanceAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::MSInheritance, R, SI)
+    : InheritableAttr(attr::MSInheritance, R, SI, 0, 0)
               , bestCase()
   {
   }
 
-  MSInheritanceAttr *clone(ASTContext &C) const override;
+  MSInheritanceAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Spelling getSemanticSpelling() const {
   switch (SpellingListIndex) {
     default: llvm_unreachable("Unknown spelling list index");
@@ -3201,7 +3164,31 @@ public:
   
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MSInheritance; }
-  bool isLateParsed() const override { return 0; }
+};
+
+class MSNoVTableAttr : public InheritableAttr {
+
+public:
+  static MSNoVTableAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    MSNoVTableAttr *A = new (Ctx) MSNoVTableAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  MSNoVTableAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : InheritableAttr(attr::MSNoVTable, R, SI, 0, 0)
+  {
+  }
+
+  MSNoVTableAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::MSNoVTable; }
 };
 
 class MSP430InterruptAttr : public InheritableAttr {
@@ -3219,16 +3206,16 @@ public:
               , unsigned Number
               , unsigned SI
              )
-    : InheritableAttr(attr::MSP430Interrupt, R, SI)
+    : InheritableAttr(attr::MSP430Interrupt, R, SI, 0, 0)
               , number(Number)
   {
 
   }
 
-  MSP430InterruptAttr *clone(ASTContext &C) const override;
+  MSP430InterruptAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   unsigned getNumber() const {
     return number;
   }
@@ -3236,7 +3223,31 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MSP430Interrupt; }
-  bool isLateParsed() const override { return 0; }
+};
+
+class MSStructAttr : public InheritableAttr {
+
+public:
+  static MSStructAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    MSStructAttr *A = new (Ctx) MSStructAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  MSStructAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : InheritableAttr(attr::MSStruct, R, SI, 0, 0)
+  {
+  }
+
+  MSStructAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::MSStruct; }
 };
 
 class MSVtorDispAttr : public InheritableAttr {
@@ -3254,16 +3265,16 @@ public:
               , unsigned Vdm
               , unsigned SI
              )
-    : InheritableAttr(attr::MSVtorDisp, R, SI)
+    : InheritableAttr(attr::MSVtorDisp, R, SI, 0, 0)
               , vdm(Vdm)
   {
 
   }
 
-  MSVtorDispAttr *clone(ASTContext &C) const override;
+  MSVtorDispAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   unsigned getVdm() const {
     return vdm;
   }
@@ -3279,33 +3290,6 @@ public:
   
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MSVtorDisp; }
-  bool isLateParsed() const override { return 0; }
-};
-
-class MallocAttr : public InheritableAttr {
-
-public:
-  static MallocAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
-    MallocAttr *A = new (Ctx) MallocAttr(Loc, Ctx, 0);
-    A->setImplicit(true);
-    return A;
-  }
-
-  MallocAttr(SourceRange R, ASTContext &Ctx
-              , unsigned SI
-             )
-    : InheritableAttr(attr::Malloc, R, SI)
-  {
-  }
-
-  MallocAttr *clone(ASTContext &C) const override;
-  void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
-
-
-  static bool classof(const Attr *A) { return A->getKind() == attr::Malloc; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class MaxFieldAlignmentAttr : public InheritableAttr {
@@ -3323,16 +3307,16 @@ public:
               , unsigned Alignment
               , unsigned SI
              )
-    : InheritableAttr(attr::MaxFieldAlignment, R, SI)
+    : InheritableAttr(attr::MaxFieldAlignment, R, SI, 0, 0)
               , alignment(Alignment)
   {
 
   }
 
-  MaxFieldAlignmentAttr *clone(ASTContext &C) const override;
+  MaxFieldAlignmentAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   unsigned getAlignment() const {
     return alignment;
   }
@@ -3340,7 +3324,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MaxFieldAlignment; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class MayAliasAttr : public InheritableAttr {
@@ -3355,18 +3338,17 @@ public:
   MayAliasAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::MayAlias, R, SI)
+    : InheritableAttr(attr::MayAlias, R, SI, 0, 0)
   {
   }
 
-  MayAliasAttr *clone(ASTContext &C) const override;
+  MayAliasAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MayAlias; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class MinSizeAttr : public InheritableAttr {
@@ -3381,18 +3363,17 @@ public:
   MinSizeAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::MinSize, R, SI)
+    : InheritableAttr(attr::MinSize, R, SI, 0, 0)
   {
   }
 
-  MinSizeAttr *clone(ASTContext &C) const override;
+  MinSizeAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MinSize; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class Mips16Attr : public InheritableAttr {
@@ -3407,18 +3388,17 @@ public:
   Mips16Attr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Mips16, R, SI)
+    : InheritableAttr(attr::Mips16, R, SI, 0, 0)
   {
   }
 
-  Mips16Attr *clone(ASTContext &C) const override;
+  Mips16Attr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Mips16; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ModeAttr : public Attr {
@@ -3436,16 +3416,16 @@ public:
               , IdentifierInfo * Mode
               , unsigned SI
              )
-    : Attr(attr::Mode, R, SI)
+    : Attr(attr::Mode, R, SI, 0, 0)
               , mode(Mode)
   {
 
   }
 
-  ModeAttr *clone(ASTContext &C) const override;
+  ModeAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   IdentifierInfo * getMode() const {
     return mode;
   }
@@ -3453,33 +3433,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Mode; }
-  bool isLateParsed() const override { return 0; }
-};
-
-class MsStructAttr : public InheritableAttr {
-
-public:
-  static MsStructAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
-    MsStructAttr *A = new (Ctx) MsStructAttr(Loc, Ctx, 0);
-    A->setImplicit(true);
-    return A;
-  }
-
-  MsStructAttr(SourceRange R, ASTContext &Ctx
-              , unsigned SI
-             )
-    : InheritableAttr(attr::MsStruct, R, SI)
-  {
-  }
-
-  MsStructAttr *clone(ASTContext &C) const override;
-  void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
-
-
-  static bool classof(const Attr *A) { return A->getKind() == attr::MsStruct; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NSConsumedAttr : public InheritableParamAttr {
@@ -3494,18 +3447,17 @@ public:
   NSConsumedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableParamAttr(attr::NSConsumed, R, SI)
+    : InheritableParamAttr(attr::NSConsumed, R, SI, 0, 0)
   {
   }
 
-  NSConsumedAttr *clone(ASTContext &C) const override;
+  NSConsumedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NSConsumed; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NSConsumesSelfAttr : public InheritableAttr {
@@ -3520,18 +3472,17 @@ public:
   NSConsumesSelfAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::NSConsumesSelf, R, SI)
+    : InheritableAttr(attr::NSConsumesSelf, R, SI, 0, 0)
   {
   }
 
-  NSConsumesSelfAttr *clone(ASTContext &C) const override;
+  NSConsumesSelfAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NSConsumesSelf; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NSReturnsAutoreleasedAttr : public InheritableAttr {
@@ -3546,18 +3497,17 @@ public:
   NSReturnsAutoreleasedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::NSReturnsAutoreleased, R, SI)
+    : InheritableAttr(attr::NSReturnsAutoreleased, R, SI, 0, 0)
   {
   }
 
-  NSReturnsAutoreleasedAttr *clone(ASTContext &C) const override;
+  NSReturnsAutoreleasedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NSReturnsAutoreleased; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NSReturnsNotRetainedAttr : public InheritableAttr {
@@ -3572,18 +3522,17 @@ public:
   NSReturnsNotRetainedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::NSReturnsNotRetained, R, SI)
+    : InheritableAttr(attr::NSReturnsNotRetained, R, SI, 0, 0)
   {
   }
 
-  NSReturnsNotRetainedAttr *clone(ASTContext &C) const override;
+  NSReturnsNotRetainedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NSReturnsNotRetained; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NSReturnsRetainedAttr : public InheritableAttr {
@@ -3598,18 +3547,17 @@ public:
   NSReturnsRetainedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::NSReturnsRetained, R, SI)
+    : InheritableAttr(attr::NSReturnsRetained, R, SI, 0, 0)
   {
   }
 
-  NSReturnsRetainedAttr *clone(ASTContext &C) const override;
+  NSReturnsRetainedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NSReturnsRetained; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NakedAttr : public InheritableAttr {
@@ -3624,18 +3572,17 @@ public:
   NakedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Naked, R, SI)
+    : InheritableAttr(attr::Naked, R, SI, 0, 0)
   {
   }
 
-  NakedAttr *clone(ASTContext &C) const override;
+  NakedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Naked; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NoCommonAttr : public InheritableAttr {
@@ -3650,18 +3597,17 @@ public:
   NoCommonAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::NoCommon, R, SI)
+    : InheritableAttr(attr::NoCommon, R, SI, 0, 0)
   {
   }
 
-  NoCommonAttr *clone(ASTContext &C) const override;
+  NoCommonAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoCommon; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NoDebugAttr : public InheritableAttr {
@@ -3676,18 +3622,17 @@ public:
   NoDebugAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::NoDebug, R, SI)
+    : InheritableAttr(attr::NoDebug, R, SI, 0, 0)
   {
   }
 
-  NoDebugAttr *clone(ASTContext &C) const override;
+  NoDebugAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoDebug; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NoDuplicateAttr : public InheritableAttr {
@@ -3702,18 +3647,17 @@ public:
   NoDuplicateAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::NoDuplicate, R, SI)
+    : InheritableAttr(attr::NoDuplicate, R, SI, 0, 0)
   {
   }
 
-  NoDuplicateAttr *clone(ASTContext &C) const override;
+  NoDuplicateAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoDuplicate; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NoInlineAttr : public InheritableAttr {
@@ -3728,18 +3672,17 @@ public:
   NoInlineAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::NoInline, R, SI)
+    : InheritableAttr(attr::NoInline, R, SI, 0, 0)
   {
   }
 
-  NoInlineAttr *clone(ASTContext &C) const override;
+  NoInlineAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoInline; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NoInstrumentFunctionAttr : public InheritableAttr {
@@ -3754,18 +3697,17 @@ public:
   NoInstrumentFunctionAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::NoInstrumentFunction, R, SI)
+    : InheritableAttr(attr::NoInstrumentFunction, R, SI, 0, 0)
   {
   }
 
-  NoInstrumentFunctionAttr *clone(ASTContext &C) const override;
+  NoInstrumentFunctionAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoInstrumentFunction; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NoMips16Attr : public InheritableAttr {
@@ -3780,18 +3722,17 @@ public:
   NoMips16Attr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::NoMips16, R, SI)
+    : InheritableAttr(attr::NoMips16, R, SI, 0, 0)
   {
   }
 
-  NoMips16Attr *clone(ASTContext &C) const override;
+  NoMips16Attr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoMips16; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NoReturnAttr : public InheritableAttr {
@@ -3806,112 +3747,73 @@ public:
   NoReturnAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::NoReturn, R, SI)
+    : InheritableAttr(attr::NoReturn, R, SI, 0, 0)
   {
   }
 
-  NoReturnAttr *clone(ASTContext &C) const override;
+  NoReturnAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoReturn; }
-  bool isLateParsed() const override { return 0; }
 };
 
-class NoSanitizeAddressAttr : public InheritableAttr {
+class NoSanitizeAttr : public InheritableAttr {
+  unsigned sanitizers_Size;
+  std::string *sanitizers_;
+
 
 public:
-  enum Spelling {
-    GNU_no_address_safety_analysis,
-    CXX11_gnu_no_address_safety_analysis,
-    GNU_no_sanitize_address,
-    CXX11_gnu_no_sanitize_address
-  };
-
-  static NoSanitizeAddressAttr *CreateImplicit(ASTContext &Ctx, Spelling S, SourceRange Loc = SourceRange()) {
-    NoSanitizeAddressAttr *A = new (Ctx) NoSanitizeAddressAttr(Loc, Ctx, S);
+  static NoSanitizeAttr *CreateImplicit(ASTContext &Ctx, std::string *Sanitizers, unsigned SanitizersSize, SourceRange Loc = SourceRange()) {
+    NoSanitizeAttr *A = new (Ctx) NoSanitizeAttr(Loc, Ctx, Sanitizers, SanitizersSize, 0);
     A->setImplicit(true);
     return A;
   }
 
-  NoSanitizeAddressAttr(SourceRange R, ASTContext &Ctx
+  NoSanitizeAttr(SourceRange R, ASTContext &Ctx
+              , std::string *Sanitizers, unsigned SanitizersSize
               , unsigned SI
              )
-    : InheritableAttr(attr::NoSanitizeAddress, R, SI)
+    : InheritableAttr(attr::NoSanitize, R, SI, 0, 0)
+              , sanitizers_Size(SanitizersSize), sanitizers_(new (Ctx, 16) std::string[sanitizers_Size])
+  {
+    std::copy(Sanitizers, Sanitizers + sanitizers_Size, sanitizers_);
+  }
+
+  NoSanitizeAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : InheritableAttr(attr::NoSanitize, R, SI, 0, 0)
+              , sanitizers_Size(0), sanitizers_(nullptr)
   {
   }
 
-  NoSanitizeAddressAttr *clone(ASTContext &C) const override;
+  NoSanitizeAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
-  Spelling getSemanticSpelling() const {
-  switch (SpellingListIndex) {
-    default: llvm_unreachable("Unknown spelling list index");
-    case 0: return GNU_no_address_safety_analysis;
-    case 1: return CXX11_gnu_no_address_safety_analysis;
-    case 2: return GNU_no_sanitize_address;
-    case 3: return CXX11_gnu_no_sanitize_address;
-  }
-  }
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+  typedef std::string* sanitizers_iterator;
+  sanitizers_iterator sanitizers_begin() const { return sanitizers_; }
+  sanitizers_iterator sanitizers_end() const { return sanitizers_ + sanitizers_Size; }
+  unsigned sanitizers_size() const { return sanitizers_Size; }
+  llvm::iterator_range<sanitizers_iterator> sanitizers() const { return llvm::make_range(sanitizers_begin(), sanitizers_end()); }
 
 
-  static bool classof(const Attr *A) { return A->getKind() == attr::NoSanitizeAddress; }
-  bool isLateParsed() const override { return 0; }
-};
 
-class NoSanitizeMemoryAttr : public InheritableAttr {
+    SanitizerMask getMask() const {
+      SanitizerMask Mask = 0;
+      for (auto SanitizerName : sanitizers()) {
+        SanitizerMask ParsedMask =
+            parseSanitizerValue(SanitizerName, /*AllowGroups=*/true);
+        Mask |= expandSanitizerGroups(ParsedMask);
+      }
+      return Mask;
+    }
+  
 
-public:
-  static NoSanitizeMemoryAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
-    NoSanitizeMemoryAttr *A = new (Ctx) NoSanitizeMemoryAttr(Loc, Ctx, 0);
-    A->setImplicit(true);
-    return A;
-  }
-
-  NoSanitizeMemoryAttr(SourceRange R, ASTContext &Ctx
-              , unsigned SI
-             )
-    : InheritableAttr(attr::NoSanitizeMemory, R, SI)
-  {
-  }
-
-  NoSanitizeMemoryAttr *clone(ASTContext &C) const override;
-  void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
-
-
-  static bool classof(const Attr *A) { return A->getKind() == attr::NoSanitizeMemory; }
-  bool isLateParsed() const override { return 0; }
-};
-
-class NoSanitizeThreadAttr : public InheritableAttr {
-
-public:
-  static NoSanitizeThreadAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
-    NoSanitizeThreadAttr *A = new (Ctx) NoSanitizeThreadAttr(Loc, Ctx, 0);
-    A->setImplicit(true);
-    return A;
-  }
-
-  NoSanitizeThreadAttr(SourceRange R, ASTContext &Ctx
-              , unsigned SI
-             )
-    : InheritableAttr(attr::NoSanitizeThread, R, SI)
-  {
-  }
-
-  NoSanitizeThreadAttr *clone(ASTContext &C) const override;
-  void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
-
-
-  static bool classof(const Attr *A) { return A->getKind() == attr::NoSanitizeThread; }
-  bool isLateParsed() const override { return 0; }
+  static bool classof(const Attr *A) { return A->getKind() == attr::NoSanitize; }
 };
 
 class NoSplitStackAttr : public InheritableAttr {
@@ -3926,18 +3828,17 @@ public:
   NoSplitStackAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::NoSplitStack, R, SI)
+    : InheritableAttr(attr::NoSplitStack, R, SI, 0, 0)
   {
   }
 
-  NoSplitStackAttr *clone(ASTContext &C) const override;
+  NoSplitStackAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoSplitStack; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NoThreadSafetyAnalysisAttr : public InheritableAttr {
@@ -3952,18 +3853,17 @@ public:
   NoThreadSafetyAnalysisAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::NoThreadSafetyAnalysis, R, SI)
+    : InheritableAttr(attr::NoThreadSafetyAnalysis, R, SI, 0, 0)
   {
   }
 
-  NoThreadSafetyAnalysisAttr *clone(ASTContext &C) const override;
+  NoThreadSafetyAnalysisAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoThreadSafetyAnalysis; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NoThrowAttr : public InheritableAttr {
@@ -3978,18 +3878,17 @@ public:
   NoThrowAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::NoThrow, R, SI)
+    : InheritableAttr(attr::NoThrow, R, SI, 0, 0)
   {
   }
 
-  NoThrowAttr *clone(ASTContext &C) const override;
+  NoThrowAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NoThrow; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class NonNullAttr : public InheritableAttr {
@@ -4008,7 +3907,7 @@ public:
               , unsigned *Args, unsigned ArgsSize
               , unsigned SI
              )
-    : InheritableAttr(attr::NonNull, R, SI)
+    : InheritableAttr(attr::NonNull, R, SI, 0, 1)
               , args_Size(ArgsSize), args_(new (Ctx, 16) unsigned[args_Size])
   {
     std::copy(Args, Args + args_Size, args_);
@@ -4017,15 +3916,15 @@ public:
   NonNullAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::NonNull, R, SI)
+    : InheritableAttr(attr::NonNull, R, SI, 0, 1)
               , args_Size(0), args_(nullptr)
   {
   }
 
-  NonNullAttr *clone(ASTContext &C) const override;
+  NonNullAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   typedef unsigned* args_iterator;
   args_iterator args_begin() const { return args_; }
   args_iterator args_end() const { return args_ + args_Size; }
@@ -4043,9 +3942,6 @@ bool isNonNull(unsigned idx) const {
   } 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NonNull; }
-  bool isLateParsed() const override { return 0; }
-  bool duplicatesAllowed() const override { return true; }
-
 };
 
 class OMPThreadPrivateDeclAttr : public InheritableAttr {
@@ -4060,18 +3956,42 @@ public:
   OMPThreadPrivateDeclAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::OMPThreadPrivateDecl, R, SI)
+    : InheritableAttr(attr::OMPThreadPrivateDecl, R, SI, 0, 0)
   {
   }
 
-  OMPThreadPrivateDeclAttr *clone(ASTContext &C) const override;
+  OMPThreadPrivateDeclAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::OMPThreadPrivateDecl; }
-  bool isLateParsed() const override { return 0; }
+};
+
+class ObjCBoxableAttr : public Attr {
+
+public:
+  static ObjCBoxableAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    ObjCBoxableAttr *A = new (Ctx) ObjCBoxableAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  ObjCBoxableAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : Attr(attr::ObjCBoxable, R, SI, 0, 0)
+  {
+  }
+
+  ObjCBoxableAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::ObjCBoxable; }
 };
 
 class ObjCBridgeAttr : public InheritableAttr {
@@ -4089,16 +4009,16 @@ public:
               , IdentifierInfo * BridgedType
               , unsigned SI
              )
-    : InheritableAttr(attr::ObjCBridge, R, SI)
+    : InheritableAttr(attr::ObjCBridge, R, SI, 0, 0)
               , bridgedType(BridgedType)
   {
 
   }
 
-  ObjCBridgeAttr *clone(ASTContext &C) const override;
+  ObjCBridgeAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   IdentifierInfo * getBridgedType() const {
     return bridgedType;
   }
@@ -4106,7 +4026,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCBridge; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ObjCBridgeMutableAttr : public InheritableAttr {
@@ -4124,16 +4043,16 @@ public:
               , IdentifierInfo * BridgedType
               , unsigned SI
              )
-    : InheritableAttr(attr::ObjCBridgeMutable, R, SI)
+    : InheritableAttr(attr::ObjCBridgeMutable, R, SI, 0, 0)
               , bridgedType(BridgedType)
   {
 
   }
 
-  ObjCBridgeMutableAttr *clone(ASTContext &C) const override;
+  ObjCBridgeMutableAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   IdentifierInfo * getBridgedType() const {
     return bridgedType;
   }
@@ -4141,7 +4060,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCBridgeMutable; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ObjCBridgeRelatedAttr : public InheritableAttr {
@@ -4165,7 +4083,7 @@ public:
               , IdentifierInfo * InstanceMethod
               , unsigned SI
              )
-    : InheritableAttr(attr::ObjCBridgeRelated, R, SI)
+    : InheritableAttr(attr::ObjCBridgeRelated, R, SI, 0, 0)
               , relatedClass(RelatedClass)
               , classMethod(ClassMethod)
               , instanceMethod(InstanceMethod)
@@ -4175,10 +4093,10 @@ public:
 
   }
 
-  ObjCBridgeRelatedAttr *clone(ASTContext &C) const override;
+  ObjCBridgeRelatedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   IdentifierInfo * getRelatedClass() const {
     return relatedClass;
   }
@@ -4194,7 +4112,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCBridgeRelated; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ObjCDesignatedInitializerAttr : public Attr {
@@ -4209,18 +4126,17 @@ public:
   ObjCDesignatedInitializerAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : Attr(attr::ObjCDesignatedInitializer, R, SI)
+    : Attr(attr::ObjCDesignatedInitializer, R, SI, 0, 0)
   {
   }
 
-  ObjCDesignatedInitializerAttr *clone(ASTContext &C) const override;
+  ObjCDesignatedInitializerAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCDesignatedInitializer; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ObjCExceptionAttr : public InheritableAttr {
@@ -4235,18 +4151,17 @@ public:
   ObjCExceptionAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ObjCException, R, SI)
+    : InheritableAttr(attr::ObjCException, R, SI, 0, 0)
   {
   }
 
-  ObjCExceptionAttr *clone(ASTContext &C) const override;
+  ObjCExceptionAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCException; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ObjCExplicitProtocolImplAttr : public InheritableAttr {
@@ -4261,18 +4176,42 @@ public:
   ObjCExplicitProtocolImplAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ObjCExplicitProtocolImpl, R, SI)
+    : InheritableAttr(attr::ObjCExplicitProtocolImpl, R, SI, 0, 0)
   {
   }
 
-  ObjCExplicitProtocolImplAttr *clone(ASTContext &C) const override;
+  ObjCExplicitProtocolImplAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCExplicitProtocolImpl; }
-  bool isLateParsed() const override { return 0; }
+};
+
+class ObjCIndependentClassAttr : public InheritableAttr {
+
+public:
+  static ObjCIndependentClassAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    ObjCIndependentClassAttr *A = new (Ctx) ObjCIndependentClassAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  ObjCIndependentClassAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : InheritableAttr(attr::ObjCIndependentClass, R, SI, 0, 0)
+  {
+  }
+
+  ObjCIndependentClassAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::ObjCIndependentClass; }
 };
 
 class ObjCMethodFamilyAttr : public InheritableAttr {
@@ -4300,16 +4239,16 @@ public:
               , FamilyKind Family
               , unsigned SI
              )
-    : InheritableAttr(attr::ObjCMethodFamily, R, SI)
+    : InheritableAttr(attr::ObjCMethodFamily, R, SI, 0, 0)
               , family(Family)
   {
 
   }
 
-  ObjCMethodFamilyAttr *clone(ASTContext &C) const override;
+  ObjCMethodFamilyAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   FamilyKind getFamily() const {
     return family;
   }
@@ -4344,7 +4283,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCMethodFamily; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ObjCNSObjectAttr : public InheritableAttr {
@@ -4359,18 +4297,17 @@ public:
   ObjCNSObjectAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ObjCNSObject, R, SI)
+    : InheritableAttr(attr::ObjCNSObject, R, SI, 0, 0)
   {
   }
 
-  ObjCNSObjectAttr *clone(ASTContext &C) const override;
+  ObjCNSObjectAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCNSObject; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ObjCPreciseLifetimeAttr : public InheritableAttr {
@@ -4385,18 +4322,17 @@ public:
   ObjCPreciseLifetimeAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ObjCPreciseLifetime, R, SI)
+    : InheritableAttr(attr::ObjCPreciseLifetime, R, SI, 0, 0)
   {
   }
 
-  ObjCPreciseLifetimeAttr *clone(ASTContext &C) const override;
+  ObjCPreciseLifetimeAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCPreciseLifetime; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ObjCRequiresPropertyDefsAttr : public InheritableAttr {
@@ -4411,18 +4347,17 @@ public:
   ObjCRequiresPropertyDefsAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ObjCRequiresPropertyDefs, R, SI)
+    : InheritableAttr(attr::ObjCRequiresPropertyDefs, R, SI, 0, 0)
   {
   }
 
-  ObjCRequiresPropertyDefsAttr *clone(ASTContext &C) const override;
+  ObjCRequiresPropertyDefsAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCRequiresPropertyDefs; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ObjCRequiresSuperAttr : public InheritableAttr {
@@ -4437,18 +4372,17 @@ public:
   ObjCRequiresSuperAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ObjCRequiresSuper, R, SI)
+    : InheritableAttr(attr::ObjCRequiresSuper, R, SI, 0, 0)
   {
   }
 
-  ObjCRequiresSuperAttr *clone(ASTContext &C) const override;
+  ObjCRequiresSuperAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCRequiresSuper; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ObjCReturnsInnerPointerAttr : public InheritableAttr {
@@ -4463,18 +4397,17 @@ public:
   ObjCReturnsInnerPointerAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ObjCReturnsInnerPointer, R, SI)
+    : InheritableAttr(attr::ObjCReturnsInnerPointer, R, SI, 0, 0)
   {
   }
 
-  ObjCReturnsInnerPointerAttr *clone(ASTContext &C) const override;
+  ObjCReturnsInnerPointerAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCReturnsInnerPointer; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ObjCRootClassAttr : public InheritableAttr {
@@ -4489,18 +4422,17 @@ public:
   ObjCRootClassAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ObjCRootClass, R, SI)
+    : InheritableAttr(attr::ObjCRootClass, R, SI, 0, 0)
   {
   }
 
-  ObjCRootClassAttr *clone(ASTContext &C) const override;
+  ObjCRootClassAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCRootClass; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ObjCRuntimeNameAttr : public Attr {
@@ -4519,16 +4451,17 @@ public:
               , llvm::StringRef MetadataName
               , unsigned SI
              )
-    : Attr(attr::ObjCRuntimeName, R, SI)
+    : Attr(attr::ObjCRuntimeName, R, SI, 0, 0)
               , metadataNameLength(MetadataName.size()),metadataName(new (Ctx, 1) char[metadataNameLength])
   {
-      std::memcpy(metadataName, MetadataName.data(), metadataNameLength);
+      if (!MetadataName.empty())
+        std::memcpy(metadataName, MetadataName.data(), metadataNameLength);
   }
 
-  ObjCRuntimeNameAttr *clone(ASTContext &C) const override;
+  ObjCRuntimeNameAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   llvm::StringRef getMetadataName() const {
     return llvm::StringRef(metadataName, metadataNameLength);
   }
@@ -4538,22 +4471,22 @@ public:
   void setMetadataName(ASTContext &C, llvm::StringRef S) {
     metadataNameLength = S.size();
     this->metadataName = new (C, 1) char [metadataNameLength];
-    std::memcpy(this->metadataName, S.data(), metadataNameLength);
+    if (!S.empty())
+      std::memcpy(this->metadataName, S.data(), metadataNameLength);
   }
 
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCRuntimeName; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class OpenCLImageAccessAttr : public Attr {
 
 public:
   enum Spelling {
-    Keyword_read_only,
-    Keyword_write_only,
-    Keyword_read_write
+    Keyword_read_only = 0,
+    Keyword_write_only = 2,
+    Keyword_read_write = 4
   };
 
   static OpenCLImageAccessAttr *CreateImplicit(ASTContext &Ctx, Spelling S, SourceRange Loc = SourceRange()) {
@@ -4565,14 +4498,14 @@ public:
   OpenCLImageAccessAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : Attr(attr::OpenCLImageAccess, R, SI)
+    : Attr(attr::OpenCLImageAccess, R, SI, 0, 0)
   {
   }
 
-  OpenCLImageAccessAttr *clone(ASTContext &C) const override;
+  OpenCLImageAccessAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Spelling getSemanticSpelling() const {
   switch (SpellingListIndex) {
     default: llvm_unreachable("Unknown spelling list index");
@@ -4593,7 +4526,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::OpenCLImageAccess; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class OpenCLKernelAttr : public InheritableAttr {
@@ -4608,18 +4540,17 @@ public:
   OpenCLKernelAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::OpenCLKernel, R, SI)
+    : InheritableAttr(attr::OpenCLKernel, R, SI, 0, 0)
   {
   }
 
-  OpenCLKernelAttr *clone(ASTContext &C) const override;
+  OpenCLKernelAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::OpenCLKernel; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class OptimizeNoneAttr : public InheritableAttr {
@@ -4634,18 +4565,17 @@ public:
   OptimizeNoneAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::OptimizeNone, R, SI)
+    : InheritableAttr(attr::OptimizeNone, R, SI, 0, 0)
   {
   }
 
-  OptimizeNoneAttr *clone(ASTContext &C) const override;
+  OptimizeNoneAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::OptimizeNone; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class OverloadableAttr : public Attr {
@@ -4660,18 +4590,17 @@ public:
   OverloadableAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : Attr(attr::Overloadable, R, SI)
+    : Attr(attr::Overloadable, R, SI, 0, 0)
   {
   }
 
-  OverloadableAttr *clone(ASTContext &C) const override;
+  OverloadableAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Overloadable; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class OverrideAttr : public InheritableAttr {
@@ -4686,18 +4615,17 @@ public:
   OverrideAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Override, R, SI)
+    : InheritableAttr(attr::Override, R, SI, 0, 0)
   {
   }
 
-  OverrideAttr *clone(ASTContext &C) const override;
+  OverrideAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Override; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class OwnershipAttr : public InheritableAttr {
@@ -4709,9 +4637,9 @@ IdentifierInfo * module;
 
 public:
   enum Spelling {
-    GNU_ownership_holds,
-    GNU_ownership_returns,
-    GNU_ownership_takes
+    GNU_ownership_holds = 0,
+    GNU_ownership_returns = 1,
+    GNU_ownership_takes = 2
   };
 
   static OwnershipAttr *CreateImplicit(ASTContext &Ctx, Spelling S, IdentifierInfo * Module, unsigned *Args, unsigned ArgsSize, SourceRange Loc = SourceRange()) {
@@ -4725,7 +4653,7 @@ public:
               , unsigned *Args, unsigned ArgsSize
               , unsigned SI
              )
-    : InheritableAttr(attr::Ownership, R, SI)
+    : InheritableAttr(attr::Ownership, R, SI, 0, 0)
               , module(Module)
               , args_Size(ArgsSize), args_(new (Ctx, 16) unsigned[args_Size])
   {
@@ -4737,17 +4665,17 @@ public:
               , IdentifierInfo * Module
               , unsigned SI
              )
-    : InheritableAttr(attr::Ownership, R, SI)
+    : InheritableAttr(attr::Ownership, R, SI, 0, 0)
               , module()
               , args_Size(0), args_(nullptr)
   {
 
   }
 
-  OwnershipAttr *clone(ASTContext &C) const override;
+  OwnershipAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Spelling getSemanticSpelling() const {
   switch (SpellingListIndex) {
     default: llvm_unreachable("Unknown spelling list index");
@@ -4780,7 +4708,6 @@ public:
   
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Ownership; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class PackedAttr : public InheritableAttr {
@@ -4795,18 +4722,17 @@ public:
   PackedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Packed, R, SI)
+    : InheritableAttr(attr::Packed, R, SI, 0, 0)
   {
   }
 
-  PackedAttr *clone(ASTContext &C) const override;
+  PackedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Packed; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ParamTypestateAttr : public InheritableAttr {
@@ -4831,16 +4757,16 @@ public:
               , ConsumedState ParamState
               , unsigned SI
              )
-    : InheritableAttr(attr::ParamTypestate, R, SI)
+    : InheritableAttr(attr::ParamTypestate, R, SI, 0, 0)
               , paramState(ParamState)
   {
 
   }
 
-  ParamTypestateAttr *clone(ASTContext &C) const override;
+  ParamTypestateAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   ConsumedState getParamState() const {
     return paramState;
   }
@@ -4869,7 +4795,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ParamTypestate; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class PascalAttr : public InheritableAttr {
@@ -4884,18 +4809,17 @@ public:
   PascalAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Pascal, R, SI)
+    : InheritableAttr(attr::Pascal, R, SI, 0, 0)
   {
   }
 
-  PascalAttr *clone(ASTContext &C) const override;
+  PascalAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Pascal; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class PcsAttr : public InheritableAttr {
@@ -4919,16 +4843,16 @@ public:
               , PCSType PCS
               , unsigned SI
              )
-    : InheritableAttr(attr::Pcs, R, SI)
+    : InheritableAttr(attr::Pcs, R, SI, 0, 0)
               , pCS(PCS)
   {
 
   }
 
-  PcsAttr *clone(ASTContext &C) const override;
+  PcsAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   PCSType getPCS() const {
     return pCS;
   }
@@ -4955,33 +4879,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Pcs; }
-  bool isLateParsed() const override { return 0; }
-};
-
-class PnaclCallAttr : public InheritableAttr {
-
-public:
-  static PnaclCallAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
-    PnaclCallAttr *A = new (Ctx) PnaclCallAttr(Loc, Ctx, 0);
-    A->setImplicit(true);
-    return A;
-  }
-
-  PnaclCallAttr(SourceRange R, ASTContext &Ctx
-              , unsigned SI
-             )
-    : InheritableAttr(attr::PnaclCall, R, SI)
-  {
-  }
-
-  PnaclCallAttr *clone(ASTContext &C) const override;
-  void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
-
-
-  static bool classof(const Attr *A) { return A->getKind() == attr::PnaclCall; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class PtGuardedByAttr : public InheritableAttr {
@@ -4999,16 +4896,16 @@ public:
               , Expr * Arg
               , unsigned SI
              )
-    : InheritableAttr(attr::PtGuardedBy, R, SI)
+    : InheritableAttr(attr::PtGuardedBy, R, SI, 1, 1)
               , arg(Arg)
   {
 
   }
 
-  PtGuardedByAttr *clone(ASTContext &C) const override;
+  PtGuardedByAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Expr * getArg() const {
     return arg;
   }
@@ -5016,9 +4913,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::PtGuardedBy; }
-  bool isLateParsed() const override { return 1; }
-  bool duplicatesAllowed() const override { return true; }
-
 };
 
 class PtGuardedVarAttr : public InheritableAttr {
@@ -5033,18 +4927,17 @@ public:
   PtGuardedVarAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::PtGuardedVar, R, SI)
+    : InheritableAttr(attr::PtGuardedVar, R, SI, 0, 0)
   {
   }
 
-  PtGuardedVarAttr *clone(ASTContext &C) const override;
+  PtGuardedVarAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::PtGuardedVar; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class PureAttr : public InheritableAttr {
@@ -5059,18 +4952,17 @@ public:
   PureAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Pure, R, SI)
+    : InheritableAttr(attr::Pure, R, SI, 0, 0)
   {
   }
 
-  PureAttr *clone(ASTContext &C) const override;
+  PureAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Pure; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ReleaseCapabilityAttr : public InheritableAttr {
@@ -5080,13 +4972,13 @@ class ReleaseCapabilityAttr : public InheritableAttr {
 
 public:
   enum Spelling {
-    GNU_release_capability,
-    CXX11_clang_release_capability,
-    GNU_release_shared_capability,
-    CXX11_clang_release_shared_capability,
-    GNU_release_generic_capability,
-    CXX11_clang_release_generic_capability,
-    GNU_unlock_function
+    GNU_release_capability = 0,
+    CXX11_clang_release_capability = 1,
+    GNU_release_shared_capability = 2,
+    CXX11_clang_release_shared_capability = 3,
+    GNU_release_generic_capability = 4,
+    CXX11_clang_release_generic_capability = 5,
+    GNU_unlock_function = 6
   };
 
   static ReleaseCapabilityAttr *CreateImplicit(ASTContext &Ctx, Spelling S, Expr * *Args, unsigned ArgsSize, SourceRange Loc = SourceRange()) {
@@ -5099,7 +4991,7 @@ public:
               , Expr * *Args, unsigned ArgsSize
               , unsigned SI
              )
-    : InheritableAttr(attr::ReleaseCapability, R, SI)
+    : InheritableAttr(attr::ReleaseCapability, R, SI, 1, 1)
               , args_Size(ArgsSize), args_(new (Ctx, 16) Expr *[args_Size])
   {
     std::copy(Args, Args + args_Size, args_);
@@ -5108,15 +5000,15 @@ public:
   ReleaseCapabilityAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ReleaseCapability, R, SI)
+    : InheritableAttr(attr::ReleaseCapability, R, SI, 1, 1)
               , args_Size(0), args_(nullptr)
   {
   }
 
-  ReleaseCapabilityAttr *clone(ASTContext &C) const override;
+  ReleaseCapabilityAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Spelling getSemanticSpelling() const {
   switch (SpellingListIndex) {
     default: llvm_unreachable("Unknown spelling list index");
@@ -5144,9 +5036,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ReleaseCapability; }
-  bool isLateParsed() const override { return 1; }
-  bool duplicatesAllowed() const override { return true; }
-
 };
 
 class ReqdWorkGroupSizeAttr : public InheritableAttr {
@@ -5170,7 +5059,7 @@ public:
               , unsigned ZDim
               , unsigned SI
              )
-    : InheritableAttr(attr::ReqdWorkGroupSize, R, SI)
+    : InheritableAttr(attr::ReqdWorkGroupSize, R, SI, 0, 0)
               , xDim(XDim)
               , yDim(YDim)
               , zDim(ZDim)
@@ -5180,10 +5069,10 @@ public:
 
   }
 
-  ReqdWorkGroupSizeAttr *clone(ASTContext &C) const override;
+  ReqdWorkGroupSizeAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   unsigned getXDim() const {
     return xDim;
   }
@@ -5199,7 +5088,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ReqdWorkGroupSize; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class RequiresCapabilityAttr : public InheritableAttr {
@@ -5209,12 +5097,12 @@ class RequiresCapabilityAttr : public InheritableAttr {
 
 public:
   enum Spelling {
-    GNU_requires_capability,
-    CXX11_clang_requires_capability,
-    GNU_exclusive_locks_required,
-    GNU_requires_shared_capability,
-    CXX11_clang_requires_shared_capability,
-    GNU_shared_locks_required
+    GNU_requires_capability = 0,
+    CXX11_clang_requires_capability = 1,
+    GNU_exclusive_locks_required = 2,
+    GNU_requires_shared_capability = 3,
+    CXX11_clang_requires_shared_capability = 4,
+    GNU_shared_locks_required = 5
   };
 
   static RequiresCapabilityAttr *CreateImplicit(ASTContext &Ctx, Spelling S, Expr * *Args, unsigned ArgsSize, SourceRange Loc = SourceRange()) {
@@ -5227,7 +5115,7 @@ public:
               , Expr * *Args, unsigned ArgsSize
               , unsigned SI
              )
-    : InheritableAttr(attr::RequiresCapability, R, SI)
+    : InheritableAttr(attr::RequiresCapability, R, SI, 1, 1)
               , args_Size(ArgsSize), args_(new (Ctx, 16) Expr *[args_Size])
   {
     std::copy(Args, Args + args_Size, args_);
@@ -5236,15 +5124,15 @@ public:
   RequiresCapabilityAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::RequiresCapability, R, SI)
+    : InheritableAttr(attr::RequiresCapability, R, SI, 1, 1)
               , args_Size(0), args_(nullptr)
   {
   }
 
-  RequiresCapabilityAttr *clone(ASTContext &C) const override;
+  RequiresCapabilityAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Spelling getSemanticSpelling() const {
   switch (SpellingListIndex) {
     default: llvm_unreachable("Unknown spelling list index");
@@ -5269,9 +5157,45 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::RequiresCapability; }
-  bool isLateParsed() const override { return 1; }
-  bool duplicatesAllowed() const override { return true; }
+};
 
+class RestrictAttr : public InheritableAttr {
+
+public:
+  enum Spelling {
+    Declspec_restrict = 0,
+    GNU_malloc = 1,
+    CXX11_gnu_malloc = 2
+  };
+
+  static RestrictAttr *CreateImplicit(ASTContext &Ctx, Spelling S, SourceRange Loc = SourceRange()) {
+    RestrictAttr *A = new (Ctx) RestrictAttr(Loc, Ctx, S);
+    A->setImplicit(true);
+    return A;
+  }
+
+  RestrictAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : InheritableAttr(attr::Restrict, R, SI, 0, 0)
+  {
+  }
+
+  RestrictAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+  Spelling getSemanticSpelling() const {
+  switch (SpellingListIndex) {
+    default: llvm_unreachable("Unknown spelling list index");
+    case 0: return Declspec_restrict;
+    case 1: return GNU_malloc;
+    case 2: return CXX11_gnu_malloc;
+  }
+  }
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::Restrict; }
 };
 
 class ReturnTypestateAttr : public InheritableAttr {
@@ -5296,16 +5220,16 @@ public:
               , ConsumedState State
               , unsigned SI
              )
-    : InheritableAttr(attr::ReturnTypestate, R, SI)
+    : InheritableAttr(attr::ReturnTypestate, R, SI, 0, 0)
               , state(State)
   {
 
   }
 
-  ReturnTypestateAttr *clone(ASTContext &C) const override;
+  ReturnTypestateAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   ConsumedState getState() const {
     return state;
   }
@@ -5334,7 +5258,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ReturnTypestate; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ReturnsNonNullAttr : public InheritableAttr {
@@ -5349,18 +5272,17 @@ public:
   ReturnsNonNullAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ReturnsNonNull, R, SI)
+    : InheritableAttr(attr::ReturnsNonNull, R, SI, 0, 0)
   {
   }
 
-  ReturnsNonNullAttr *clone(ASTContext &C) const override;
+  ReturnsNonNullAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ReturnsNonNull; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ReturnsTwiceAttr : public InheritableAttr {
@@ -5375,18 +5297,17 @@ public:
   ReturnsTwiceAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ReturnsTwice, R, SI)
+    : InheritableAttr(attr::ReturnsTwice, R, SI, 0, 0)
   {
   }
 
-  ReturnsTwiceAttr *clone(ASTContext &C) const override;
+  ReturnsTwiceAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ReturnsTwice; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ScopedLockableAttr : public InheritableAttr {
@@ -5401,18 +5322,17 @@ public:
   ScopedLockableAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ScopedLockable, R, SI)
+    : InheritableAttr(attr::ScopedLockable, R, SI, 0, 0)
   {
   }
 
-  ScopedLockableAttr *clone(ASTContext &C) const override;
+  ScopedLockableAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ScopedLockable; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class SectionAttr : public InheritableAttr {
@@ -5422,9 +5342,9 @@ char *name;
 
 public:
   enum Spelling {
-    GNU_section,
-    CXX11_gnu_section,
-    Declspec_allocate
+    GNU_section = 0,
+    CXX11_gnu_section = 1,
+    Declspec_allocate = 2
   };
 
   static SectionAttr *CreateImplicit(ASTContext &Ctx, Spelling S, llvm::StringRef Name, SourceRange Loc = SourceRange()) {
@@ -5437,16 +5357,17 @@ public:
               , llvm::StringRef Name
               , unsigned SI
              )
-    : InheritableAttr(attr::Section, R, SI)
+    : InheritableAttr(attr::Section, R, SI, 0, 0)
               , nameLength(Name.size()),name(new (Ctx, 1) char[nameLength])
   {
-      std::memcpy(name, Name.data(), nameLength);
+      if (!Name.empty())
+        std::memcpy(name, Name.data(), nameLength);
   }
 
-  SectionAttr *clone(ASTContext &C) const override;
+  SectionAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Spelling getSemanticSpelling() const {
   switch (SpellingListIndex) {
     default: llvm_unreachable("Unknown spelling list index");
@@ -5464,13 +5385,13 @@ public:
   void setName(ASTContext &C, llvm::StringRef S) {
     nameLength = S.size();
     this->name = new (C, 1) char [nameLength];
-    std::memcpy(this->name, S.data(), nameLength);
+    if (!S.empty())
+      std::memcpy(this->name, S.data(), nameLength);
   }
 
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Section; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class SelectAnyAttr : public InheritableAttr {
@@ -5485,18 +5406,17 @@ public:
   SelectAnyAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::SelectAny, R, SI)
+    : InheritableAttr(attr::SelectAny, R, SI, 0, 0)
   {
   }
 
-  SelectAnyAttr *clone(ASTContext &C) const override;
+  SelectAnyAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::SelectAny; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class SentinelAttr : public InheritableAttr {
@@ -5517,7 +5437,7 @@ public:
               , int NullPos
               , unsigned SI
              )
-    : InheritableAttr(attr::Sentinel, R, SI)
+    : InheritableAttr(attr::Sentinel, R, SI, 0, 0)
               , sentinel(Sentinel)
               , nullPos(NullPos)
   {
@@ -5528,16 +5448,16 @@ public:
   SentinelAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Sentinel, R, SI)
+    : InheritableAttr(attr::Sentinel, R, SI, 0, 0)
               , sentinel()
               , nullPos()
   {
   }
 
-  SentinelAttr *clone(ASTContext &C) const override;
+  SentinelAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   int getSentinel() const {
     return sentinel;
   }
@@ -5553,7 +5473,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Sentinel; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class SetTypestateAttr : public InheritableAttr {
@@ -5578,16 +5497,16 @@ public:
               , ConsumedState NewState
               , unsigned SI
              )
-    : InheritableAttr(attr::SetTypestate, R, SI)
+    : InheritableAttr(attr::SetTypestate, R, SI, 0, 0)
               , newState(NewState)
   {
 
   }
 
-  SetTypestateAttr *clone(ASTContext &C) const override;
+  SetTypestateAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   ConsumedState getNewState() const {
     return newState;
   }
@@ -5616,7 +5535,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::SetTypestate; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class SharedTrylockFunctionAttr : public InheritableAttr {
@@ -5638,7 +5556,7 @@ public:
               , Expr * *Args, unsigned ArgsSize
               , unsigned SI
              )
-    : InheritableAttr(attr::SharedTrylockFunction, R, SI)
+    : InheritableAttr(attr::SharedTrylockFunction, R, SI, 1, 1)
               , successValue(SuccessValue)
               , args_Size(ArgsSize), args_(new (Ctx, 16) Expr *[args_Size])
   {
@@ -5650,17 +5568,17 @@ public:
               , Expr * SuccessValue
               , unsigned SI
              )
-    : InheritableAttr(attr::SharedTrylockFunction, R, SI)
+    : InheritableAttr(attr::SharedTrylockFunction, R, SI, 1, 1)
               , successValue()
               , args_Size(0), args_(nullptr)
   {
 
   }
 
-  SharedTrylockFunctionAttr *clone(ASTContext &C) const override;
+  SharedTrylockFunctionAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Expr * getSuccessValue() const {
     return successValue;
   }
@@ -5675,9 +5593,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::SharedTrylockFunction; }
-  bool isLateParsed() const override { return 1; }
-  bool duplicatesAllowed() const override { return true; }
-
 };
 
 class StdCallAttr : public InheritableAttr {
@@ -5692,18 +5607,17 @@ public:
   StdCallAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::StdCall, R, SI)
+    : InheritableAttr(attr::StdCall, R, SI, 0, 0)
   {
   }
 
-  StdCallAttr *clone(ASTContext &C) const override;
+  StdCallAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::StdCall; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class SysVABIAttr : public InheritableAttr {
@@ -5718,18 +5632,17 @@ public:
   SysVABIAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::SysVABI, R, SI)
+    : InheritableAttr(attr::SysVABI, R, SI, 0, 0)
   {
   }
 
-  SysVABIAttr *clone(ASTContext &C) const override;
+  SysVABIAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::SysVABI; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class TLSModelAttr : public InheritableAttr {
@@ -5748,16 +5661,17 @@ public:
               , llvm::StringRef Model
               , unsigned SI
              )
-    : InheritableAttr(attr::TLSModel, R, SI)
+    : InheritableAttr(attr::TLSModel, R, SI, 0, 0)
               , modelLength(Model.size()),model(new (Ctx, 1) char[modelLength])
   {
-      std::memcpy(model, Model.data(), modelLength);
+      if (!Model.empty())
+        std::memcpy(model, Model.data(), modelLength);
   }
 
-  TLSModelAttr *clone(ASTContext &C) const override;
+  TLSModelAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   llvm::StringRef getModel() const {
     return llvm::StringRef(model, modelLength);
   }
@@ -5767,13 +5681,58 @@ public:
   void setModel(ASTContext &C, llvm::StringRef S) {
     modelLength = S.size();
     this->model = new (C, 1) char [modelLength];
-    std::memcpy(this->model, S.data(), modelLength);
+    if (!S.empty())
+      std::memcpy(this->model, S.data(), modelLength);
   }
 
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::TLSModel; }
-  bool isLateParsed() const override { return 0; }
+};
+
+class TargetAttr : public InheritableAttr {
+unsigned featuresLength;
+char *features;
+
+
+public:
+  static TargetAttr *CreateImplicit(ASTContext &Ctx, llvm::StringRef Features, SourceRange Loc = SourceRange()) {
+    TargetAttr *A = new (Ctx) TargetAttr(Loc, Ctx, Features, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  TargetAttr(SourceRange R, ASTContext &Ctx
+              , llvm::StringRef Features
+              , unsigned SI
+             )
+    : InheritableAttr(attr::Target, R, SI, 0, 0)
+              , featuresLength(Features.size()),features(new (Ctx, 1) char[featuresLength])
+  {
+      if (!Features.empty())
+        std::memcpy(features, Features.data(), featuresLength);
+  }
+
+  TargetAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+  llvm::StringRef getFeatures() const {
+    return llvm::StringRef(features, featuresLength);
+  }
+  unsigned getFeaturesLength() const {
+    return featuresLength;
+  }
+  void setFeatures(ASTContext &C, llvm::StringRef S) {
+    featuresLength = S.size();
+    this->features = new (C, 1) char [featuresLength];
+    if (!S.empty())
+      std::memcpy(this->features, S.data(), featuresLength);
+  }
+
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::Target; }
 };
 
 class TestTypestateAttr : public InheritableAttr {
@@ -5797,16 +5756,16 @@ public:
               , ConsumedState TestState
               , unsigned SI
              )
-    : InheritableAttr(attr::TestTypestate, R, SI)
+    : InheritableAttr(attr::TestTypestate, R, SI, 0, 0)
               , testState(TestState)
   {
 
   }
 
-  TestTypestateAttr *clone(ASTContext &C) const override;
+  TestTypestateAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   ConsumedState getTestState() const {
     return testState;
   }
@@ -5833,7 +5792,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::TestTypestate; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ThisCallAttr : public InheritableAttr {
@@ -5848,18 +5806,17 @@ public:
   ThisCallAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::ThisCall, R, SI)
+    : InheritableAttr(attr::ThisCall, R, SI, 0, 0)
   {
   }
 
-  ThisCallAttr *clone(ASTContext &C) const override;
+  ThisCallAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ThisCall; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class ThreadAttr : public Attr {
@@ -5874,18 +5831,17 @@ public:
   ThreadAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : Attr(attr::Thread, R, SI)
+    : Attr(attr::Thread, R, SI, 0, 0)
   {
   }
 
-  ThreadAttr *clone(ASTContext &C) const override;
+  ThreadAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Thread; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class TransparentUnionAttr : public InheritableAttr {
@@ -5900,18 +5856,17 @@ public:
   TransparentUnionAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::TransparentUnion, R, SI)
+    : InheritableAttr(attr::TransparentUnion, R, SI, 0, 0)
   {
   }
 
-  TransparentUnionAttr *clone(ASTContext &C) const override;
+  TransparentUnionAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::TransparentUnion; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class TryAcquireCapabilityAttr : public InheritableAttr {
@@ -5923,10 +5878,10 @@ Expr * successValue;
 
 public:
   enum Spelling {
-    GNU_try_acquire_capability,
-    CXX11_clang_try_acquire_capability,
-    GNU_try_acquire_shared_capability,
-    CXX11_clang_try_acquire_shared_capability
+    GNU_try_acquire_capability = 0,
+    CXX11_clang_try_acquire_capability = 1,
+    GNU_try_acquire_shared_capability = 2,
+    CXX11_clang_try_acquire_shared_capability = 3
   };
 
   static TryAcquireCapabilityAttr *CreateImplicit(ASTContext &Ctx, Spelling S, Expr * SuccessValue, Expr * *Args, unsigned ArgsSize, SourceRange Loc = SourceRange()) {
@@ -5940,7 +5895,7 @@ public:
               , Expr * *Args, unsigned ArgsSize
               , unsigned SI
              )
-    : InheritableAttr(attr::TryAcquireCapability, R, SI)
+    : InheritableAttr(attr::TryAcquireCapability, R, SI, 1, 1)
               , successValue(SuccessValue)
               , args_Size(ArgsSize), args_(new (Ctx, 16) Expr *[args_Size])
   {
@@ -5952,17 +5907,17 @@ public:
               , Expr * SuccessValue
               , unsigned SI
              )
-    : InheritableAttr(attr::TryAcquireCapability, R, SI)
+    : InheritableAttr(attr::TryAcquireCapability, R, SI, 1, 1)
               , successValue()
               , args_Size(0), args_(nullptr)
   {
 
   }
 
-  TryAcquireCapabilityAttr *clone(ASTContext &C) const override;
+  TryAcquireCapabilityAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   Spelling getSemanticSpelling() const {
   switch (SpellingListIndex) {
     default: llvm_unreachable("Unknown spelling list index");
@@ -5988,9 +5943,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::TryAcquireCapability; }
-  bool isLateParsed() const override { return 1; }
-  bool duplicatesAllowed() const override { return true; }
-
 };
 
 class TypeTagForDatatypeAttr : public InheritableAttr {
@@ -6017,7 +5969,7 @@ public:
               , bool MustBeNull
               , unsigned SI
              )
-    : InheritableAttr(attr::TypeTagForDatatype, R, SI)
+    : InheritableAttr(attr::TypeTagForDatatype, R, SI, 0, 0)
               , argumentKind(ArgumentKind)
               , matchingCType(MatchingCType)
               , layoutCompatible(LayoutCompatible)
@@ -6029,10 +5981,10 @@ public:
 
   }
 
-  TypeTagForDatatypeAttr *clone(ASTContext &C) const override;
+  TypeTagForDatatypeAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   IdentifierInfo * getArgumentKind() const {
     return argumentKind;
   }
@@ -6054,7 +6006,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::TypeTagForDatatype; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class TypeVisibilityAttr : public InheritableAttr {
@@ -6079,16 +6030,16 @@ public:
               , VisibilityType Visibility
               , unsigned SI
              )
-    : InheritableAttr(attr::TypeVisibility, R, SI)
+    : InheritableAttr(attr::TypeVisibility, R, SI, 0, 0)
               , visibility(Visibility)
   {
 
   }
 
-  TypeVisibilityAttr *clone(ASTContext &C) const override;
+  TypeVisibilityAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   VisibilityType getVisibility() const {
     return visibility;
   }
@@ -6118,7 +6069,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::TypeVisibility; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class UnavailableAttr : public InheritableAttr {
@@ -6137,24 +6087,25 @@ public:
               , llvm::StringRef Message
               , unsigned SI
              )
-    : InheritableAttr(attr::Unavailable, R, SI)
+    : InheritableAttr(attr::Unavailable, R, SI, 0, 0)
               , messageLength(Message.size()),message(new (Ctx, 1) char[messageLength])
   {
-      std::memcpy(message, Message.data(), messageLength);
+      if (!Message.empty())
+        std::memcpy(message, Message.data(), messageLength);
   }
 
   UnavailableAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Unavailable, R, SI)
+    : InheritableAttr(attr::Unavailable, R, SI, 0, 0)
               , messageLength(0),message(0)
   {
   }
 
-  UnavailableAttr *clone(ASTContext &C) const override;
+  UnavailableAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   llvm::StringRef getMessage() const {
     return llvm::StringRef(message, messageLength);
   }
@@ -6164,13 +6115,13 @@ public:
   void setMessage(ASTContext &C, llvm::StringRef S) {
     messageLength = S.size();
     this->message = new (C, 1) char [messageLength];
-    std::memcpy(this->message, S.data(), messageLength);
+    if (!S.empty())
+      std::memcpy(this->message, S.data(), messageLength);
   }
 
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Unavailable; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class UnusedAttr : public InheritableAttr {
@@ -6185,18 +6136,17 @@ public:
   UnusedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Unused, R, SI)
+    : InheritableAttr(attr::Unused, R, SI, 0, 0)
   {
   }
 
-  UnusedAttr *clone(ASTContext &C) const override;
+  UnusedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Unused; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class UsedAttr : public InheritableAttr {
@@ -6211,18 +6161,17 @@ public:
   UsedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Used, R, SI)
+    : InheritableAttr(attr::Used, R, SI, 0, 0)
   {
   }
 
-  UsedAttr *clone(ASTContext &C) const override;
+  UsedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Used; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class UuidAttr : public InheritableAttr {
@@ -6241,16 +6190,17 @@ public:
               , llvm::StringRef Guid
               , unsigned SI
              )
-    : InheritableAttr(attr::Uuid, R, SI)
+    : InheritableAttr(attr::Uuid, R, SI, 0, 0)
               , guidLength(Guid.size()),guid(new (Ctx, 1) char[guidLength])
   {
-      std::memcpy(guid, Guid.data(), guidLength);
+      if (!Guid.empty())
+        std::memcpy(guid, Guid.data(), guidLength);
   }
 
-  UuidAttr *clone(ASTContext &C) const override;
+  UuidAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   llvm::StringRef getGuid() const {
     return llvm::StringRef(guid, guidLength);
   }
@@ -6260,13 +6210,13 @@ public:
   void setGuid(ASTContext &C, llvm::StringRef S) {
     guidLength = S.size();
     this->guid = new (C, 1) char [guidLength];
-    std::memcpy(this->guid, S.data(), guidLength);
+    if (!S.empty())
+      std::memcpy(this->guid, S.data(), guidLength);
   }
 
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Uuid; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class VecReturnAttr : public InheritableAttr {
@@ -6281,18 +6231,17 @@ public:
   VecReturnAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::VecReturn, R, SI)
+    : InheritableAttr(attr::VecReturn, R, SI, 0, 0)
   {
   }
 
-  VecReturnAttr *clone(ASTContext &C) const override;
+  VecReturnAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::VecReturn; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class VecTypeHintAttr : public InheritableAttr {
@@ -6310,16 +6259,16 @@ public:
               , TypeSourceInfo * TypeHint
               , unsigned SI
              )
-    : InheritableAttr(attr::VecTypeHint, R, SI)
+    : InheritableAttr(attr::VecTypeHint, R, SI, 0, 0)
               , typeHint(TypeHint)
   {
 
   }
 
-  VecTypeHintAttr *clone(ASTContext &C) const override;
+  VecTypeHintAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   QualType getTypeHint() const {
     return typeHint->getType();
   }  TypeSourceInfo * getTypeHintLoc() const {
@@ -6329,7 +6278,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::VecTypeHint; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class VectorCallAttr : public InheritableAttr {
@@ -6344,18 +6292,17 @@ public:
   VectorCallAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::VectorCall, R, SI)
+    : InheritableAttr(attr::VectorCall, R, SI, 0, 0)
   {
   }
 
-  VectorCallAttr *clone(ASTContext &C) const override;
+  VectorCallAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::VectorCall; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class VisibilityAttr : public InheritableAttr {
@@ -6380,16 +6327,16 @@ public:
               , VisibilityType Visibility
               , unsigned SI
              )
-    : InheritableAttr(attr::Visibility, R, SI)
+    : InheritableAttr(attr::Visibility, R, SI, 0, 0)
               , visibility(Visibility)
   {
 
   }
 
-  VisibilityAttr *clone(ASTContext &C) const override;
+  VisibilityAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   VisibilityType getVisibility() const {
     return visibility;
   }
@@ -6419,7 +6366,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Visibility; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class WarnUnusedAttr : public InheritableAttr {
@@ -6434,18 +6380,17 @@ public:
   WarnUnusedAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::WarnUnused, R, SI)
+    : InheritableAttr(attr::WarnUnused, R, SI, 0, 0)
   {
   }
 
-  WarnUnusedAttr *clone(ASTContext &C) const override;
+  WarnUnusedAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::WarnUnused; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class WarnUnusedResultAttr : public InheritableAttr {
@@ -6460,18 +6405,17 @@ public:
   WarnUnusedResultAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::WarnUnusedResult, R, SI)
+    : InheritableAttr(attr::WarnUnusedResult, R, SI, 0, 0)
   {
   }
 
-  WarnUnusedResultAttr *clone(ASTContext &C) const override;
+  WarnUnusedResultAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::WarnUnusedResult; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class WeakAttr : public InheritableAttr {
@@ -6486,18 +6430,17 @@ public:
   WeakAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::Weak, R, SI)
+    : InheritableAttr(attr::Weak, R, SI, 0, 0)
   {
   }
 
-  WeakAttr *clone(ASTContext &C) const override;
+  WeakAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Weak; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class WeakImportAttr : public InheritableAttr {
@@ -6512,18 +6455,17 @@ public:
   WeakImportAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::WeakImport, R, SI)
+    : InheritableAttr(attr::WeakImport, R, SI, 0, 0)
   {
   }
 
-  WeakImportAttr *clone(ASTContext &C) const override;
+  WeakImportAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::WeakImport; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class WeakRefAttr : public InheritableAttr {
@@ -6542,24 +6484,25 @@ public:
               , llvm::StringRef Aliasee
               , unsigned SI
              )
-    : InheritableAttr(attr::WeakRef, R, SI)
+    : InheritableAttr(attr::WeakRef, R, SI, 0, 0)
               , aliaseeLength(Aliasee.size()),aliasee(new (Ctx, 1) char[aliaseeLength])
   {
-      std::memcpy(aliasee, Aliasee.data(), aliaseeLength);
+      if (!Aliasee.empty())
+        std::memcpy(aliasee, Aliasee.data(), aliaseeLength);
   }
 
   WeakRefAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::WeakRef, R, SI)
+    : InheritableAttr(attr::WeakRef, R, SI, 0, 0)
               , aliaseeLength(0),aliasee(0)
   {
   }
 
-  WeakRefAttr *clone(ASTContext &C) const override;
+  WeakRefAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   llvm::StringRef getAliasee() const {
     return llvm::StringRef(aliasee, aliaseeLength);
   }
@@ -6569,13 +6512,13 @@ public:
   void setAliasee(ASTContext &C, llvm::StringRef S) {
     aliaseeLength = S.size();
     this->aliasee = new (C, 1) char [aliaseeLength];
-    std::memcpy(this->aliasee, S.data(), aliaseeLength);
+    if (!S.empty())
+      std::memcpy(this->aliasee, S.data(), aliaseeLength);
   }
 
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::WeakRef; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class WorkGroupSizeHintAttr : public InheritableAttr {
@@ -6599,7 +6542,7 @@ public:
               , unsigned ZDim
               , unsigned SI
              )
-    : InheritableAttr(attr::WorkGroupSizeHint, R, SI)
+    : InheritableAttr(attr::WorkGroupSizeHint, R, SI, 0, 0)
               , xDim(XDim)
               , yDim(YDim)
               , zDim(ZDim)
@@ -6609,10 +6552,10 @@ public:
 
   }
 
-  WorkGroupSizeHintAttr *clone(ASTContext &C) const override;
+  WorkGroupSizeHintAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
   unsigned getXDim() const {
     return xDim;
   }
@@ -6628,7 +6571,6 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::WorkGroupSizeHint; }
-  bool isLateParsed() const override { return 0; }
 };
 
 class X86ForceAlignArgPointerAttr : public InheritableAttr {
@@ -6643,18 +6585,17 @@ public:
   X86ForceAlignArgPointerAttr(SourceRange R, ASTContext &Ctx
               , unsigned SI
              )
-    : InheritableAttr(attr::X86ForceAlignArgPointer, R, SI)
+    : InheritableAttr(attr::X86ForceAlignArgPointer, R, SI, 0, 0)
   {
   }
 
-  X86ForceAlignArgPointerAttr *clone(ASTContext &C) const override;
+  X86ForceAlignArgPointerAttr *clone(ASTContext &C) const;
   void printPretty(raw_ostream &OS,
-                   const PrintingPolicy &Policy) const override;
-  const char *getSpelling() const override;
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::X86ForceAlignArgPointer; }
-  bool isLateParsed() const override { return 0; }
 };
 
 #endif

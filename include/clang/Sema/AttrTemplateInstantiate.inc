@@ -1,6 +1,6 @@
 /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
 |*                                                                            *|
-|*Template instantiation code for attributes                                  *|
+|* Template instantiation code for attributes                                 *|
 |*                                                                            *|
 |* Automatically generated file, do not edit!                                 *|
 |*                                                                            *|
@@ -330,6 +330,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const FinalAttr *A = cast<FinalAttr>(At);
       return A->clone(C);
     }
+    case attr::FlagEnum: {
+      const FlagEnumAttr *A = cast<FlagEnumAttr>(At);
+      return A->clone(C);
+    }
     case attr::Flatten: {
       const FlattenAttr *A = cast<FlattenAttr>(At);
       return A->clone(C);
@@ -425,16 +429,20 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const MSInheritanceAttr *A = cast<MSInheritanceAttr>(At);
       return A->clone(C);
     }
+    case attr::MSNoVTable: {
+      const MSNoVTableAttr *A = cast<MSNoVTableAttr>(At);
+      return A->clone(C);
+    }
     case attr::MSP430Interrupt: {
       const MSP430InterruptAttr *A = cast<MSP430InterruptAttr>(At);
       return A->clone(C);
     }
-    case attr::MSVtorDisp: {
-      const MSVtorDispAttr *A = cast<MSVtorDispAttr>(At);
+    case attr::MSStruct: {
+      const MSStructAttr *A = cast<MSStructAttr>(At);
       return A->clone(C);
     }
-    case attr::Malloc: {
-      const MallocAttr *A = cast<MallocAttr>(At);
+    case attr::MSVtorDisp: {
+      const MSVtorDispAttr *A = cast<MSVtorDispAttr>(At);
       return A->clone(C);
     }
     case attr::MaxFieldAlignment: {
@@ -455,10 +463,6 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::Mode: {
       const ModeAttr *A = cast<ModeAttr>(At);
-      return A->clone(C);
-    }
-    case attr::MsStruct: {
-      const MsStructAttr *A = cast<MsStructAttr>(At);
       return A->clone(C);
     }
     case attr::NSConsumed: {
@@ -513,16 +517,8 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const NoReturnAttr *A = cast<NoReturnAttr>(At);
       return A->clone(C);
     }
-    case attr::NoSanitizeAddress: {
-      const NoSanitizeAddressAttr *A = cast<NoSanitizeAddressAttr>(At);
-      return A->clone(C);
-    }
-    case attr::NoSanitizeMemory: {
-      const NoSanitizeMemoryAttr *A = cast<NoSanitizeMemoryAttr>(At);
-      return A->clone(C);
-    }
-    case attr::NoSanitizeThread: {
-      const NoSanitizeThreadAttr *A = cast<NoSanitizeThreadAttr>(At);
+    case attr::NoSanitize: {
+      const NoSanitizeAttr *A = cast<NoSanitizeAttr>(At);
       return A->clone(C);
     }
     case attr::NoSplitStack: {
@@ -543,6 +539,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::OMPThreadPrivateDecl: {
       const OMPThreadPrivateDeclAttr *A = cast<OMPThreadPrivateDeclAttr>(At);
+      return A->clone(C);
+    }
+    case attr::ObjCBoxable: {
+      const ObjCBoxableAttr *A = cast<ObjCBoxableAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCBridge: {
@@ -567,6 +567,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::ObjCExplicitProtocolImpl: {
       const ObjCExplicitProtocolImplAttr *A = cast<ObjCExplicitProtocolImplAttr>(At);
+      return A->clone(C);
+    }
+    case attr::ObjCIndependentClass: {
+      const ObjCIndependentClassAttr *A = cast<ObjCIndependentClassAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCMethodFamily: {
@@ -641,10 +645,6 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const PcsAttr *A = cast<PcsAttr>(At);
       return A->clone(C);
     }
-    case attr::PnaclCall: {
-      const PnaclCallAttr *A = cast<PnaclCallAttr>(At);
-      return A->clone(C);
-    }
     case attr::PtGuardedBy: {
       const PtGuardedByAttr *A = cast<PtGuardedByAttr>(At);
       Expr * tempInstArg;
@@ -696,6 +696,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
         }
       }
       return new (C) RequiresCapabilityAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
+    }
+    case attr::Restrict: {
+      const RestrictAttr *A = cast<RestrictAttr>(At);
+      return A->clone(C);
     }
     case attr::ReturnTypestate: {
       const ReturnTypestateAttr *A = cast<ReturnTypestateAttr>(At);
@@ -760,6 +764,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::TLSModel: {
       const TLSModelAttr *A = cast<TLSModelAttr>(At);
+      return A->clone(C);
+    }
+    case attr::Target: {
+      const TargetAttr *A = cast<TargetAttr>(At);
       return A->clone(C);
     }
     case attr::TestTypestate: {
