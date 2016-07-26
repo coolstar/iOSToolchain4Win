@@ -22,5 +22,6 @@ What this toolchain supports:
 4. Objective C Blocks (introduced with iOS 4.0)
 5. Objective C Literals (introduced with iOS 5.1)
 6. Objective C ARC (introduced with iOS 5.0)
+7. TBD linker files (introduced with iOS 9.0)
 
 The binaries from this toolchain have been tested and work properly on an iPod touch 5, iPad mini, and iPhone 6, on iOS 6.1.2, 7.1.2, 8.1.2, 8.3, 8.4, 9.0.2, and 9.3.3.
