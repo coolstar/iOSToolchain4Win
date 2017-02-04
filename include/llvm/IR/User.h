@@ -27,6 +27,9 @@
 
 namespace llvm {
 
+template <typename T> class ArrayRef;
+template <typename T> class MutableArrayRef;
+
 /// \brief Compile-time customization of User operands.
 ///
 /// Customizes operand-related allocators and accessors.
@@ -38,6 +41,9 @@ class User : public Value {
   template <unsigned>
   friend struct HungoffOperandTraits;
   virtual void anchor();
+
+  LLVM_ATTRIBUTE_ALWAYS_INLINE inline static void *
+  allocateFixedOperandUser(size_t, unsigned, unsigned);
 
 protected:
   /// Allocate a User with an operand pointer co-allocated.
@@ -51,7 +57,17 @@ protected:
   /// This is used for subclasses which have a fixed number of operands.
   void *operator new(size_t Size, unsigned Us);
 
-  User(Type *ty, unsigned vty, Use *OpList, unsigned NumOps)
+  /// Allocate a User with the operands co-allocated.  If DescBytes is non-zero
+  /// then allocate an additional DescBytes bytes before the operands. These
+  /// bytes can be accessed by calling getDescriptor.
+  ///
+  /// DescBytes needs to be divisible by sizeof(void *).  The allocated
+  /// descriptor, if any, is aligned to sizeof(void *) bytes.
+  ///
+  /// This is used for subclasses which have a fixed number of operands.
+  void *operator new(size_t Size, unsigned Us, unsigned DescBytes);
+
+  User(Type *ty, unsigned vty, Use *, unsigned NumOps)
       : Value(ty, vty) {
     assert(NumOps < (1u << NumUserOperandsBits) && "Too many operands");
     NumUserOperands = NumOps;
@@ -137,6 +153,12 @@ public:
 
   unsigned getNumOperands() const { return NumUserOperands; }
 
+  /// Returns the descriptor co-allocated with this User instance.
+  ArrayRef<const uint8_t> getDescriptor() const;
+
+  /// Returns the descriptor co-allocated with this User instance.
+  MutableArrayRef<uint8_t> getDescriptor();
+
   /// Set the number of operands on a GlobalVariable.
   ///
   /// GlobalVariable always allocates space for a single operands, but
@@ -147,19 +169,6 @@ public:
   /// 1 operand before delete.
   void setGlobalVariableNumOperands(unsigned NumOps) {
     assert(NumOps <= 1 && "GlobalVariable can only have 0 or 1 operands");
-    NumUserOperands = NumOps;
-  }
-
-  /// Set the number of operands on a Function.
-  ///
-  /// Function always allocates space for a single operands, but
-  /// doesn't always use it.
-  ///
-  /// FIXME: As that the number of operands is used to find the start of
-  /// the allocated memory in operator delete, we need to always think we have
-  /// 1 operand before delete.
-  void setFunctionNumOperands(unsigned NumOps) {
-    assert(NumOps <= 1 && "Function can only have 0 or 1 operands");
     NumUserOperands = NumOps;
   }
 
@@ -213,7 +222,7 @@ public:
     return value_op_iterator(op_end());
   }
   iterator_range<value_op_iterator> operand_values() {
-    return iterator_range<value_op_iterator>(value_op_begin(), value_op_end());
+    return make_range(value_op_begin(), value_op_end());
   }
 
   /// \brief Drop all references to operands.

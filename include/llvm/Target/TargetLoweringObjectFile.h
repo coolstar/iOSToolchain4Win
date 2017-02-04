@@ -42,16 +42,15 @@ class TargetLoweringObjectFile : public MCObjectFileInfo {
   void operator=(const TargetLoweringObjectFile&) = delete;
 
 protected:
-  const DataLayout *DL;
   bool SupportIndirectSymViaGOTPCRel;
   bool SupportGOTPCRelWithOffset;
 
 public:
   MCContext &getContext() const { return *Ctx; }
 
-  TargetLoweringObjectFile() : MCObjectFileInfo(), Ctx(nullptr), DL(nullptr),
-                               SupportIndirectSymViaGOTPCRel(false),
-                               SupportGOTPCRelWithOffset(true) {}
+  TargetLoweringObjectFile()
+      : MCObjectFileInfo(), Ctx(nullptr), SupportIndirectSymViaGOTPCRel(false),
+        SupportGOTPCRelWithOffset(true) {}
 
   virtual ~TargetLoweringObjectFile();
 
@@ -60,8 +59,7 @@ public:
   /// implementations a chance to set up their default sections.
   virtual void Initialize(MCContext &ctx, const TargetMachine &TM);
 
-  virtual void emitPersonalityValue(MCStreamer &Streamer,
-                                    const TargetMachine &TM,
+  virtual void emitPersonalityValue(MCStreamer &Streamer, const DataLayout &TM,
                                     const MCSymbol *Sym) const;
 
   /// Emit the module flags that the platform cares about.
@@ -71,8 +69,10 @@ public:
 
   /// Given a constant with the SectionKind, return a section that it should be
   /// placed in.
-  virtual MCSection *getSectionForConstant(SectionKind Kind,
-                                           const Constant *C) const;
+  virtual MCSection *getSectionForConstant(const DataLayout &DL,
+                                           SectionKind Kind,
+                                           const Constant *C,
+                                           unsigned &Align) const;
 
   /// Classify the specified global variable into a set of target independent
   /// categories embodied in SectionKind.
@@ -94,8 +94,7 @@ public:
   }
 
   virtual void getNameWithPrefix(SmallVectorImpl<char> &OutName,
-                                 const GlobalValue *GV,
-                                 bool CannotUsePrivateLabel, Mangler &Mang,
+                                 const GlobalValue *GV, Mangler &Mang,
                                  const TargetMachine &TM) const;
 
   virtual MCSection *getSectionForJumpTable(const Function &F, Mangler &Mang,
@@ -156,8 +155,8 @@ public:
   virtual const MCExpr *getDebugThreadLocalSymbol(const MCSymbol *Sym) const;
 
   virtual const MCExpr *
-  getExecutableRelativeSymbol(const ConstantExpr *CE, Mangler &Mang,
-                              const TargetMachine &TM) const {
+  lowerRelativeReference(const GlobalValue *LHS, const GlobalValue *RHS,
+                         Mangler &Mang, const TargetMachine &TM) const {
     return nullptr;
   }
 

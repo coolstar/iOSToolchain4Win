@@ -15,11 +15,12 @@
 #define LLVM_TRANSFORMS_UTILS_LOOPUTILS_H
 
 #include "llvm/ADT/SmallVector.h"
+#include "llvm/Analysis/AliasAnalysis.h"
+#include "llvm/Analysis/EHPersonalities.h"
 #include "llvm/IR/Dominators.h"
 #include "llvm/IR/IRBuilder.h"
 
 namespace llvm {
-class AliasAnalysis;
 class AliasSet;
 class AliasSetTracker;
 class AssumptionCache;
@@ -29,18 +30,21 @@ class DominatorTree;
 class Loop;
 class LoopInfo;
 class Pass;
+class PredicatedScalarEvolution;
 class PredIteratorCache;
 class ScalarEvolution;
+class SCEV;
 class TargetLibraryInfo;
 
 /// \brief Captures loop safety information.
 /// It keep information for loop & its header may throw exception.
-struct LICMSafetyInfo {
-  bool MayThrow;           // The current loop contains an instruction which
-                           // may throw.
-  bool HeaderMayThrow;     // Same as previous, but specific to loop header
-  LICMSafetyInfo() : MayThrow(false), HeaderMayThrow(false)
-  {}
+struct LoopSafetyInfo {
+  bool MayThrow;       // The current loop contains an instruction which
+                       // may throw.
+  bool HeaderMayThrow; // Same as previous, but specific to loop header
+  // Used to update funclet bundle operands.
+  DenseMap<BasicBlock *, ColorVector> BlockColors;
+  LoopSafetyInfo() : MayThrow(false), HeaderMayThrow(false) {}
 };
 
 /// The RecurrenceDescriptor is used to identify recurrences variables in a
@@ -85,23 +89,34 @@ public:
 
   RecurrenceDescriptor()
       : StartValue(nullptr), LoopExitInstr(nullptr), Kind(RK_NoRecurrence),
-        MinMaxKind(MRK_Invalid) {}
+        MinMaxKind(MRK_Invalid), UnsafeAlgebraInst(nullptr),
+        RecurrenceType(nullptr), IsSigned(false) {}
 
   RecurrenceDescriptor(Value *Start, Instruction *Exit, RecurrenceKind K,
-                       MinMaxRecurrenceKind MK)
-      : StartValue(Start), LoopExitInstr(Exit), Kind(K), MinMaxKind(MK) {}
+                       MinMaxRecurrenceKind MK, Instruction *UAI, Type *RT,
+                       bool Signed, SmallPtrSetImpl<Instruction *> &CI)
+      : StartValue(Start), LoopExitInstr(Exit), Kind(K), MinMaxKind(MK),
+        UnsafeAlgebraInst(UAI), RecurrenceType(RT), IsSigned(Signed) {
+    CastInsts.insert(CI.begin(), CI.end());
+  }
 
   /// This POD struct holds information about a potential recurrence operation.
   class InstDesc {
 
   public:
-    InstDesc(bool IsRecur, Instruction *I)
-        : IsRecurrence(IsRecur), PatternLastInst(I), MinMaxKind(MRK_Invalid) {}
+    InstDesc(bool IsRecur, Instruction *I, Instruction *UAI = nullptr)
+        : IsRecurrence(IsRecur), PatternLastInst(I), MinMaxKind(MRK_Invalid),
+          UnsafeAlgebraInst(UAI) {}
 
-    InstDesc(Instruction *I, MinMaxRecurrenceKind K)
-        : IsRecurrence(true), PatternLastInst(I), MinMaxKind(K) {}
+    InstDesc(Instruction *I, MinMaxRecurrenceKind K, Instruction *UAI = nullptr)
+        : IsRecurrence(true), PatternLastInst(I), MinMaxKind(K),
+          UnsafeAlgebraInst(UAI) {}
 
     bool isRecurrence() { return IsRecurrence; }
+
+    bool hasUnsafeAlgebra() { return UnsafeAlgebraInst != nullptr; }
+
+    Instruction *getUnsafeAlgebraInst() { return UnsafeAlgebraInst; }
 
     MinMaxRecurrenceKind getMinMaxKind() { return MinMaxKind; }
 
@@ -115,6 +130,8 @@ public:
     Instruction *PatternLastInst;
     // If this is a min/max pattern the comparison predicate.
     MinMaxRecurrenceKind MinMaxKind;
+    // Recurrence has unsafe algebra.
+    Instruction *UnsafeAlgebraInst;
   };
 
   /// Returns a struct describing if the instruction 'I' can be a recurrence
@@ -125,7 +142,7 @@ public:
   static InstDesc isRecurrenceInstr(Instruction *I, RecurrenceKind Kind,
                                     InstDesc &Prev, bool HasFunNoNaNAttr);
 
-  /// Returns true if instuction I has multiple uses in Insts
+  /// Returns true if instruction I has multiple uses in Insts
   static bool hasMultipleUsesOf(Instruction *I,
                                 SmallPtrSetImpl<Instruction *> &Insts);
 
@@ -159,6 +176,13 @@ public:
   static bool isReductionPHI(PHINode *Phi, Loop *TheLoop,
                              RecurrenceDescriptor &RedDes);
 
+  /// Returns true if Phi is a first-order recurrence. A first-order recurrence
+  /// is a non-reduction recurrence relation in which the value of the
+  /// recurrence in the current loop iteration equals a value defined in the
+  /// previous iteration.
+  static bool isFirstOrderRecurrence(PHINode *Phi, Loop *TheLoop,
+                                     DominatorTree *DT);
+
   RecurrenceKind getRecurrenceKind() { return Kind; }
 
   MinMaxRecurrenceKind getMinMaxRecurrenceKind() { return MinMaxKind; }
@@ -166,6 +190,51 @@ public:
   TrackingVH<Value> getRecurrenceStartValue() { return StartValue; }
 
   Instruction *getLoopExitInstr() { return LoopExitInstr; }
+
+  /// Returns true if the recurrence has unsafe algebra which requires a relaxed
+  /// floating-point model.
+  bool hasUnsafeAlgebra() { return UnsafeAlgebraInst != nullptr; }
+
+  /// Returns first unsafe algebra instruction in the PHI node's use-chain.
+  Instruction *getUnsafeAlgebraInst() { return UnsafeAlgebraInst; }
+
+  /// Returns true if the recurrence kind is an integer kind.
+  static bool isIntegerRecurrenceKind(RecurrenceKind Kind);
+
+  /// Returns true if the recurrence kind is a floating point kind.
+  static bool isFloatingPointRecurrenceKind(RecurrenceKind Kind);
+
+  /// Returns true if the recurrence kind is an arithmetic kind.
+  static bool isArithmeticRecurrenceKind(RecurrenceKind Kind);
+
+  /// Determines if Phi may have been type-promoted. If Phi has a single user
+  /// that ANDs the Phi with a type mask, return the user. RT is updated to
+  /// account for the narrower bit width represented by the mask, and the AND
+  /// instruction is added to CI.
+  static Instruction *lookThroughAnd(PHINode *Phi, Type *&RT,
+                                     SmallPtrSetImpl<Instruction *> &Visited,
+                                     SmallPtrSetImpl<Instruction *> &CI);
+
+  /// Returns true if all the source operands of a recurrence are either
+  /// SExtInsts or ZExtInsts. This function is intended to be used with
+  /// lookThroughAnd to determine if the recurrence has been type-promoted. The
+  /// source operands are added to CI, and IsSigned is updated to indicate if
+  /// all source operands are SExtInsts.
+  static bool getSourceExtensionKind(Instruction *Start, Instruction *Exit,
+                                     Type *RT, bool &IsSigned,
+                                     SmallPtrSetImpl<Instruction *> &Visited,
+                                     SmallPtrSetImpl<Instruction *> &CI);
+
+  /// Returns the type of the recurrence. This type can be narrower than the
+  /// actual type of the Phi if the recurrence has been type-promoted.
+  Type *getRecurrenceType() { return RecurrenceType; }
+
+  /// Returns a reference to the instructions used for type-promoting the
+  /// recurrence.
+  SmallPtrSet<Instruction *, 8> &getCastInsts() { return CastInsts; }
+
+  /// Returns true if all source operands of the recurrence are SExtInsts.
+  bool isSigned() { return IsSigned; }
 
 private:
   // The starting value of the recurrence.
@@ -177,19 +246,96 @@ private:
   RecurrenceKind Kind;
   // If this a min/max recurrence the kind of recurrence.
   MinMaxRecurrenceKind MinMaxKind;
+  // First occurance of unasfe algebra in the PHI's use-chain.
+  Instruction *UnsafeAlgebraInst;
+  // The type of the recurrence.
+  Type *RecurrenceType;
+  // True if all source operands of the recurrence are SExtInsts.
+  bool IsSigned;
+  // Instructions used for type-promoting the recurrence.
+  SmallPtrSet<Instruction *, 8> CastInsts;
 };
 
-BasicBlock *InsertPreheaderForLoop(Loop *L, Pass *P);
+/// A struct for saving information about induction variables.
+class InductionDescriptor {
+public:
+  /// This enum represents the kinds of inductions that we support.
+  enum InductionKind {
+    IK_NoInduction,  ///< Not an induction variable.
+    IK_IntInduction, ///< Integer induction variable. Step = C.
+    IK_PtrInduction  ///< Pointer induction var. Step = C / sizeof(elem).
+  };
 
-/// \brief Simplify each loop in a loop nest recursively.
+public:
+  /// Default constructor - creates an invalid induction.
+  InductionDescriptor()
+      : StartValue(nullptr), IK(IK_NoInduction), Step(nullptr) {}
+
+  /// Get the consecutive direction. Returns:
+  ///   0 - unknown or non-consecutive.
+  ///   1 - consecutive and increasing.
+  ///  -1 - consecutive and decreasing.
+  int getConsecutiveDirection() const;
+
+  /// Compute the transformed value of Index at offset StartValue using step
+  /// StepValue.
+  /// For integer induction, returns StartValue + Index * StepValue.
+  /// For pointer induction, returns StartValue[Index * StepValue].
+  /// FIXME: The newly created binary instructions should contain nsw/nuw
+  /// flags, which can be found from the original scalar operations.
+  Value *transform(IRBuilder<> &B, Value *Index, ScalarEvolution *SE,
+                   const DataLayout& DL) const;
+
+  Value *getStartValue() const { return StartValue; }
+  InductionKind getKind() const { return IK; }
+  const SCEV *getStep() const { return Step; }
+  ConstantInt *getConstIntStepValue() const;
+
+  /// Returns true if \p Phi is an induction. If \p Phi is an induction,
+  /// the induction descriptor \p D will contain the data describing this
+  /// induction. If by some other means the caller has a better SCEV
+  /// expression for \p Phi than the one returned by the ScalarEvolution
+  /// analysis, it can be passed through \p Expr.
+  static bool isInductionPHI(PHINode *Phi, ScalarEvolution *SE,
+                             InductionDescriptor &D,
+                             const SCEV *Expr = nullptr);
+
+  /// Returns true if \p Phi is an induction, in the context associated with
+  /// the run-time predicate of PSE. If \p Assume is true, this can add further
+  /// SCEV predicates to \p PSE in order to prove that \p Phi is an induction.
+  /// If \p Phi is an induction, \p D will contain the data describing this
+  /// induction.
+  static bool isInductionPHI(PHINode *Phi, PredicatedScalarEvolution &PSE,
+                             InductionDescriptor &D, bool Assume = false);
+
+private:
+  /// Private constructor - used by \c isInductionPHI.
+  InductionDescriptor(Value *Start, InductionKind K, const SCEV *Step);
+
+  /// Start value.
+  TrackingVH<Value> StartValue;
+  /// Induction kind.
+  InductionKind IK;
+  /// Step value.
+  const SCEV *Step;
+};
+
+BasicBlock *InsertPreheaderForLoop(Loop *L, DominatorTree *DT, LoopInfo *LI,
+                                   bool PreserveLCSSA);
+
+/// Ensures LCSSA form for every instruction from the Worklist in the scope of
+/// innermost containing loop.
 ///
-/// This takes a potentially un-simplified loop L (and its children) and turns
-/// it into a simplified loop nest with preheaders and single backedges. It
-/// will optionally update \c AliasAnalysis and \c ScalarEvolution analyses if
-/// passed into it.
-bool simplifyLoop(Loop *L, DominatorTree *DT, LoopInfo *LI, Pass *PP,
-                  AliasAnalysis *AA = nullptr, ScalarEvolution *SE = nullptr,
-                  AssumptionCache *AC = nullptr);
+/// For the given instruction which have uses outside of the loop, an LCSSA PHI
+/// node is inserted and the uses outside the loop are rewritten to use this
+/// node.
+///
+/// LoopInfo and DominatorTree are required and, since the routine makes no
+/// changes to CFG, preserved.
+///
+/// Returns true if any modifications are made.
+bool formLCSSAForInstructions(SmallVectorImpl<Instruction *> &Worklist,
+                              DominatorTree &DT, LoopInfo &LI);
 
 /// \brief Put loop into LCSSA form.
 ///
@@ -202,8 +348,7 @@ bool simplifyLoop(Loop *L, DominatorTree *DT, LoopInfo *LI, Pass *PP,
 /// If ScalarEvolution is passed in, it will be preserved.
 ///
 /// Returns true if any modifications are made to the loop.
-bool formLCSSA(Loop &L, DominatorTree &DT, LoopInfo *LI,
-               ScalarEvolution *SE = nullptr);
+bool formLCSSA(Loop &L, DominatorTree &DT, LoopInfo *LI, ScalarEvolution *SE);
 
 /// \brief Put a loop nest into LCSSA form.
 ///
@@ -215,7 +360,7 @@ bool formLCSSA(Loop &L, DominatorTree &DT, LoopInfo *LI,
 ///
 /// Returns true if any modifications are made to the loop.
 bool formLCSSARecursively(Loop &L, DominatorTree &DT, LoopInfo *LI,
-                          ScalarEvolution *SE = nullptr);
+                          ScalarEvolution *SE);
 
 /// \brief Walk the specified region of the CFG (defined by all blocks
 /// dominated by the specified block, and that are in the current loop) in
@@ -227,7 +372,7 @@ bool formLCSSARecursively(Loop &L, DominatorTree &DT, LoopInfo *LI,
 /// It returns changed status.
 bool sinkRegion(DomTreeNode *, AliasAnalysis *, LoopInfo *, DominatorTree *,
                 TargetLibraryInfo *, Loop *, AliasSetTracker *,
-                LICMSafetyInfo *);
+                LoopSafetyInfo *);
 
 /// \brief Walk the specified region of the CFG (defined by all blocks
 /// dominated by the specified block, and that are in the current loop) in depth
@@ -238,31 +383,54 @@ bool sinkRegion(DomTreeNode *, AliasAnalysis *, LoopInfo *, DominatorTree *,
 /// loop and loop safety information as arguments. It returns changed status.
 bool hoistRegion(DomTreeNode *, AliasAnalysis *, LoopInfo *, DominatorTree *,
                  TargetLibraryInfo *, Loop *, AliasSetTracker *,
-                 LICMSafetyInfo *);
+                 LoopSafetyInfo *);
 
 /// \brief Try to promote memory values to scalars by sinking stores out of
 /// the loop and moving loads to before the loop.  We do this by looping over
-/// the stores in the loop, looking for stores to Must pointers which are 
+/// the stores in the loop, looking for stores to Must pointers which are
 /// loop invariant. It takes AliasSet, Loop exit blocks vector, loop exit blocks
 /// insertion point vector, PredIteratorCache, LoopInfo, DominatorTree, Loop,
-/// AliasSet information for all instructions of the loop and loop safety 
+/// AliasSet information for all instructions of the loop and loop safety
 /// information as arguments. It returns changed status.
-bool promoteLoopAccessesToScalars(AliasSet &, SmallVectorImpl<BasicBlock*> &,
-                                  SmallVectorImpl<Instruction*> &,
+bool promoteLoopAccessesToScalars(AliasSet &, SmallVectorImpl<BasicBlock *> &,
+                                  SmallVectorImpl<Instruction *> &,
                                   PredIteratorCache &, LoopInfo *,
-                                  DominatorTree *, Loop *, AliasSetTracker *,
-                                  LICMSafetyInfo *);
+                                  DominatorTree *, const TargetLibraryInfo *,
+                                  Loop *, AliasSetTracker *, LoopSafetyInfo *);
 
 /// \brief Computes safety information for a loop
-/// checks loop body & header for the possiblity of may throw
-/// exception, it takes LICMSafetyInfo and loop as argument.
-/// Updates safety information in LICMSafetyInfo argument.
-void computeLICMSafetyInfo(LICMSafetyInfo *, Loop *);
+/// checks loop body & header for the possibility of may throw
+/// exception, it takes LoopSafetyInfo and loop as argument.
+/// Updates safety information in LoopSafetyInfo argument.
+void computeLoopSafetyInfo(LoopSafetyInfo *, Loop *);
 
-/// \brief Checks if the given PHINode in a loop header is an induction
-/// variable. Returns true if this is an induction PHI along with the step
-/// value.
-bool isInductionPHI(PHINode *, ScalarEvolution *, ConstantInt *&);
+/// Returns true if the instruction in a loop is guaranteed to execute at least
+/// once.
+bool isGuaranteedToExecute(const Instruction &Inst, const DominatorTree *DT,
+                           const Loop *CurLoop,
+                           const LoopSafetyInfo *SafetyInfo);
+
+/// \brief Returns the instructions that use values defined in the loop.
+SmallVector<Instruction *, 8> findDefsUsedOutsideOfLoop(Loop *L);
+
+/// \brief Find string metadata for loop
+///
+/// If it has a value (e.g. {"llvm.distribute", 1} return the value as an
+/// operand or null otherwise.  If the string metadata is not found return
+/// Optional's not-a-value.
+Optional<const MDOperand *> findStringMetadataForLoop(Loop *TheLoop,
+                                                      StringRef Name);
+
+/// \brief Set input string into loop metadata by keeping other values intact.
+void addStringMetadataToLoop(Loop *TheLoop, const char *MDString,
+                             unsigned V = 0);
+
+/// Helper to consistently add the set of standard passes to a loop pass's \c
+/// AnalysisUsage.
+///
+/// All loop passes should call this as part of implementing their \c
+/// getAnalysisUsage.
+void getLoopAnalysisUsage(AnalysisUsage &AU);
 }
 
 #endif

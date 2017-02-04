@@ -25,6 +25,7 @@
 #include "llvm/CodeGen/SlotIndexes.h"
 #include "llvm/Support/AlignOf.h"
 #include "llvm/Support/Allocator.h"
+#include "llvm/Target/TargetRegisterInfo.h"
 #include <cassert>
 #include <climits>
 #include <set>
@@ -189,8 +190,8 @@ namespace llvm {
       void dump() const;
     };
 
-    typedef SmallVector<Segment,4> Segments;
-    typedef SmallVector<VNInfo*,4> VNInfoList;
+    typedef SmallVector<Segment, 2> Segments;
+    typedef SmallVector<VNInfo *, 2> VNInfoList;
 
     Segments segments;   // the liveness segments
     VNInfoList valnos;   // value#'s
@@ -543,6 +544,11 @@ namespace llvm {
       return true;
     }
 
+    // Returns true if any segment in the live range contains any of the
+    // provided slot indexes.  Slots which occur in holes between
+    // segments will not cause the function to return true.
+    bool isLiveAtIndexes(ArrayRef<SlotIndex> Slots) const;
+
     bool operator<(const LiveRange& other) const {
       const SlotIndex &thisIndex = beginIndex();
       const SlotIndex &otherIndex = other.beginIndex();
@@ -595,18 +601,21 @@ namespace llvm {
     class SubRange : public LiveRange {
     public:
       SubRange *Next;
-      unsigned LaneMask;
+      LaneBitmask LaneMask;
 
       /// Constructs a new SubRange object.
-      SubRange(unsigned LaneMask)
+      SubRange(LaneBitmask LaneMask)
         : Next(nullptr), LaneMask(LaneMask) {
       }
 
       /// Constructs a new SubRange object by copying liveness from @p Other.
-      SubRange(unsigned LaneMask, const LiveRange &Other,
+      SubRange(LaneBitmask LaneMask, const LiveRange &Other,
                BumpPtrAllocator &Allocator)
         : LiveRange(Other, Allocator), Next(nullptr), LaneMask(LaneMask) {
       }
+
+      void print(raw_ostream &OS) const;
+      void dump() const;
     };
 
   private:
@@ -677,7 +686,8 @@ namespace llvm {
 
     /// Creates a new empty subregister live range. The range is added at the
     /// beginning of the subrange list; subrange iterators stay valid.
-    SubRange *createSubRange(BumpPtrAllocator &Allocator, unsigned LaneMask) {
+    SubRange *createSubRange(BumpPtrAllocator &Allocator,
+                             LaneBitmask LaneMask) {
       SubRange *Range = new (Allocator) SubRange(LaneMask);
       appendSubRange(Range);
       return Range;
@@ -685,7 +695,8 @@ namespace llvm {
 
     /// Like createSubRange() but the new range is filled with a copy of the
     /// liveness information in @p CopyFrom.
-    SubRange *createSubRangeFrom(BumpPtrAllocator &Allocator, unsigned LaneMask,
+    SubRange *createSubRangeFrom(BumpPtrAllocator &Allocator,
+                                 LaneBitmask LaneMask,
                                  const LiveRange &CopyFrom) {
       SubRange *Range = new (Allocator) SubRange(LaneMask, CopyFrom, Allocator);
       appendSubRange(Range);
@@ -703,10 +714,6 @@ namespace llvm {
     /// Removes all subranges without any segments (subranges without segments
     /// are not considered valid and should only exist temporarily).
     void removeEmptySubRanges();
-
-    /// Construct main live range by merging the SubRanges of @p LI.
-    void constructMainRangeFromSubranges(const SlotIndexes &Indexes,
-                                         VNInfo::Allocator &VNIAllocator);
 
     /// getSize - Returns the sum of sizes of all the LiveRange's.
     ///
@@ -750,6 +757,12 @@ namespace llvm {
     /// Free memory held by SubRange.
     void freeSubRange(SubRange *S);
   };
+
+  inline raw_ostream &operator<<(raw_ostream &OS,
+                                 const LiveInterval::SubRange &SR) {
+    SR.print(OS);
+    return OS;
+  }
 
   inline raw_ostream &operator<<(raw_ostream &OS, const LiveInterval &LI) {
     LI.print(OS);
@@ -842,29 +855,23 @@ namespace llvm {
     LiveIntervals &LIS;
     IntEqClasses EqClass;
 
-    // Note that values a and b are connected.
-    void Connect(unsigned a, unsigned b);
-
-    unsigned Renumber();
-
   public:
     explicit ConnectedVNInfoEqClasses(LiveIntervals &lis) : LIS(lis) {}
 
-    /// Classify - Classify the values in LI into connected components.
-    /// Return the number of connected components.
-    unsigned Classify(const LiveInterval *LI);
+    /// Classify the values in \p LR into connected components.
+    /// Returns the number of connected components.
+    unsigned Classify(const LiveRange &LR);
 
     /// getEqClass - Classify creates equivalence classes numbered 0..N. Return
     /// the equivalence class assigned the VNI.
     unsigned getEqClass(const VNInfo *VNI) const { return EqClass[VNI->id]; }
 
-    /// Distribute - Distribute values in LIV[0] into a separate LiveInterval
-    /// for each connected component. LIV must have a LiveInterval for each
-    /// connected component. The LiveIntervals in Liv[1..] must be empty.
-    /// Instructions using LIV[0] are rewritten.
-    void Distribute(LiveInterval *LIV[], MachineRegisterInfo &MRI);
-
+    /// Distribute values in \p LI into a separate LiveIntervals
+    /// for each connected component. LIV must have an empty LiveInterval for
+    /// each additional connected component. The first connected component is
+    /// left in \p LI.
+    void Distribute(LiveInterval &LI, LiveInterval *LIV[],
+                    MachineRegisterInfo &MRI);
   };
-
 }
 #endif

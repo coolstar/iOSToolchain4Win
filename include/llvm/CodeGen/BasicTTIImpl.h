@@ -105,6 +105,11 @@ public:
 
   /// \name Scalar TTI Implementations
   /// @{
+  bool allowsMisalignedMemoryAccesses(unsigned BitWidth, unsigned AddressSpace,
+                                      unsigned Alignment, bool *Fast) const {
+    MVT M = MVT::getIntegerVT(BitWidth);
+    return getTLI()->allowsMisalignedMemoryAccesses(M, AddressSpace, Alignment, Fast);
+  }
 
   bool hasBranchDivergence() { return false; }
 
@@ -152,6 +157,11 @@ public:
     return getTLI()->isTypeLegal(VT);
   }
 
+  int getGEPCost(Type *PointeeType, const Value *Ptr,
+                 ArrayRef<const Value *> Operands) {
+    return BaseT::getGEPCost(PointeeType, Ptr, Operands);
+  }
+
   unsigned getIntrinsicCost(Intrinsic::ID IID, Type *RetTy,
                             ArrayRef<const Value *> Arguments) {
     return BaseT::getIntrinsicCost(IID, RetTy, Arguments);
@@ -166,7 +176,7 @@ public:
     }
 
     if (IID == Intrinsic::ctlz) {
-       if (getTLI()->isCheapToSpeculateCtlz())
+      if (getTLI()->isCheapToSpeculateCtlz())
         return TargetTransformInfo::TCC_Basic;
       return TargetTransformInfo::TCC_Expensive;
     }
@@ -216,6 +226,8 @@ public:
     return BaseT::getOperationCost(Opcode, Ty, OpTy);
   }
 
+  unsigned getInliningThresholdMultiplier() { return 1; }
+
   void getUnrollingPreferences(Loop *L, TTI::UnrollingPreferences &UP) {
     // This unrolling functionality is target independent, but to provide some
     // motivation for its intended use, for x86:
@@ -256,7 +268,7 @@ public:
 
       for (BasicBlock::iterator J = BB->begin(), JE = BB->end(); J != JE; ++J)
         if (isa<CallInst>(J) || isa<InvokeInst>(J)) {
-          ImmutableCallSite CS(J);
+          ImmutableCallSite CS(&*J);
           if (const Function *F = CS.getCalledFunction()) {
             if (!static_cast<T *>(this)->isLoweredToCall(F))
               continue;
@@ -302,21 +314,19 @@ public:
 
     if (TLI->isOperationLegalOrPromote(ISD, LT.second)) {
       // The operation is legal. Assume it costs 1.
-      // If the type is split to multiple registers, assume that there is some
-      // overhead to this.
       // TODO: Once we have extract/insert subvector cost we need to use them.
-      if (LT.first > 1)
-        return LT.first * 2 * OpCost;
-      return LT.first * 1 * OpCost;
+      return LT.first * OpCost;
     }
 
     if (!TLI->isOperationExpand(ISD, LT.second)) {
-      // If the operation is custom lowered then assume
-      // thare the code is twice as expensive.
+      // If the operation is custom lowered, then assume that the code is twice
+      // as expensive.
       return LT.first * 2 * OpCost;
     }
 
     // Else, assume that we need to scalarize this op.
+    // TODO: If one of the types get legalized by splitting, handle this
+    // similarly to what getCastInstrCost() does.
     if (Ty->isVectorTy()) {
       unsigned Num = Ty->getVectorNumElements();
       unsigned Cost = static_cast<T *>(this)
@@ -363,6 +373,11 @@ public:
         TLI->isZExtFree(SrcLT.second, DstLT.second))
       return 0;
 
+    if (Opcode == Instruction::AddrSpaceCast &&
+        TLI->isNoopAddrSpaceCast(Src->getPointerAddressSpace(),
+                                 Dst->getPointerAddressSpace()))
+      return 0;
+
     // If the cast is marked as legal (or promote) then assume low cost.
     if (SrcLT.first == DstLT.first &&
         TLI->isOperationLegalOrPromote(ISD, DstLT.second))
@@ -406,9 +421,25 @@ public:
           return SrcLT.first * 1;
       }
 
-      // If we are converting vectors and the operation is illegal, or
-      // if the vectors are legalized to different types, estimate the
-      // scalarization costs.
+      // If we are legalizing by splitting, query the concrete TTI for the cost
+      // of casting the original vector twice. We also need to factor int the
+      // cost of the split itself. Count that as 1, to be consistent with
+      // TLI->getTypeLegalizationCost().
+      if ((TLI->getTypeAction(Src->getContext(), TLI->getValueType(DL, Src)) ==
+           TargetLowering::TypeSplitVector) ||
+          (TLI->getTypeAction(Dst->getContext(), TLI->getValueType(DL, Dst)) ==
+           TargetLowering::TypeSplitVector)) {
+        Type *SplitDst = VectorType::get(Dst->getVectorElementType(),
+                                         Dst->getVectorNumElements() / 2);
+        Type *SplitSrc = VectorType::get(Src->getVectorElementType(),
+                                         Src->getVectorNumElements() / 2);
+        T *TTI = static_cast<T *>(this);
+        return TTI->getVectorSplitCost() +
+               (2 * TTI->getCastInstrCost(Opcode, SplitDst, SplitSrc));
+      }
+
+      // In other cases where the source or destination are illegal, assume
+      // the operation will get scalarized.
       unsigned Num = Dst->getVectorNumElements();
       unsigned Cost = static_cast<T *>(this)->getCastInstrCost(
           Opcode, Dst->getScalarType(), Src->getScalarType());
@@ -430,6 +461,14 @@ public:
                                 : 0);
 
     llvm_unreachable("Unhandled cast");
+  }
+
+  unsigned getExtractWithExtendCost(unsigned Opcode, Type *Dst,
+                                    VectorType *VecTy, unsigned Index) {
+    return static_cast<T *>(this)->getVectorInstrCost(
+               Instruction::ExtractElement, VecTy, Index) +
+           static_cast<T *>(this)->getCastInstrCost(Opcode, Dst,
+                                                    VecTy->getElementType());
   }
 
   unsigned getCFInstrCost(unsigned Opcode) {
@@ -458,6 +497,8 @@ public:
     }
 
     // Otherwise, assume that the cast is scalarized.
+    // TODO: If one of the types get legalized by splitting, handle this
+    // similarly to what getCastInstrCost() does.
     if (ValTy->isVectorTy()) {
       unsigned Num = ValTy->getVectorNumElements();
       if (CondTy)
@@ -466,8 +507,7 @@ public:
           Opcode, ValTy->getScalarType(), CondTy);
 
       // Return the cost of multiple scalar invocation plus the cost of
-      // inserting
-      // and extracting the values.
+      // inserting and extracting the values.
       return getScalarizationOverhead(ValTy, true, false) + Num * Cost;
     }
 
@@ -496,13 +536,11 @@ public:
       // itself. Unless the corresponding extending load or truncating store is
       // legal, then this will scalarize.
       TargetLowering::LegalizeAction LA = TargetLowering::Expand;
-      EVT MemVT = getTLI()->getValueType(DL, Src, true);
-      if (MemVT.isSimple() && MemVT != MVT::Other) {
-        if (Opcode == Instruction::Store)
-          LA = getTLI()->getTruncStoreAction(LT.second, MemVT.getSimpleVT());
-        else
-          LA = getTLI()->getLoadExtAction(ISD::EXTLOAD, LT.second, MemVT);
-      }
+      EVT MemVT = getTLI()->getValueType(DL, Src);
+      if (Opcode == Instruction::Store)
+        LA = getTLI()->getTruncStoreAction(LT.second, MemVT);
+      else
+        LA = getTLI()->getLoadExtAction(ISD::EXTLOAD, LT.second, MemVT);
 
       if (LA != TargetLowering::Legal && LA != TargetLowering::Custom) {
         // This is a vector load/store for some illegal type that is scalarized.
@@ -530,7 +568,53 @@ public:
     VectorType *SubVT = VectorType::get(VT->getElementType(), NumSubElts);
 
     // Firstly, the cost of load/store operation.
-    unsigned Cost = getMemoryOpCost(Opcode, VecTy, Alignment, AddressSpace);
+    unsigned Cost = static_cast<T *>(this)->getMemoryOpCost(
+        Opcode, VecTy, Alignment, AddressSpace);
+
+    // Legalize the vector type, and get the legalized and unlegalized type
+    // sizes.
+    MVT VecTyLT = getTLI()->getTypeLegalizationCost(DL, VecTy).second;
+    unsigned VecTySize =
+        static_cast<T *>(this)->getDataLayout().getTypeStoreSize(VecTy);
+    unsigned VecTyLTSize = VecTyLT.getStoreSize();
+
+    // Return the ceiling of dividing A by B.
+    auto ceil = [](unsigned A, unsigned B) { return (A + B - 1) / B; };
+
+    // Scale the cost of the memory operation by the fraction of legalized
+    // instructions that will actually be used. We shouldn't account for the
+    // cost of dead instructions since they will be removed.
+    //
+    // E.g., An interleaved load of factor 8:
+    //       %vec = load <16 x i64>, <16 x i64>* %ptr
+    //       %v0 = shufflevector %vec, undef, <0, 8>
+    //
+    // If <16 x i64> is legalized to 8 v2i64 loads, only 2 of the loads will be
+    // used (those corresponding to elements [0:1] and [8:9] of the unlegalized
+    // type). The other loads are unused.
+    //
+    // We only scale the cost of loads since interleaved store groups aren't
+    // allowed to have gaps.
+    if (Opcode == Instruction::Load && VecTySize > VecTyLTSize) {
+
+      // The number of loads of a legal type it will take to represent a load
+      // of the unlegalized vector type.
+      unsigned NumLegalInsts = ceil(VecTySize, VecTyLTSize);
+
+      // The number of elements of the unlegalized type that correspond to a
+      // single legal instruction.
+      unsigned NumEltsPerLegalInst = ceil(NumElts, NumLegalInsts);
+
+      // Determine which legal instructions will be used.
+      BitVector UsedInsts(NumLegalInsts, false);
+      for (unsigned Index : Indices)
+        for (unsigned Elt = 0; Elt < NumSubElts; ++Elt)
+          UsedInsts.set((Index + Elt * Factor) / NumEltsPerLegalInst);
+
+      // Scale the cost of the load by the fraction of legal instructions that
+      // will be used.
+      Cost *= UsedInsts.count() / NumLegalInsts;
+    }
 
     // Then plus the cost of interleave operation.
     if (Opcode == Instruction::Load) {
@@ -545,18 +629,20 @@ public:
 
       assert(Indices.size() <= Factor &&
              "Interleaved memory op has too many members");
+
       for (unsigned Index : Indices) {
         assert(Index < Factor && "Invalid index for interleaved memory op");
 
         // Extract elements from loaded vector for each sub vector.
         for (unsigned i = 0; i < NumSubElts; i++)
-          Cost += getVectorInstrCost(Instruction::ExtractElement, VT,
-                                     Index + i * Factor);
+          Cost += static_cast<T *>(this)->getVectorInstrCost(
+              Instruction::ExtractElement, VT, Index + i * Factor);
       }
 
       unsigned InsSubCost = 0;
       for (unsigned i = 0; i < NumSubElts; i++)
-        InsSubCost += getVectorInstrCost(Instruction::InsertElement, SubVT, i);
+        InsSubCost += static_cast<T *>(this)->getVectorInstrCost(
+            Instruction::InsertElement, SubVT, i);
 
       Cost += Indices.size() * InsSubCost;
     } else {
@@ -571,20 +657,56 @@ public:
 
       unsigned ExtSubCost = 0;
       for (unsigned i = 0; i < NumSubElts; i++)
-        ExtSubCost += getVectorInstrCost(Instruction::ExtractElement, SubVT, i);
-
-      Cost += Factor * ExtSubCost;
+        ExtSubCost += static_cast<T *>(this)->getVectorInstrCost(
+            Instruction::ExtractElement, SubVT, i);
+      Cost += ExtSubCost * Factor;
 
       for (unsigned i = 0; i < NumElts; i++)
-        Cost += getVectorInstrCost(Instruction::InsertElement, VT, i);
+        Cost += static_cast<T *>(this)
+                    ->getVectorInstrCost(Instruction::InsertElement, VT, i);
     }
 
     return Cost;
   }
 
+  /// Get intrinsic cost based on arguments  
   unsigned getIntrinsicInstrCost(Intrinsic::ID IID, Type *RetTy,
-                                 ArrayRef<Type *> Tys) {
-    unsigned ISD = 0;
+                                 ArrayRef<Value *> Args, FastMathFlags FMF) {
+    switch (IID) {
+    default: {
+      SmallVector<Type *, 4> Types;
+      for (Value *Op : Args)
+        Types.push_back(Op->getType());
+      return static_cast<T *>(this)->getIntrinsicInstrCost(IID, RetTy, Types,
+                                                           FMF);
+    }
+    case Intrinsic::masked_scatter: {
+      Value *Mask = Args[3];
+      bool VarMask = !isa<Constant>(Mask);
+      unsigned Alignment = cast<ConstantInt>(Args[2])->getZExtValue();
+      return
+        static_cast<T *>(this)->getGatherScatterOpCost(Instruction::Store,
+                                                       Args[0]->getType(),
+                                                       Args[1], VarMask,
+                                                       Alignment);
+    }
+    case Intrinsic::masked_gather: {
+      Value *Mask = Args[2];
+      bool VarMask = !isa<Constant>(Mask);
+      unsigned Alignment = cast<ConstantInt>(Args[1])->getZExtValue();
+      return
+        static_cast<T *>(this)->getGatherScatterOpCost(Instruction::Load,
+                                                       RetTy, Args[0], VarMask,
+                                                       Alignment);
+    }
+    }
+  }
+  
+  /// Get intrinsic cost based on argument types
+  unsigned getIntrinsicInstrCost(Intrinsic::ID IID, Type *RetTy,
+                                 ArrayRef<Type *> Tys, FastMathFlags FMF) {
+    SmallVector<unsigned, 2> ISDs;
+    unsigned SingleCallCost = 10; // Library call cost. Make it expensive.
     switch (IID) {
     default: {
       // Assume that we need to scalarize this intrinsic.
@@ -610,74 +732,78 @@ public:
         return 1; // Return cost of a scalar intrinsic. Assume it to be cheap.
 
       unsigned ScalarCost = static_cast<T *>(this)->getIntrinsicInstrCost(
-          IID, ScalarRetTy, ScalarTys);
+          IID, ScalarRetTy, ScalarTys, FMF);
 
       return ScalarCalls * ScalarCost + ScalarizationCost;
     }
     // Look for intrinsics that can be lowered directly or turned into a scalar
     // intrinsic call.
     case Intrinsic::sqrt:
-      ISD = ISD::FSQRT;
+      ISDs.push_back(ISD::FSQRT);
       break;
     case Intrinsic::sin:
-      ISD = ISD::FSIN;
+      ISDs.push_back(ISD::FSIN);
       break;
     case Intrinsic::cos:
-      ISD = ISD::FCOS;
+      ISDs.push_back(ISD::FCOS);
       break;
     case Intrinsic::exp:
-      ISD = ISD::FEXP;
+      ISDs.push_back(ISD::FEXP);
       break;
     case Intrinsic::exp2:
-      ISD = ISD::FEXP2;
+      ISDs.push_back(ISD::FEXP2);
       break;
     case Intrinsic::log:
-      ISD = ISD::FLOG;
+      ISDs.push_back(ISD::FLOG);
       break;
     case Intrinsic::log10:
-      ISD = ISD::FLOG10;
+      ISDs.push_back(ISD::FLOG10);
       break;
     case Intrinsic::log2:
-      ISD = ISD::FLOG2;
+      ISDs.push_back(ISD::FLOG2);
       break;
     case Intrinsic::fabs:
-      ISD = ISD::FABS;
+      ISDs.push_back(ISD::FABS);
       break;
     case Intrinsic::minnum:
-      ISD = ISD::FMINNUM;
+      ISDs.push_back(ISD::FMINNUM);
+      if (FMF.noNaNs())
+        ISDs.push_back(ISD::FMINNAN);
       break;
     case Intrinsic::maxnum:
-      ISD = ISD::FMAXNUM;
+      ISDs.push_back(ISD::FMAXNUM);
+      if (FMF.noNaNs())
+        ISDs.push_back(ISD::FMAXNAN);
       break;
     case Intrinsic::copysign:
-      ISD = ISD::FCOPYSIGN;
+      ISDs.push_back(ISD::FCOPYSIGN);
       break;
     case Intrinsic::floor:
-      ISD = ISD::FFLOOR;
+      ISDs.push_back(ISD::FFLOOR);
       break;
     case Intrinsic::ceil:
-      ISD = ISD::FCEIL;
+      ISDs.push_back(ISD::FCEIL);
       break;
     case Intrinsic::trunc:
-      ISD = ISD::FTRUNC;
+      ISDs.push_back(ISD::FTRUNC);
       break;
     case Intrinsic::nearbyint:
-      ISD = ISD::FNEARBYINT;
+      ISDs.push_back(ISD::FNEARBYINT);
       break;
     case Intrinsic::rint:
-      ISD = ISD::FRINT;
+      ISDs.push_back(ISD::FRINT);
       break;
     case Intrinsic::round:
-      ISD = ISD::FROUND;
+      ISDs.push_back(ISD::FROUND);
       break;
     case Intrinsic::pow:
-      ISD = ISD::FPOW;
+      ISDs.push_back(ISD::FPOW);
       break;
     case Intrinsic::fma:
-      ISD = ISD::FMA;
+      ISDs.push_back(ISD::FMA);
       break;
     case Intrinsic::fmuladd:
-      ISD = ISD::FMA;
+      ISDs.push_back(ISD::FMA);
       break;
     // FIXME: We should return 0 whenever getIntrinsicCost == TCC_Free.
     case Intrinsic::lifetime_start:
@@ -689,26 +815,48 @@ public:
     case Intrinsic::masked_load:
       return static_cast<T *>(this)
           ->getMaskedMemoryOpCost(Instruction::Load, RetTy, 0, 0);
+    case Intrinsic::ctpop:
+      ISDs.push_back(ISD::CTPOP);
+      // In case of legalization use TCC_Expensive. This is cheaper than a
+      // library call but still not a cheap instruction.
+      SingleCallCost = TargetTransformInfo::TCC_Expensive;
+      break;
+    // FIXME: ctlz, cttz, ...
     }
 
     const TargetLoweringBase *TLI = getTLI();
     std::pair<unsigned, MVT> LT = TLI->getTypeLegalizationCost(DL, RetTy);
 
-    if (TLI->isOperationLegalOrPromote(ISD, LT.second)) {
-      // The operation is legal. Assume it costs 1.
-      // If the type is split to multiple registers, assume that there is some
-      // overhead to this.
-      // TODO: Once we have extract/insert subvector cost we need to use them.
-      if (LT.first > 1)
-        return LT.first * 2;
-      return LT.first * 1;
+    SmallVector<unsigned, 2> LegalCost;
+    SmallVector<unsigned, 2> CustomCost;
+    for (unsigned ISD : ISDs) {
+      if (TLI->isOperationLegalOrPromote(ISD, LT.second)) {
+        if (IID == Intrinsic::fabs && TLI->isFAbsFree(LT.second)) {
+          return 0;
+        }
+
+        // The operation is legal. Assume it costs 1.
+        // If the type is split to multiple registers, assume that there is some
+        // overhead to this.
+        // TODO: Once we have extract/insert subvector cost we need to use them.
+        if (LT.first > 1)
+          LegalCost.push_back(LT.first * 2);
+        else
+          LegalCost.push_back(LT.first * 1);
+      } else if (!TLI->isOperationExpand(ISD, LT.second)) {
+        // If the operation is custom lowered then assume
+        // that the code is twice as expensive.
+        CustomCost.push_back(LT.first * 2);
+      }
     }
 
-    if (!TLI->isOperationExpand(ISD, LT.second)) {
-      // If the operation is custom lowered then assume
-      // thare the code is twice as expensive.
-      return LT.first * 2;
-    }
+    auto MinLegalCostI = std::min_element(LegalCost.begin(), LegalCost.end());
+    if (MinLegalCostI != LegalCost.end())
+      return *MinLegalCostI;
+
+    auto MinCustomCostI = std::min_element(CustomCost.begin(), CustomCost.end());
+    if (MinCustomCostI != CustomCost.end())
+      return *MinCustomCostI;
 
     // If we can't lower fmuladd into an FMA estimate the cost as a floating
     // point mul followed by an add.
@@ -732,7 +880,7 @@ public:
         ScalarTys.push_back(Ty);
       }
       unsigned ScalarCost = static_cast<T *>(this)->getIntrinsicInstrCost(
-          IID, RetTy->getScalarType(), ScalarTys);
+          IID, RetTy->getScalarType(), ScalarTys, FMF);
       for (unsigned i = 0, ie = Tys.size(); i != ie; ++i) {
         if (Tys[i]->isVectorTy()) {
           ScalarizationCost += getScalarizationOverhead(Tys[i], false, true);
@@ -744,7 +892,7 @@ public:
     }
 
     // This is going to be turned into a library call, make it expensive.
-    return 10;
+    return SingleCallCost;
   }
 
   /// \brief Compute a cost of the given call instruction.
@@ -784,6 +932,8 @@ public:
     return ShuffleCost + ArithCost + getScalarizationOverhead(Ty, false, true);
   }
 
+  unsigned getVectorSplitCost() { return 1; }
+
   /// @}
 };
 
@@ -800,7 +950,7 @@ class BasicTTIImpl : public BasicTTIImplBase<BasicTTIImpl> {
   const TargetLoweringBase *getTLI() const { return TLI; }
 
 public:
-  explicit BasicTTIImpl(const TargetMachine *ST, Function &F);
+  explicit BasicTTIImpl(const TargetMachine *ST, const Function &F);
 
   // Provide value semantics. MSVC requires that we spell all of these out.
   BasicTTIImpl(const BasicTTIImpl &Arg)

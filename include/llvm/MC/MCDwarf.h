@@ -15,23 +15,21 @@
 #ifndef LLVM_MC_MCDWARF_H
 #define LLVM_MC_MCDWARF_H
 
-#include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/MapVector.h"
 #include "llvm/ADT/StringMap.h"
 #include "llvm/ADT/StringRef.h"
-#include "llvm/Support/Compiler.h"
+#include "llvm/MC/MCSection.h"
 #include "llvm/Support/Dwarf.h"
-#include "llvm/Support/raw_ostream.h"
-#include <map>
 #include <string>
 #include <utility>
 #include <vector>
 
 namespace llvm {
+template <typename T> class ArrayRef;
+class raw_ostream;
 class MCAsmBackend;
 class MCContext;
 class MCObjectStreamer;
-class MCSection;
 class MCStreamer;
 class MCSymbol;
 class SourceMgr;
@@ -72,7 +70,7 @@ class MCDwarfLoc {
 
 private: // MCContext manages these
   friend class MCContext;
-  friend class MCLineEntry;
+  friend class MCDwarfLineEntry;
   MCDwarfLoc(unsigned fileNum, unsigned line, unsigned column, unsigned flags,
              unsigned isa, unsigned discriminator)
       : FileNum(fileNum), Line(line), Column(column), Flags(flags), Isa(isa),
@@ -135,16 +133,16 @@ public:
 /// instruction is assembled and uses an address from a temporary label
 /// created at the current address in the current section and the info from
 /// the last .loc directive seen as stored in the context.
-class MCLineEntry : public MCDwarfLoc {
+class MCDwarfLineEntry : public MCDwarfLoc {
   MCSymbol *Label;
 
 private:
   // Allow the default copy constructor and assignment operator to be used
-  // for an MCLineEntry object.
+  // for an MCDwarfLineEntry object.
 
 public:
-  // Constructor to create an MCLineEntry given a symbol and the dwarf loc.
-  MCLineEntry(MCSymbol *label, const MCDwarfLoc loc)
+  // Constructor to create an MCDwarfLineEntry given a symbol and the dwarf loc.
+  MCDwarfLineEntry(MCSymbol *label, const MCDwarfLoc loc)
       : MCDwarfLoc(loc), Label(label) {}
 
   MCSymbol *getLabel() const { return Label; }
@@ -162,24 +160,37 @@ public:
 class MCLineSection {
 public:
   // \brief Add an entry to this MCLineSection's line entries.
-  void addLineEntry(const MCLineEntry &LineEntry, MCSection *Sec) {
+  void addLineEntry(const MCDwarfLineEntry &LineEntry, MCSection *Sec) {
     MCLineDivisions[Sec].push_back(LineEntry);
   }
 
-  typedef std::vector<MCLineEntry> MCLineEntryCollection;
-  typedef MCLineEntryCollection::iterator iterator;
-  typedef MCLineEntryCollection::const_iterator const_iterator;
-  typedef MapVector<MCSection *, MCLineEntryCollection> MCLineDivisionMap;
+  typedef std::vector<MCDwarfLineEntry> MCDwarfLineEntryCollection;
+  typedef MCDwarfLineEntryCollection::iterator iterator;
+  typedef MCDwarfLineEntryCollection::const_iterator const_iterator;
+  typedef MapVector<MCSection *, MCDwarfLineEntryCollection> MCLineDivisionMap;
 
 private:
-  // A collection of MCLineEntry for each section.
+  // A collection of MCDwarfLineEntry for each section.
   MCLineDivisionMap MCLineDivisions;
 
 public:
-  // Returns the collection of MCLineEntry for a given Compile Unit ID.
+  // Returns the collection of MCDwarfLineEntry for a given Compile Unit ID.
   const MCLineDivisionMap &getMCLineEntries() const {
     return MCLineDivisions;
   }
+};
+
+struct MCDwarfLineTableParams {
+  /// First special line opcode - leave room for the standard opcodes.
+  /// Note: If you want to change this, you'll have to update the
+  /// "StandardOpcodeLengths" table that is emitted in
+  /// \c Emit().
+  uint8_t DWARF2LineOpcodeBase = 13;
+  /// Minimum line offset in a special line info. opcode.  The value
+  /// -5 was chosen to give a reasonable range of values.
+  int8_t DWARF2LineBase = -5;
+  /// Range of line offsets in a special line info. opcode.
+  uint8_t DWARF2LineRange = 14;
 };
 
 struct MCDwarfLineTableHeader {
@@ -192,9 +203,11 @@ struct MCDwarfLineTableHeader {
   MCDwarfLineTableHeader() : Label(nullptr) {}
   unsigned getFile(StringRef &Directory, StringRef &FileName,
                    unsigned FileNumber = 0);
-  std::pair<MCSymbol *, MCSymbol *> Emit(MCStreamer *MCOS) const;
+  std::pair<MCSymbol *, MCSymbol *> Emit(MCStreamer *MCOS,
+                                         MCDwarfLineTableParams Params) const;
   std::pair<MCSymbol *, MCSymbol *>
-  Emit(MCStreamer *MCOS, ArrayRef<char> SpecialOpcodeLengths) const;
+  Emit(MCStreamer *MCOS, MCDwarfLineTableParams Params,
+       ArrayRef<char> SpecialOpcodeLengths) const;
 };
 
 class MCDwarfDwoLineTable {
@@ -206,7 +219,7 @@ public:
   unsigned getFile(StringRef Directory, StringRef FileName) {
     return Header.getFile(Directory, FileName);
   }
-  void Emit(MCStreamer &MCOS) const;
+  void Emit(MCStreamer &MCOS, MCDwarfLineTableParams Params) const;
 };
 
 class MCDwarfLineTable {
@@ -215,10 +228,10 @@ class MCDwarfLineTable {
 
 public:
   // This emits the Dwarf file and the line tables for all Compile Units.
-  static void Emit(MCObjectStreamer *MCOS);
+  static void Emit(MCObjectStreamer *MCOS, MCDwarfLineTableParams Params);
 
   // This emits the Dwarf file and the line tables for a given Compile Unit.
-  void EmitCU(MCObjectStreamer *MCOS) const;
+  void EmitCU(MCObjectStreamer *MCOS, MCDwarfLineTableParams Params) const;
 
   unsigned getFile(StringRef &Directory, StringRef &FileName,
                    unsigned FileNumber = 0);
@@ -262,11 +275,12 @@ public:
 class MCDwarfLineAddr {
 public:
   /// Utility function to encode a Dwarf pair of LineDelta and AddrDeltas.
-  static void Encode(MCContext &Context, int64_t LineDelta, uint64_t AddrDelta,
-                     raw_ostream &OS);
+  static void Encode(MCContext &Context, MCDwarfLineTableParams Params,
+                     int64_t LineDelta, uint64_t AddrDelta, raw_ostream &OS);
 
   /// Utility function to emit the encoding to a streamer.
-  static void Emit(MCStreamer *MCOS, int64_t LineDelta, uint64_t AddrDelta);
+  static void Emit(MCStreamer *MCOS, MCDwarfLineTableParams Params,
+                   int64_t LineDelta, uint64_t AddrDelta);
 };
 
 class MCGenDwarfInfo {
@@ -324,7 +338,8 @@ public:
     OpRestore,
     OpUndefined,
     OpRegister,
-    OpWindowSave
+    OpWindowSave,
+    OpGnuArgsSize
   };
 
 private:
@@ -438,6 +453,11 @@ public:
     return MCCFIInstruction(OpEscape, L, 0, 0, Vals);
   }
 
+  /// \brief A special wrapper for .cfi_escape that indicates GNU_ARGS_SIZE
+  static MCCFIInstruction createGnuArgsSize(MCSymbol *L, int Size) {
+    return MCCFIInstruction(OpGnuArgsSize, L, 0, Size, "");
+  }
+
   OpType getOperation() const { return Operation; }
   MCSymbol *getLabel() const { return Label; }
 
@@ -457,7 +477,7 @@ public:
   int getOffset() const {
     assert(Operation == OpDefCfa || Operation == OpOffset ||
            Operation == OpRelOffset || Operation == OpDefCfaOffset ||
-           Operation == OpAdjustCfaOffset);
+           Operation == OpAdjustCfaOffset || Operation == OpGnuArgsSize);
     return Offset;
   }
 

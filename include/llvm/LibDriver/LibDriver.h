@@ -8,19 +8,17 @@
 //===----------------------------------------------------------------------===//
 //
 // Defines an interface to a lib.exe-compatible driver that also understands
-// bitcode files. Used by llvm-lib and lld-link2 /lib.
+// bitcode files. Used by llvm-lib and lld-link /lib.
 //
 //===----------------------------------------------------------------------===//
 
 #ifndef LLVM_LIBDRIVER_LIBDRIVER_H
 #define LLVM_LIBDRIVER_LIBDRIVER_H
 
-#include "llvm/ADT/ArrayRef.h"
-
 namespace llvm {
+template <typename T> class ArrayRef;
 
-int libDriverMain(llvm::ArrayRef<const char*> ARgs);
-
+int libDriverMain(ArrayRef<const char *> ARgs);
 }
 
 #endif

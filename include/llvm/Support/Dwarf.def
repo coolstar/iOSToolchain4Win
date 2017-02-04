@@ -14,7 +14,7 @@
 // TODO: Add other DW-based macros.
 #if !(defined HANDLE_DW_TAG || defined HANDLE_DW_OP ||                         \
       defined HANDLE_DW_LANG || defined HANDLE_DW_ATE ||                       \
-      defined HANDLE_DW_VIRTUALITY)
+      defined HANDLE_DW_VIRTUALITY || defined HANDLE_DW_CC)
 #error "Missing macro definition of HANDLE_DW*"
 #endif
 
@@ -37,6 +37,11 @@
 #ifndef HANDLE_DW_VIRTUALITY
 #define HANDLE_DW_VIRTUALITY(ID, NAME)
 #endif
+
+#ifndef HANDLE_DW_CC
+#define HANDLE_DW_CC(ID, NAME)
+#endif
+
 
 HANDLE_DW_TAG(0x0001, array_type)
 HANDLE_DW_TAG(0x0002, class_type)
@@ -99,10 +104,6 @@ HANDLE_DW_TAG(0x0041, type_unit)
 HANDLE_DW_TAG(0x0042, rvalue_reference_type)
 HANDLE_DW_TAG(0x0043, template_alias)
 
-// Mock tags we use as discriminators.
-HANDLE_DW_TAG(0x0100, auto_variable) // Tag for local (auto) variables.
-HANDLE_DW_TAG(0x0101, arg_variable)  // Tag for argument variables.
-
 // New in DWARF v5.
 HANDLE_DW_TAG(0x0044, coarray_type)
 HANDLE_DW_TAG(0x0045, generic_subrange)
@@ -117,6 +118,11 @@ HANDLE_DW_TAG(0x4106, GNU_template_template_param)
 HANDLE_DW_TAG(0x4107, GNU_template_parameter_pack)
 HANDLE_DW_TAG(0x4108, GNU_formal_parameter_pack)
 HANDLE_DW_TAG(0x4200, APPLE_property)
+HANDLE_DW_TAG(0xb000, BORLAND_property)
+HANDLE_DW_TAG(0xb001, BORLAND_Delphi_string)
+HANDLE_DW_TAG(0xb002, BORLAND_Delphi_dynamic_array)
+HANDLE_DW_TAG(0xb003, BORLAND_Delphi_set)
+HANDLE_DW_TAG(0xb004, BORLAND_Delphi_variant)
 
 HANDLE_DW_OP(0x03, addr)
 HANDLE_DW_OP(0x06, deref)
@@ -319,6 +325,8 @@ HANDLE_DW_LANG(0x0021, C_plus_plus_14)
 HANDLE_DW_LANG(0x0022, Fortran03)
 HANDLE_DW_LANG(0x0023, Fortran08)
 HANDLE_DW_LANG(0x8001, Mips_Assembler)
+HANDLE_DW_LANG(0x8e57, GOOGLE_RenderScript)
+HANDLE_DW_LANG(0xb000, BORLAND_Delphi)
 
 // DWARF attribute type encodings.
 HANDLE_DW_ATE(0x01, address)
@@ -343,8 +351,23 @@ HANDLE_DW_VIRTUALITY(0x00, none)
 HANDLE_DW_VIRTUALITY(0x01, virtual)
 HANDLE_DW_VIRTUALITY(0x02, pure_virtual)
 
+// DWARF calling convention codes.
+HANDLE_DW_CC(0x01, normal)
+HANDLE_DW_CC(0x02, program)
+HANDLE_DW_CC(0x03, nocall)
+HANDLE_DW_CC(0x41, GNU_borland_fastcall_i386)
+HANDLE_DW_CC(0xb0, BORLAND_safecall)
+HANDLE_DW_CC(0xb1, BORLAND_stdcall)
+HANDLE_DW_CC(0xb2, BORLAND_pascal)
+HANDLE_DW_CC(0xb3, BORLAND_msfastcall)
+HANDLE_DW_CC(0xb4, BORLAND_msreturn)
+HANDLE_DW_CC(0xb5, BORLAND_thiscall)
+HANDLE_DW_CC(0xb6, BORLAND_fastcall)
+HANDLE_DW_CC(0xc0, LLVM_vectorcall)
+
 #undef HANDLE_DW_TAG
 #undef HANDLE_DW_OP
 #undef HANDLE_DW_LANG
 #undef HANDLE_DW_ATE
 #undef HANDLE_DW_VIRTUALITY
+#undef HANDLE_DW_CC

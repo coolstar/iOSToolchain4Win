@@ -173,6 +173,12 @@ OBJCPROPERTY(ObjCProperty, NamedDecl)
 #  define TEMPLATE(Type, Base) NAMED(Type, Base)
 #endif
 ABSTRACT_DECL(TEMPLATE(Template, NamedDecl))
+#ifndef BUILTINTEMPLATE
+#  define BUILTINTEMPLATE(Type, Base) TEMPLATE(Type, Base)
+#endif
+BUILTINTEMPLATE(BuiltinTemplate, TemplateDecl)
+#undef BUILTINTEMPLATE
+
 #ifndef REDECLARABLETEMPLATE
 #  define REDECLARABLETEMPLATE(Type, Base) TEMPLATE(Type, Base)
 #endif
@@ -211,7 +217,7 @@ DECL_RANGE(RedeclarableTemplate, ClassTemplate, VarTemplate)
 TEMPLATETEMPLATEPARM(TemplateTemplateParm, TemplateDecl)
 #undef TEMPLATETEMPLATEPARM
 
-DECL_RANGE(Template, ClassTemplate, TemplateTemplateParm)
+DECL_RANGE(Template, BuiltinTemplate, TemplateTemplateParm)
 
 #undef TEMPLATE
 
@@ -321,6 +327,14 @@ USINGDIRECTIVE(UsingDirective, NamedDecl)
 #  define USINGSHADOW(Type, Base) NAMED(Type, Base)
 #endif
 USINGSHADOW(UsingShadow, NamedDecl)
+#ifndef CONSTRUCTORUSINGSHADOW
+#  define CONSTRUCTORUSINGSHADOW(Type, Base) USINGSHADOW(Type, Base)
+#endif
+CONSTRUCTORUSINGSHADOW(ConstructorUsingShadow, UsingShadowDecl)
+#undef CONSTRUCTORUSINGSHADOW
+
+DECL_RANGE(UsingShadow, UsingShadow, ConstructorUsingShadow)
+
 #undef USINGSHADOW
 
 #ifndef VALUE
@@ -407,6 +421,12 @@ VAR(Var, DeclaratorDecl)
 IMPLICITPARAM(ImplicitParam, VarDecl)
 #undef IMPLICITPARAM
 
+#ifndef OMPCAPTUREDEXPR
+#  define OMPCAPTUREDEXPR(Type, Base) VAR(Type, Base)
+#endif
+OMPCAPTUREDEXPR(OMPCapturedExpr, VarDecl)
+#undef OMPCAPTUREDEXPR
+
 #ifndef PARMVAR
 #  define PARMVAR(Type, Base) VAR(Type, Base)
 #endif
@@ -447,6 +467,12 @@ ENUMCONSTANT(EnumConstant, ValueDecl)
 INDIRECTFIELD(IndirectField, ValueDecl)
 #undef INDIRECTFIELD
 
+#ifndef OMPDECLAREREDUCTION
+#  define OMPDECLAREREDUCTION(Type, Base) VALUE(Type, Base)
+#endif
+OMPDECLAREREDUCTION(OMPDeclareReduction, ValueDecl)
+#undef OMPDECLAREREDUCTION
+
 #ifndef UNRESOLVEDUSINGVALUE
 #  define UNRESOLVEDUSINGVALUE(Type, Base) VALUE(Type, Base)
 #endif
@@ -472,6 +498,18 @@ OMPTHREADPRIVATE(OMPThreadPrivate, Decl)
 #endif
 OBJCPROPERTYIMPL(ObjCPropertyImpl, Decl)
 #undef OBJCPROPERTYIMPL
+
+#ifndef PRAGMACOMMENT
+#  define PRAGMACOMMENT(Type, Base) DECL(Type, Base)
+#endif
+PRAGMACOMMENT(PragmaComment, Decl)
+#undef PRAGMACOMMENT
+
+#ifndef PRAGMADETECTMISMATCH
+#  define PRAGMADETECTMISMATCH(Type, Base) DECL(Type, Base)
+#endif
+PRAGMADETECTMISMATCH(PragmaDetectMismatch, Decl)
+#undef PRAGMADETECTMISMATCH
 
 #ifndef STATICASSERT
 #  define STATICASSERT(Type, Base) DECL(Type, Base)
@@ -513,6 +551,7 @@ DECL_CONTEXT(Captured)
 DECL_CONTEXT(ExternCContext)
 DECL_CONTEXT(LinkageSpec)
 DECL_CONTEXT(Namespace)
+DECL_CONTEXT(OMPDeclareReduction)
 DECL_CONTEXT(ObjCMethod)
 DECL_CONTEXT(TranslationUnit)
 #undef DECL_CONTEXT

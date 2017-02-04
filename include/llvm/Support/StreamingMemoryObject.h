@@ -28,15 +28,7 @@ public:
   uint64_t getExtent() const override;
   uint64_t readBytes(uint8_t *Buf, uint64_t Size,
                      uint64_t Address) const override;
-  const uint8_t *getPointer(uint64_t address, uint64_t size) const override {
-    // FIXME: This could be fixed by ensuring the bytes are fetched and
-    // making a copy, requiring that the bitcode size be known, or
-    // otherwise ensuring that the memory doesn't go away/get reallocated,
-    // but it's not currently necessary. Users that need the pointer (any
-    // that need Blobs) don't stream.
-    report_fatal_error("getPointer in streaming memory objects not allowed");
-    return nullptr;
-  }
+  const uint8_t *getPointer(uint64_t Address, uint64_t Size) const override;
   bool isValidAddress(uint64_t address) const override;
 
   /// Drop s bytes from the front of the stream, pushing the positions of the
@@ -50,8 +42,10 @@ public:
   /// starts (although it can be called anytime).
   void setKnownObjectSize(size_t size);
 
+  /// The number of bytes read at a time from the data streamer.
+  static const uint32_t kChunkSize = 4096 * 4;
+
 private:
-  const static uint32_t kChunkSize = 4096 * 4;
   mutable std::vector<unsigned char> Bytes;
   std::unique_ptr<DataStreamer> Streamer;
   mutable size_t BytesRead;   // Bytes read from stream

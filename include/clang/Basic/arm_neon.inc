@@ -112,8 +112,8 @@ BUILTIN(__builtin_neon_vclz_v, "V8ScV8Sci", "n")
 BUILTIN(__builtin_neon_vclzq_v, "V16ScV16Sci", "n")
 BUILTIN(__builtin_neon_vcnt_v, "V8ScV8Sci", "n")
 BUILTIN(__builtin_neon_vcntq_v, "V16ScV16Sci", "n")
-BUILTIN(__builtin_neon_vcvt_f16_v, "V8ScV16Sci", "n")
-BUILTIN(__builtin_neon_vcvt_f32_f16, "V4fV8Sci", "n")
+BUILTIN(__builtin_neon_vcvt_f16_f32, "V8ScV16Sci", "n")
+BUILTIN(__builtin_neon_vcvt_f32_f16, "V16ScV8Sci", "n")
 BUILTIN(__builtin_neon_vcvt_f32_f64, "V8ScV16Sci", "n")
 BUILTIN(__builtin_neon_vcvt_f32_v, "V2fV8Sci", "n")
 BUILTIN(__builtin_neon_vcvt_f64_f32, "V16ScV8Sci", "n")
@@ -230,8 +230,6 @@ BUILTIN(__builtin_neon_vfmaq_laneq_v, "V16ScV16ScV16ScV16ScIii", "n")
 BUILTIN(__builtin_neon_vfmaq_v, "V16ScV16ScV16ScV16Sci", "n")
 BUILTIN(__builtin_neon_vfmas_lane_f32, "fffV2fIi", "n")
 BUILTIN(__builtin_neon_vfmas_laneq_f32, "fffV4fIi", "n")
-BUILTIN(__builtin_neon_vfms_v, "V8ScV8ScV8ScV8Sci", "n")
-BUILTIN(__builtin_neon_vfmsq_v, "V16ScV16ScV16ScV16Sci", "n")
 BUILTIN(__builtin_neon_vget_lane_f32, "fV2fIi", "n")
 BUILTIN(__builtin_neon_vget_lane_f64, "dV1dIi", "n")
 BUILTIN(__builtin_neon_vget_lane_i16, "UsV4sIi", "n")
@@ -700,8 +698,8 @@ case NEON::BI__builtin_neon_vclz_v: mask = 0x70007ULL; break;
 case NEON::BI__builtin_neon_vclzq_v: mask = 0x7000700000000ULL; break;
 case NEON::BI__builtin_neon_vcnt_v: mask = 0x10011ULL; break;
 case NEON::BI__builtin_neon_vcntq_v: mask = 0x1001100000000ULL; break;
-case NEON::BI__builtin_neon_vcvt_f16_v: mask = 0x100ULL; break;
-case NEON::BI__builtin_neon_vcvt_f32_f16: mask = 0x100ULL; break;
+case NEON::BI__builtin_neon_vcvt_f16_f32: mask = 0x100ULL; break;
+case NEON::BI__builtin_neon_vcvt_f32_f16: mask = 0x20000000000ULL; break;
 case NEON::BI__builtin_neon_vcvt_f32_f64: mask = 0x200ULL; break;
 case NEON::BI__builtin_neon_vcvt_f32_v: mask = 0x40004ULL; break;
 case NEON::BI__builtin_neon_vcvt_f64_f32: mask = 0x40000000000ULL; break;
@@ -769,8 +767,6 @@ case NEON::BI__builtin_neon_vfma_v: mask = 0x600ULL; break;
 case NEON::BI__builtin_neon_vfmaq_lane_v: mask = 0x60000000000ULL; break;
 case NEON::BI__builtin_neon_vfmaq_laneq_v: mask = 0x60000000000ULL; break;
 case NEON::BI__builtin_neon_vfmaq_v: mask = 0x60000000000ULL; break;
-case NEON::BI__builtin_neon_vfms_v: mask = 0x600ULL; break;
-case NEON::BI__builtin_neon_vfmsq_v: mask = 0x60000000000ULL; break;
 case NEON::BI__builtin_neon_vhadd_v: mask = 0x70007ULL; break;
 case NEON::BI__builtin_neon_vhaddq_v: mask = 0x7000700000000ULL; break;
 case NEON::BI__builtin_neon_vhsub_v: mask = 0x70007ULL; break;

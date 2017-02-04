@@ -195,12 +195,14 @@ class CCState {
 private:
   CallingConv::ID CallingConv;
   bool IsVarArg;
+  bool AnalyzingMustTailForwardedRegs = false;
   MachineFunction &MF;
   const TargetRegisterInfo &TRI;
   SmallVectorImpl<CCValAssign> &Locs;
   LLVMContext &Context;
 
   unsigned StackOffset;
+  unsigned MaxStackArgAlign;
   SmallVector<uint32_t, 16> UsedRegs;
   SmallVector<CCValAssign, 4> PendingLocs;
 
@@ -270,7 +272,18 @@ public:
   CallingConv::ID getCallingConv() const { return CallingConv; }
   bool isVarArg() const { return IsVarArg; }
 
-  unsigned getNextStackOffset() const { return StackOffset; }
+  /// getNextStackOffset - Return the next stack offset such that all stack
+  /// slots satisfy their alignment requirements.
+  unsigned getNextStackOffset() const {
+    return StackOffset;
+  }
+
+  /// getAlignedCallFrameSize - Return the size of the call frame needed to
+  /// be able to store all arguments and such that the alignment requirement
+  /// of each of the arguments is satisfied.
+  unsigned getAlignedCallFrameSize() const {
+    return alignTo(StackOffset, MaxStackArgAlign);
+  }
 
   /// isAllocated - Return true if the specified register (or an alias) is
   /// allocated.
@@ -357,7 +370,7 @@ public:
   /// AllocateRegBlock - Attempt to allocate a block of RegsRequired consecutive
   /// registers. If this is not possible, return zero. Otherwise, return the first
   /// register of the block that were allocated, marking the entire block as allocated.
-  unsigned AllocateRegBlock(ArrayRef<uint16_t> Regs, unsigned RegsRequired) {
+  unsigned AllocateRegBlock(ArrayRef<MCPhysReg> Regs, unsigned RegsRequired) {
     if (RegsRequired > Regs.size())
       return 0;
 
@@ -400,11 +413,17 @@ public:
   /// and alignment.
   unsigned AllocateStack(unsigned Size, unsigned Align) {
     assert(Align && ((Align - 1) & Align) == 0); // Align is power of 2.
-    StackOffset = ((StackOffset + Align - 1) & ~(Align - 1));
+    StackOffset = alignTo(StackOffset, Align);
     unsigned Result = StackOffset;
     StackOffset += Size;
-    MF.getFrameInfo()->ensureMaxAlignment(Align);
+    MaxStackArgAlign = std::max(Align, MaxStackArgAlign);
+    ensureMaxAlignment(Align);
     return Result;
+  }
+
+  void ensureMaxAlignment(unsigned Align) {
+    if (!AnalyzingMustTailForwardedRegs)
+      MF.getFrameInfo()->ensureMaxAlignment(Align);
   }
 
   /// Version of AllocateStack with extra register to be shadowed.
@@ -493,6 +512,14 @@ public:
   void analyzeMustTailForwardedRegisters(
       SmallVectorImpl<ForwardedRegister> &Forwards, ArrayRef<MVT> RegParmTypes,
       CCAssignFn Fn);
+
+  /// Returns true if the results of the two calling conventions are compatible.
+  /// This is usually part of the check for tailcall eligibility.
+  static bool resultsCompatible(CallingConv::ID CalleeCC,
+                                CallingConv::ID CallerCC, MachineFunction &MF,
+                                LLVMContext &C,
+                                const SmallVectorImpl<ISD::InputArg> &Ins,
+                                CCAssignFn CalleeFn, CCAssignFn CallerFn);
 
 private:
   /// MarkAllocated - Mark a register and all of its aliases as allocated.

@@ -78,6 +78,9 @@ class CompilerInstance : public ModuleLoader {
   /// The target being compiled for.
   IntrusiveRefCntPtr<TargetInfo> Target;
 
+  /// Auxiliary Target info.
+  IntrusiveRefCntPtr<TargetInfo> AuxTarget;
+
   /// The virtual file system.
   IntrusiveRefCntPtr<vfs::FileSystem> VirtualFileSystem;
 
@@ -126,13 +129,6 @@ class CompilerInstance : public ModuleLoader {
   /// along with the module map
   llvm::DenseMap<const IdentifierInfo *, Module *> KnownModules;
 
-  /// \brief Module names that have an override for the target file.
-  llvm::StringMap<std::string> ModuleFileOverrides;
-
-  /// \brief Module files that we've explicitly loaded via \ref loadModuleFile,
-  /// and their dependencies.
-  llvm::StringSet<> ExplicitlyLoadedModuleFiles;
-
   /// \brief The location of the module-import keyword for the last module
   /// import. 
   SourceLocation LastModuleImportLoc;
@@ -159,15 +155,10 @@ class CompilerInstance : public ModuleLoader {
   struct OutputFile {
     std::string Filename;
     std::string TempFilename;
-    std::unique_ptr<raw_ostream> OS;
 
-    OutputFile(std::string filename, std::string tempFilename,
-               std::unique_ptr<raw_ostream> OS)
-        : Filename(std::move(filename)), TempFilename(std::move(tempFilename)),
-          OS(std::move(OS)) {}
-    OutputFile(OutputFile &&O)
-        : Filename(std::move(O.Filename)),
-          TempFilename(std::move(O.TempFilename)), OS(std::move(O.OS)) {}
+    OutputFile(std::string filename, std::string tempFilename)
+        : Filename(std::move(filename)), TempFilename(std::move(tempFilename)) {
+    }
   };
 
   /// If the output doesn't support seeking (terminal, pipe). we switch
@@ -355,8 +346,17 @@ public:
     return *Target;
   }
 
-  /// Replace the current diagnostics engine.
+  /// Replace the current Target.
   void setTarget(TargetInfo *Value);
+
+  /// }
+  /// @name AuxTarget Info
+  /// {
+
+  TargetInfo *getAuxTarget() const { return AuxTarget.get(); }
+
+  /// Replace the current AuxTarget.
+  void setAuxTarget(TargetInfo *Value);
 
   /// }
   /// @name Virtual File System
@@ -375,7 +375,7 @@ public:
   /// \note Most clients should use setFileManager, which will implicitly reset
   /// the virtual file system to the one contained in the file manager.
   void setVirtualFileSystem(IntrusiveRefCntPtr<vfs::FileSystem> FS) {
-    VirtualFileSystem = FS;
+    VirtualFileSystem = std::move(FS);
   }
 
   /// }
@@ -572,8 +572,8 @@ public:
   /// \param OutFile - The output file info.
   void addOutputFile(OutputFile &&OutFile);
 
-  /// clearOutputFiles - Clear the output file list, destroying the contained
-  /// output streams.
+  /// clearOutputFiles - Clear the output file list. The underlying output
+  /// streams must have been closed beforehand.
   ///
   /// \param EraseFiles - If true, attempt to erase the files from disk.
   void clearOutputFiles(bool EraseFiles);
@@ -650,6 +650,7 @@ public:
       StringRef Path, StringRef Sysroot, bool DisablePCHValidation,
       bool AllowPCHWithCompilerErrors, Preprocessor &PP, ASTContext &Context,
       const PCHContainerReader &PCHContainerRdr,
+      ArrayRef<IntrusiveRefCntPtr<ModuleFileExtension>> Extensions,
       void *DeserializationListener, bool OwnDeserializationListener,
       bool Preamble, bool UseGlobalModuleIndex);
 
@@ -679,19 +680,18 @@ public:
   /// atomically replace the target output on success).
   ///
   /// \return - Null on error.
-  raw_pwrite_stream *createDefaultOutputFile(bool Binary = true,
-                                             StringRef BaseInput = "",
-                                             StringRef Extension = "");
+  std::unique_ptr<raw_pwrite_stream>
+  createDefaultOutputFile(bool Binary = true, StringRef BaseInput = "",
+                          StringRef Extension = "");
 
   /// Create a new output file and add it to the list of tracked output files,
   /// optionally deriving the output path name.
   ///
   /// \return - Null on error.
-  raw_pwrite_stream *createOutputFile(StringRef OutputPath, bool Binary,
-                                      bool RemoveFileOnSignal,
-                                      StringRef BaseInput, StringRef Extension,
-                                      bool UseTemporary,
-                                      bool CreateMissingDirectories = false);
+  std::unique_ptr<raw_pwrite_stream>
+  createOutputFile(StringRef OutputPath, bool Binary, bool RemoveFileOnSignal,
+                   StringRef BaseInput, StringRef Extension, bool UseTemporary,
+                   bool CreateMissingDirectories = false);
 
   /// Create a new output file, optionally deriving the output path name.
   ///
@@ -725,7 +725,7 @@ public:
                    bool CreateMissingDirectories, std::string *ResultPathName,
                    std::string *TempPathName);
 
-  llvm::raw_null_ostream *createNullOutputFile();
+  std::unique_ptr<raw_pwrite_stream> createNullOutputFile();
 
   /// }
   /// @name Initialization Utility Methods
@@ -742,10 +742,12 @@ public:
   ///
   /// \return True on success.
   static bool InitializeSourceManager(const FrontendInputFile &Input,
-                DiagnosticsEngine &Diags,
-                FileManager &FileMgr,
-                SourceManager &SourceMgr,
-                const FrontendOptions &Opts);
+                                      DiagnosticsEngine &Diags,
+                                      FileManager &FileMgr,
+                                      SourceManager &SourceMgr,
+                                      HeaderSearch *HS,
+                                      DependencyOutputOptions &DepOpts,
+                                      const FrontendOptions &Opts);
 
   /// }
 

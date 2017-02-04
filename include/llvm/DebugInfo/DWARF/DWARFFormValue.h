@@ -10,12 +10,12 @@
 #ifndef LLVM_DEBUGINFO_DWARFFORMVALUE_H
 #define LLVM_DEBUGINFO_DWARFFORMVALUE_H
 
-#include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/Optional.h"
 #include "llvm/Support/DataExtractor.h"
 
 namespace llvm {
 
+template <typename T> class ArrayRef;
 class DWARFUnit;
 class raw_ostream;
 
@@ -84,6 +84,9 @@ public:
                  const DWARFUnit *u) const;
   static bool skipValue(uint16_t form, DataExtractor debug_info_data,
                         uint32_t *offset_ptr, const DWARFUnit *u);
+  static bool skipValue(uint16_t form, DataExtractor debug_info_data,
+                        uint32_t *offset_ptr, uint16_t Version,
+                        uint8_t AddrSize);
 
   static ArrayRef<uint8_t> getFixedFormSizes(uint8_t AddrSize,
                                              uint16_t Version);

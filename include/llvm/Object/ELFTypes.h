@@ -12,7 +12,6 @@
 
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/Object/Error.h"
-#include "llvm/Support/DataTypes.h"
 #include "llvm/Support/ELF.h"
 #include "llvm/Support/Endian.h"
 #include "llvm/Support/ErrorOr.h"
@@ -22,9 +21,60 @@ namespace object {
 
 using support::endianness;
 
-template <endianness target_endianness, bool is64Bits> struct ELFType {
-  static const endianness TargetEndianness = target_endianness;
-  static const bool Is64Bits = is64Bits;
+template <class ELFT> struct Elf_Ehdr_Impl;
+template <class ELFT> struct Elf_Shdr_Impl;
+template <class ELFT> struct Elf_Sym_Impl;
+template <class ELFT> struct Elf_Dyn_Impl;
+template <class ELFT> struct Elf_Phdr_Impl;
+template <class ELFT, bool isRela> struct Elf_Rel_Impl;
+template <class ELFT> struct Elf_Verdef_Impl;
+template <class ELFT> struct Elf_Verdaux_Impl;
+template <class ELFT> struct Elf_Verneed_Impl;
+template <class ELFT> struct Elf_Vernaux_Impl;
+template <class ELFT> struct Elf_Versym_Impl;
+template <class ELFT> struct Elf_Hash_Impl;
+template <class ELFT> struct Elf_GnuHash_Impl;
+template <class ELFT> struct Elf_Chdr_Impl;
+
+template <endianness E, bool Is64> struct ELFType {
+private:
+  template <typename Ty>
+  using packed = support::detail::packed_endian_specific_integral<Ty, E, 2>;
+
+public:
+  static const endianness TargetEndianness = E;
+  static const bool Is64Bits = Is64;
+
+  typedef typename std::conditional<Is64, uint64_t, uint32_t>::type uint;
+  typedef Elf_Ehdr_Impl<ELFType<E, Is64>> Ehdr;
+  typedef Elf_Shdr_Impl<ELFType<E, Is64>> Shdr;
+  typedef Elf_Sym_Impl<ELFType<E, Is64>> Sym;
+  typedef Elf_Dyn_Impl<ELFType<E, Is64>> Dyn;
+  typedef Elf_Phdr_Impl<ELFType<E, Is64>> Phdr;
+  typedef Elf_Rel_Impl<ELFType<E, Is64>, false> Rel;
+  typedef Elf_Rel_Impl<ELFType<E, Is64>, true> Rela;
+  typedef Elf_Verdef_Impl<ELFType<E, Is64>> Verdef;
+  typedef Elf_Verdaux_Impl<ELFType<E, Is64>> Verdaux;
+  typedef Elf_Verneed_Impl<ELFType<E, Is64>> Verneed;
+  typedef Elf_Vernaux_Impl<ELFType<E, Is64>> Vernaux;
+  typedef Elf_Versym_Impl<ELFType<E, Is64>> Versym;
+  typedef Elf_Hash_Impl<ELFType<E, Is64>> Hash;
+  typedef Elf_GnuHash_Impl<ELFType<E, Is64>> GnuHash;
+  typedef Elf_Chdr_Impl<ELFType<E, Is64>> Chdr;
+  typedef ArrayRef<Dyn> DynRange;
+  typedef ArrayRef<Shdr> ShdrRange;
+  typedef ArrayRef<Sym> SymRange;
+  typedef ArrayRef<Rel> RelRange;
+  typedef ArrayRef<Rela> RelaRange;
+  typedef ArrayRef<Phdr> PhdrRange;
+
+  typedef packed<uint16_t> Half;
+  typedef packed<uint32_t> Word;
+  typedef packed<int32_t> Sword;
+  typedef packed<uint64_t> Xword;
+  typedef packed<int64_t> Sxword;
+  typedef packed<uint> Addr;
+  typedef packed<uint> Off;
 };
 
 typedef ELFType<support::little, false> ELF32LE;
@@ -209,14 +259,14 @@ struct Elf_Sym_Impl : Elf_Sym_Base<ELFT> {
     return getBinding() != ELF::STB_LOCAL;
   }
 
-  ErrorOr<StringRef> getName(StringRef StrTab) const;
+  Expected<StringRef> getName(StringRef StrTab) const;
 };
 
 template <class ELFT>
-ErrorOr<StringRef> Elf_Sym_Impl<ELFT>::getName(StringRef StrTab) const {
+Expected<StringRef> Elf_Sym_Impl<ELFT>::getName(StringRef StrTab) const {
   uint32_t Offset = this->st_name;
   if (Offset >= StrTab.size())
-    return object_error::parse_failed;
+    return errorCodeToError(object_error::parse_failed);
   return StringRef(StrTab.data() + Offset);
 }
 
@@ -307,22 +357,24 @@ struct Elf_Dyn_Base<ELFType<TargetEndianness, true>> {
   } d_un;
 };
 
-/// Elf_Dyn_Impl: This inherits from Elf_Dyn_Base, adding getters and setters.
+/// Elf_Dyn_Impl: This inherits from Elf_Dyn_Base, adding getters.
 template <class ELFT>
 struct Elf_Dyn_Impl : Elf_Dyn_Base<ELFT> {
   using Elf_Dyn_Base<ELFT>::d_tag;
   using Elf_Dyn_Base<ELFT>::d_un;
-  int64_t getTag() const { return d_tag; }
-  uint64_t getVal() const { return d_un.d_val; }
-  uint64_t getPtr() const { return d_un.d_ptr; }
+  typedef typename std::conditional<ELFT::Is64Bits,
+                                    int64_t, int32_t>::type intX_t;
+  typedef typename std::conditional<ELFT::Is64Bits,
+                                    uint64_t, uint32_t>::type uintX_t;
+  intX_t getTag() const { return d_tag; }
+  uintX_t getVal() const { return d_un.d_val; }
+  uintX_t getPtr() const { return d_un.d_ptr; }
 };
-
-// Elf_Rel: Elf Relocation
-template <class ELFT, bool isRela> struct Elf_Rel_Impl;
 
 template <endianness TargetEndianness>
 struct Elf_Rel_Impl<ELFType<TargetEndianness, false>, false> {
   LLVM_ELF_IMPORT_TYPES(TargetEndianness, false)
+  static const bool IsRela = false;
   Elf_Addr r_offset; // Location (file byte offset, or program virtual addr)
   Elf_Word r_info;   // Symbol table index and type of relocation to apply
 
@@ -358,12 +410,14 @@ template <endianness TargetEndianness>
 struct Elf_Rel_Impl<ELFType<TargetEndianness, false>, true>
     : public Elf_Rel_Impl<ELFType<TargetEndianness, false>, false> {
   LLVM_ELF_IMPORT_TYPES(TargetEndianness, false)
+  static const bool IsRela = true;
   Elf_Sword r_addend; // Compute value for relocatable field by adding this
 };
 
 template <endianness TargetEndianness>
 struct Elf_Rel_Impl<ELFType<TargetEndianness, true>, false> {
   LLVM_ELF_IMPORT_TYPES(TargetEndianness, true)
+  static const bool IsRela = false;
   Elf_Addr r_offset; // Location (file byte offset, or program virtual addr)
   Elf_Xword r_info;  // Symbol table index and type of relocation to apply
 
@@ -408,6 +462,7 @@ template <endianness TargetEndianness>
 struct Elf_Rel_Impl<ELFType<TargetEndianness, true>, true>
     : public Elf_Rel_Impl<ELFType<TargetEndianness, true>, false> {
   LLVM_ELF_IMPORT_TYPES(TargetEndianness, true)
+  static const bool IsRela = true;
   Elf_Sxword r_addend; // Compute value for relocatable field by adding this.
 };
 
@@ -479,6 +534,49 @@ struct Elf_Hash_Impl {
     return ArrayRef<Elf_Word>(&nbucket + 2 + nbucket,
                               &nbucket + 2 + nbucket + nchain);
   }
+};
+
+// .gnu.hash section
+template <class ELFT>
+struct Elf_GnuHash_Impl {
+  LLVM_ELF_IMPORT_TYPES_ELFT(ELFT)
+  Elf_Word nbuckets;
+  Elf_Word symndx;
+  Elf_Word maskwords;
+  Elf_Word shift2;
+
+  ArrayRef<Elf_Off> filter() const {
+    return ArrayRef<Elf_Off>(reinterpret_cast<const Elf_Off *>(&shift2 + 1),
+                             maskwords);
+  }
+
+  ArrayRef<Elf_Word> buckets() const {
+    return ArrayRef<Elf_Word>(
+        reinterpret_cast<const Elf_Word *>(filter().end()), nbuckets);
+  }
+
+  ArrayRef<Elf_Word> values(unsigned DynamicSymCount) const {
+    return ArrayRef<Elf_Word>(buckets().end(), DynamicSymCount - symndx);
+  }
+};
+
+// Compressed section headers.
+// http://www.sco.com/developers/gabi/latest/ch4.sheader.html#compression_header
+template <endianness TargetEndianness>
+struct Elf_Chdr_Impl<ELFType<TargetEndianness, false>> {
+  LLVM_ELF_IMPORT_TYPES(TargetEndianness, false)
+  Elf_Word ch_type;
+  Elf_Word ch_size;
+  Elf_Word ch_addralign;
+};
+
+template <endianness TargetEndianness>
+struct Elf_Chdr_Impl<ELFType<TargetEndianness, true>> {
+  LLVM_ELF_IMPORT_TYPES(TargetEndianness, true)
+  Elf_Word ch_type;
+  Elf_Word ch_reserved;
+  Elf_Xword ch_size;
+  Elf_Xword ch_addralign;
 };
 
 // MIPS .reginfo section

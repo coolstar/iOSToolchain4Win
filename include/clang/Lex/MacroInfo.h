@@ -106,7 +106,7 @@ class MacroInfo {
   bool IsWarnIfUnused : 1;
 
   /// \brief Whether this macro info was loaded from an AST file.
-  unsigned FromASTFile : 1;
+  bool FromASTFile : 1;
 
   /// \brief Whether this macro was used as header guard.
   bool UsedForHeaderGuard : 1;
@@ -158,17 +158,16 @@ public:
 
   /// \brief Set the specified list of identifiers as the argument list for
   /// this macro.
-  void setArgumentList(IdentifierInfo *const *List, unsigned NumArgs,
+  void setArgumentList(ArrayRef<IdentifierInfo *> List,
                        llvm::BumpPtrAllocator &PPAllocator) {
     assert(ArgumentList == nullptr && NumArguments == 0 &&
            "Argument list already set!");
-    if (NumArgs == 0)
+    if (List.empty())
       return;
 
-    NumArguments = NumArgs;
-    ArgumentList = PPAllocator.Allocate<IdentifierInfo *>(NumArgs);
-    for (unsigned i = 0; i != NumArgs; ++i)
-      ArgumentList[i] = List[i];
+    NumArguments = List.size();
+    ArgumentList = PPAllocator.Allocate<IdentifierInfo *>(List.size());
+    std::copy(List.begin(), List.end(), ArgumentList);
   }
 
   /// Arguments - The list of arguments for a function-like macro.  This can be
@@ -319,13 +318,13 @@ protected:
   unsigned MDKind : 2;
 
   /// \brief True if the macro directive was loaded from a PCH file.
-  bool IsFromPCH : 1;
+  unsigned IsFromPCH : 1;
 
   // Used by VisibilityMacroDirective ----------------------------------------//
 
   /// \brief Whether the macro has public visibility (when described in a
   /// module).
-  bool IsPublic : 1;
+  unsigned IsPublic : 1;
 
   MacroDirective(Kind K, SourceLocation Loc)
       : Previous(nullptr), Loc(Loc), MDKind(K), IsFromPCH(false),

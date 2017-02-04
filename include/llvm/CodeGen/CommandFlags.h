@@ -46,20 +46,23 @@ MAttrs("mattr",
        cl::desc("Target specific attributes (-mattr=help for details)"),
        cl::value_desc("a1,+a2,-a3,..."));
 
-cl::opt<Reloc::Model>
-RelocModel("relocation-model",
-           cl::desc("Choose relocation model"),
-           cl::init(Reloc::Default),
-           cl::values(
-              clEnumValN(Reloc::Default, "default",
-                      "Target default relocation model"),
-              clEnumValN(Reloc::Static, "static",
-                      "Non-relocatable code"),
-              clEnumValN(Reloc::PIC_, "pic",
-                      "Fully relocatable, position independent code"),
-              clEnumValN(Reloc::DynamicNoPIC, "dynamic-no-pic",
-                      "Relocatable external references, non-relocatable code"),
-              clEnumValEnd));
+cl::opt<Reloc::Model> RelocModel(
+    "relocation-model", cl::desc("Choose relocation model"),
+    cl::values(
+        clEnumValN(Reloc::Static, "static", "Non-relocatable code"),
+        clEnumValN(Reloc::PIC_, "pic",
+                   "Fully relocatable, position independent code"),
+        clEnumValN(Reloc::DynamicNoPIC, "dynamic-no-pic",
+                   "Relocatable external references, non-relocatable code"),
+        clEnumValEnd));
+
+static inline Optional<Reloc::Model> getRelocModel() {
+  if (RelocModel.getNumOccurrences()) {
+    Reloc::Model R = RelocModel;
+    return R;
+  }
+  return None;
+}
 
 cl::opt<ThreadModel::Model>
 TMModel("thread-model",
@@ -86,6 +89,22 @@ CMModel("code-model",
                    clEnumValN(CodeModel::Large, "large",
                               "Large code model"),
                    clEnumValEnd));
+
+cl::opt<llvm::ExceptionHandling>
+ExceptionModel("exception-model",
+               cl::desc("exception model"),
+               cl::init(ExceptionHandling::None),
+               cl::values(clEnumValN(ExceptionHandling::None, "default",
+                                     "default exception handling model"),
+                          clEnumValN(ExceptionHandling::DwarfCFI, "dwarf",
+                                     "DWARF-like CFI based exception handling"),
+                          clEnumValN(ExceptionHandling::SjLj, "sjlj",
+                                     "SjLj exception handling"),
+                          clEnumValN(ExceptionHandling::ARM, "arm",
+                                     "ARM EHABI exceptions"),
+                          clEnumValN(ExceptionHandling::WinEH, "wineh",
+                                     "Windows exception model"),
+                          clEnumValEnd));
 
 cl::opt<TargetMachine::CodeGenFileType>
 FileType("filetype", cl::init(TargetMachine::CGFT_AssemblyFile),
@@ -177,20 +196,25 @@ DisableTailCalls("disable-tail-calls",
                  cl::desc("Never emit tail calls"),
                  cl::init(false));
 
+cl::opt<bool>
+StackSymbolOrdering("stack-symbol-ordering",
+                    cl::desc("Order local stack symbols."),
+                    cl::init(true));
+
 cl::opt<unsigned>
 OverrideStackAlignment("stack-alignment",
                        cl::desc("Override default stack alignment"),
                        cl::init(0));
 
+cl::opt<bool>
+StackRealign("stackrealign",
+             cl::desc("Force align the stack to the minimum alignment"),
+             cl::init(false));
+
 cl::opt<std::string>
 TrapFuncName("trap-func", cl::Hidden,
         cl::desc("Emit a call to trap function rather than a trap instruction"),
         cl::init(""));
-
-cl::opt<bool>
-EnablePIE("enable-pie",
-          cl::desc("Assume the creation of a position independent executable."),
-          cl::init(false));
 
 cl::opt<bool>
 UseCtors("use-ctors",
@@ -206,10 +230,6 @@ cl::opt<std::string> StartAfter("start-after",
                           cl::value_desc("pass-name"),
                           cl::init(""));
 
-cl::opt<std::string>
-    RunPass("run-pass", cl::desc("Run compiler only for one specific pass"),
-            cl::value_desc("pass-name"), cl::init(""));
-
 cl::opt<bool> DataSections("data-sections",
                            cl::desc("Emit data into separate sections"),
                            cl::init(false));
@@ -218,6 +238,10 @@ cl::opt<bool>
 FunctionSections("function-sections",
                  cl::desc("Emit functions into separate sections"),
                  cl::init(false));
+
+cl::opt<bool> EmulatedTLS("emulated-tls",
+                          cl::desc("Use emulated TLS model"),
+                          cl::init(false));
 
 cl::opt<bool> UniqueSectionNames("unique-section-names",
                                  cl::desc("Give unique names to every section"),
@@ -238,6 +262,26 @@ JTableType("jump-table-type",
                          "Create one table per unique function type."),
               clEnumValEnd));
 
+cl::opt<llvm::EABI> EABIVersion(
+    "meabi", cl::desc("Set EABI type (default depends on triple):"),
+    cl::init(EABI::Default),
+    cl::values(clEnumValN(EABI::Default, "default",
+                          "Triple default EABI version"),
+               clEnumValN(EABI::EABI4, "4", "EABI version 4"),
+               clEnumValN(EABI::EABI5, "5", "EABI version 5"),
+               clEnumValN(EABI::GNU, "gnu", "EABI GNU"), clEnumValEnd));
+
+cl::opt<DebuggerKind>
+DebuggerTuningOpt("debugger-tune",
+                  cl::desc("Tune debug info for a particular debugger"),
+                  cl::init(DebuggerKind::Default),
+                  cl::values(
+                      clEnumValN(DebuggerKind::GDB, "gdb", "gdb"),
+                      clEnumValN(DebuggerKind::LLDB, "lldb", "lldb"),
+                      clEnumValN(DebuggerKind::SCE, "sce",
+                                 "SCE targets (e.g. PS4)"),
+                      clEnumValEnd));
+
 // Common utility function tightly tied to the options listed here. Initializes
 // a TargetOptions object with CodeGen flags and returns it.
 static inline TargetOptions InitTargetOptionsFromCodeGenFlags() {
@@ -255,16 +299,20 @@ static inline TargetOptions InitTargetOptionsFromCodeGenFlags() {
   Options.NoZerosInBSS = DontPlaceZerosInBSS;
   Options.GuaranteedTailCallOpt = EnableGuaranteedTailCallOpt;
   Options.StackAlignmentOverride = OverrideStackAlignment;
-  Options.PositionIndependentExecutable = EnablePIE;
+  Options.StackSymbolOrdering = StackSymbolOrdering;
   Options.UseInitArray = !UseCtors;
   Options.DataSections = DataSections;
   Options.FunctionSections = FunctionSections;
   Options.UniqueSectionNames = UniqueSectionNames;
+  Options.EmulatedTLS = EmulatedTLS;
+  Options.ExceptionModel = ExceptionModel;
 
   Options.MCOptions = InitMCTargetOptionsFromFlags();
   Options.JTType = JTableType;
 
   Options.ThreadModel = TMModel;
+  Options.EABIVersion = EABIVersion;
+  Options.DebuggerTuning = DebuggerTuningOpt;
 
   return Options;
 }
@@ -324,6 +372,10 @@ static inline void setFunctionAttributes(StringRef CPU, StringRef Features,
       NewAttrs = NewAttrs.addAttribute(Ctx, AttributeSet::FunctionIndex,
                                        "disable-tail-calls",
                                        toStringRef(DisableTailCalls));
+
+    if (StackRealign)
+      NewAttrs = NewAttrs.addAttribute(Ctx, AttributeSet::FunctionIndex,
+                                       "stackrealign");
 
     if (TrapFuncName.getNumOccurrences() > 0)
       for (auto &B : F)

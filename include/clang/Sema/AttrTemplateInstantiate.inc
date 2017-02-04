@@ -12,23 +12,25 @@ namespace sema {
 Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
         const MultiLevelTemplateArgumentList &TemplateArgs) {
   switch (At->getKind()) {
-    default:
-      break;
     case attr::AMDGPUNumSGPR: {
-      const AMDGPUNumSGPRAttr *A = cast<AMDGPUNumSGPRAttr>(At);
+      const auto *A = cast<AMDGPUNumSGPRAttr>(At);
       return A->clone(C);
     }
     case attr::AMDGPUNumVGPR: {
-      const AMDGPUNumVGPRAttr *A = cast<AMDGPUNumVGPRAttr>(At);
+      const auto *A = cast<AMDGPUNumVGPRAttr>(At);
       return A->clone(C);
     }
     case attr::ARMInterrupt: {
-      const ARMInterruptAttr *A = cast<ARMInterruptAttr>(At);
+      const auto *A = cast<ARMInterruptAttr>(At);
+      return A->clone(C);
+    }
+    case attr::AbiTag: {
+      const auto *A = cast<AbiTagAttr>(At);
       return A->clone(C);
     }
     case attr::AcquireCapability: {
-      const AcquireCapabilityAttr *A = cast<AcquireCapabilityAttr>(At);
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      const auto *A = cast<AcquireCapabilityAttr>(At);
+      auto *tempInstArgs = new (C, 16) Expr *[A->args_size()];
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         Expr * *TI = tempInstArgs;
@@ -42,8 +44,8 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       return new (C) AcquireCapabilityAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::AcquiredAfter: {
-      const AcquiredAfterAttr *A = cast<AcquiredAfterAttr>(At);
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      const auto *A = cast<AcquiredAfterAttr>(At);
+      auto *tempInstArgs = new (C, 16) Expr *[A->args_size()];
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         Expr * *TI = tempInstArgs;
@@ -57,8 +59,8 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       return new (C) AcquiredAfterAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::AcquiredBefore: {
-      const AcquiredBeforeAttr *A = cast<AcquiredBeforeAttr>(At);
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      const auto *A = cast<AcquiredBeforeAttr>(At);
+      auto *tempInstArgs = new (C, 16) Expr *[A->args_size()];
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         Expr * *TI = tempInstArgs;
@@ -72,47 +74,51 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       return new (C) AcquiredBeforeAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::Alias: {
-      const AliasAttr *A = cast<AliasAttr>(At);
+      const auto *A = cast<AliasAttr>(At);
       return A->clone(C);
     }
     case attr::AlignMac68k: {
-      const AlignMac68kAttr *A = cast<AlignMac68kAttr>(At);
+      const auto *A = cast<AlignMac68kAttr>(At);
       return A->clone(C);
     }
     case attr::AlignValue: {
-      const AlignValueAttr *A = cast<AlignValueAttr>(At);
+      const auto *A = cast<AlignValueAttr>(At);
       return A->clone(C);
     }
     case attr::Aligned: {
-      const AlignedAttr *A = cast<AlignedAttr>(At);
+      const auto *A = cast<AlignedAttr>(At);
       return A->clone(C);
     }
     case attr::AlwaysInline: {
-      const AlwaysInlineAttr *A = cast<AlwaysInlineAttr>(At);
+      const auto *A = cast<AlwaysInlineAttr>(At);
       return A->clone(C);
     }
     case attr::AnalyzerNoReturn: {
-      const AnalyzerNoReturnAttr *A = cast<AnalyzerNoReturnAttr>(At);
+      const auto *A = cast<AnalyzerNoReturnAttr>(At);
       return A->clone(C);
     }
     case attr::Annotate: {
-      const AnnotateAttr *A = cast<AnnotateAttr>(At);
+      const auto *A = cast<AnnotateAttr>(At);
+      return A->clone(C);
+    }
+    case attr::AnyX86Interrupt: {
+      const auto *A = cast<AnyX86InterruptAttr>(At);
       return A->clone(C);
     }
     case attr::ArcWeakrefUnavailable: {
-      const ArcWeakrefUnavailableAttr *A = cast<ArcWeakrefUnavailableAttr>(At);
+      const auto *A = cast<ArcWeakrefUnavailableAttr>(At);
       return A->clone(C);
     }
     case attr::ArgumentWithTypeTag: {
-      const ArgumentWithTypeTagAttr *A = cast<ArgumentWithTypeTagAttr>(At);
+      const auto *A = cast<ArgumentWithTypeTagAttr>(At);
       return A->clone(C);
     }
     case attr::AsmLabel: {
-      const AsmLabelAttr *A = cast<AsmLabelAttr>(At);
+      const auto *A = cast<AsmLabelAttr>(At);
       return A->clone(C);
     }
     case attr::AssertCapability: {
-      const AssertCapabilityAttr *A = cast<AssertCapabilityAttr>(At);
+      const auto *A = cast<AssertCapabilityAttr>(At);
       Expr * tempInstExpr;
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
@@ -122,8 +128,8 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       return new (C) AssertCapabilityAttr(A->getLocation(), C, tempInstExpr, A->getSpellingListIndex());
     }
     case attr::AssertExclusiveLock: {
-      const AssertExclusiveLockAttr *A = cast<AssertExclusiveLockAttr>(At);
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      const auto *A = cast<AssertExclusiveLockAttr>(At);
+      auto *tempInstArgs = new (C, 16) Expr *[A->args_size()];
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         Expr * *TI = tempInstArgs;
@@ -137,8 +143,8 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       return new (C) AssertExclusiveLockAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::AssertSharedLock: {
-      const AssertSharedLockAttr *A = cast<AssertSharedLockAttr>(At);
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      const auto *A = cast<AssertSharedLockAttr>(At);
+      auto *tempInstArgs = new (C, 16) Expr *[A->args_size()];
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         Expr * *TI = tempInstArgs;
@@ -152,143 +158,151 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       return new (C) AssertSharedLockAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::AssumeAligned: {
-      const AssumeAlignedAttr *A = cast<AssumeAlignedAttr>(At);
+      const auto *A = cast<AssumeAlignedAttr>(At);
       return A->clone(C);
     }
     case attr::Availability: {
-      const AvailabilityAttr *A = cast<AvailabilityAttr>(At);
+      const auto *A = cast<AvailabilityAttr>(At);
       return A->clone(C);
     }
     case attr::Blocks: {
-      const BlocksAttr *A = cast<BlocksAttr>(At);
+      const auto *A = cast<BlocksAttr>(At);
       return A->clone(C);
     }
     case attr::C11NoReturn: {
-      const C11NoReturnAttr *A = cast<C11NoReturnAttr>(At);
+      const auto *A = cast<C11NoReturnAttr>(At);
       return A->clone(C);
     }
     case attr::CDecl: {
-      const CDeclAttr *A = cast<CDeclAttr>(At);
+      const auto *A = cast<CDeclAttr>(At);
       return A->clone(C);
     }
     case attr::CFAuditedTransfer: {
-      const CFAuditedTransferAttr *A = cast<CFAuditedTransferAttr>(At);
+      const auto *A = cast<CFAuditedTransferAttr>(At);
       return A->clone(C);
     }
     case attr::CFConsumed: {
-      const CFConsumedAttr *A = cast<CFConsumedAttr>(At);
+      const auto *A = cast<CFConsumedAttr>(At);
       return A->clone(C);
     }
     case attr::CFReturnsNotRetained: {
-      const CFReturnsNotRetainedAttr *A = cast<CFReturnsNotRetainedAttr>(At);
+      const auto *A = cast<CFReturnsNotRetainedAttr>(At);
       return A->clone(C);
     }
     case attr::CFReturnsRetained: {
-      const CFReturnsRetainedAttr *A = cast<CFReturnsRetainedAttr>(At);
+      const auto *A = cast<CFReturnsRetainedAttr>(At);
       return A->clone(C);
     }
     case attr::CFUnknownTransfer: {
-      const CFUnknownTransferAttr *A = cast<CFUnknownTransferAttr>(At);
+      const auto *A = cast<CFUnknownTransferAttr>(At);
       return A->clone(C);
     }
     case attr::CUDAConstant: {
-      const CUDAConstantAttr *A = cast<CUDAConstantAttr>(At);
+      const auto *A = cast<CUDAConstantAttr>(At);
       return A->clone(C);
     }
     case attr::CUDADevice: {
-      const CUDADeviceAttr *A = cast<CUDADeviceAttr>(At);
+      const auto *A = cast<CUDADeviceAttr>(At);
       return A->clone(C);
     }
     case attr::CUDAGlobal: {
-      const CUDAGlobalAttr *A = cast<CUDAGlobalAttr>(At);
+      const auto *A = cast<CUDAGlobalAttr>(At);
       return A->clone(C);
     }
     case attr::CUDAHost: {
-      const CUDAHostAttr *A = cast<CUDAHostAttr>(At);
+      const auto *A = cast<CUDAHostAttr>(At);
       return A->clone(C);
     }
     case attr::CUDAInvalidTarget: {
-      const CUDAInvalidTargetAttr *A = cast<CUDAInvalidTargetAttr>(At);
+      const auto *A = cast<CUDAInvalidTargetAttr>(At);
       return A->clone(C);
     }
     case attr::CUDALaunchBounds: {
-      const CUDALaunchBoundsAttr *A = cast<CUDALaunchBoundsAttr>(At);
+      const auto *A = cast<CUDALaunchBoundsAttr>(At);
       return A->clone(C);
     }
     case attr::CUDAShared: {
-      const CUDASharedAttr *A = cast<CUDASharedAttr>(At);
+      const auto *A = cast<CUDASharedAttr>(At);
       return A->clone(C);
     }
     case attr::CXX11NoReturn: {
-      const CXX11NoReturnAttr *A = cast<CXX11NoReturnAttr>(At);
+      const auto *A = cast<CXX11NoReturnAttr>(At);
       return A->clone(C);
     }
     case attr::CallableWhen: {
-      const CallableWhenAttr *A = cast<CallableWhenAttr>(At);
+      const auto *A = cast<CallableWhenAttr>(At);
       return A->clone(C);
     }
     case attr::Capability: {
-      const CapabilityAttr *A = cast<CapabilityAttr>(At);
+      const auto *A = cast<CapabilityAttr>(At);
       return A->clone(C);
     }
     case attr::CapturedRecord: {
-      const CapturedRecordAttr *A = cast<CapturedRecordAttr>(At);
+      const auto *A = cast<CapturedRecordAttr>(At);
       return A->clone(C);
     }
     case attr::CarriesDependency: {
-      const CarriesDependencyAttr *A = cast<CarriesDependencyAttr>(At);
+      const auto *A = cast<CarriesDependencyAttr>(At);
       return A->clone(C);
     }
     case attr::Cleanup: {
-      const CleanupAttr *A = cast<CleanupAttr>(At);
+      const auto *A = cast<CleanupAttr>(At);
       return A->clone(C);
     }
     case attr::Cold: {
-      const ColdAttr *A = cast<ColdAttr>(At);
+      const auto *A = cast<ColdAttr>(At);
       return A->clone(C);
     }
     case attr::Common: {
-      const CommonAttr *A = cast<CommonAttr>(At);
+      const auto *A = cast<CommonAttr>(At);
       return A->clone(C);
     }
     case attr::Const: {
-      const ConstAttr *A = cast<ConstAttr>(At);
+      const auto *A = cast<ConstAttr>(At);
       return A->clone(C);
     }
     case attr::Constructor: {
-      const ConstructorAttr *A = cast<ConstructorAttr>(At);
+      const auto *A = cast<ConstructorAttr>(At);
       return A->clone(C);
     }
     case attr::Consumable: {
-      const ConsumableAttr *A = cast<ConsumableAttr>(At);
+      const auto *A = cast<ConsumableAttr>(At);
       return A->clone(C);
     }
     case attr::ConsumableAutoCast: {
-      const ConsumableAutoCastAttr *A = cast<ConsumableAutoCastAttr>(At);
+      const auto *A = cast<ConsumableAutoCastAttr>(At);
       return A->clone(C);
     }
     case attr::ConsumableSetOnRead: {
-      const ConsumableSetOnReadAttr *A = cast<ConsumableSetOnReadAttr>(At);
+      const auto *A = cast<ConsumableSetOnReadAttr>(At);
       return A->clone(C);
     }
     case attr::DLLExport: {
-      const DLLExportAttr *A = cast<DLLExportAttr>(At);
+      const auto *A = cast<DLLExportAttr>(At);
       return A->clone(C);
     }
     case attr::DLLImport: {
-      const DLLImportAttr *A = cast<DLLImportAttr>(At);
+      const auto *A = cast<DLLImportAttr>(At);
       return A->clone(C);
     }
     case attr::Deprecated: {
-      const DeprecatedAttr *A = cast<DeprecatedAttr>(At);
+      const auto *A = cast<DeprecatedAttr>(At);
       return A->clone(C);
     }
     case attr::Destructor: {
-      const DestructorAttr *A = cast<DestructorAttr>(At);
+      const auto *A = cast<DestructorAttr>(At);
+      return A->clone(C);
+    }
+    case attr::DisableTailCalls: {
+      const auto *A = cast<DisableTailCallsAttr>(At);
+      return A->clone(C);
+    }
+    case attr::EmptyBases: {
+      const auto *A = cast<EmptyBasesAttr>(At);
       return A->clone(C);
     }
     case attr::EnableIf: {
-      const EnableIfAttr *A = cast<EnableIfAttr>(At);
+      const auto *A = cast<EnableIfAttr>(At);
       Expr * tempInstCond;
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
@@ -298,14 +312,14 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       return new (C) EnableIfAttr(A->getLocation(), C, tempInstCond, A->getMessage(), A->getSpellingListIndex());
     }
     case attr::ExclusiveTrylockFunction: {
-      const ExclusiveTrylockFunctionAttr *A = cast<ExclusiveTrylockFunctionAttr>(At);
+      const auto *A = cast<ExclusiveTrylockFunctionAttr>(At);
       Expr * tempInstSuccessValue;
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         ExprResult Result = S.SubstExpr(A->getSuccessValue(), TemplateArgs);
         tempInstSuccessValue = Result.getAs<Expr>();
       }
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      auto *tempInstArgs = new (C, 16) Expr *[A->args_size()];
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         Expr * *TI = tempInstArgs;
@@ -319,39 +333,39 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       return new (C) ExclusiveTrylockFunctionAttr(A->getLocation(), C, tempInstSuccessValue, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::FallThrough: {
-      const FallThroughAttr *A = cast<FallThroughAttr>(At);
+      const auto *A = cast<FallThroughAttr>(At);
       return A->clone(C);
     }
     case attr::FastCall: {
-      const FastCallAttr *A = cast<FastCallAttr>(At);
+      const auto *A = cast<FastCallAttr>(At);
       return A->clone(C);
     }
     case attr::Final: {
-      const FinalAttr *A = cast<FinalAttr>(At);
+      const auto *A = cast<FinalAttr>(At);
       return A->clone(C);
     }
     case attr::FlagEnum: {
-      const FlagEnumAttr *A = cast<FlagEnumAttr>(At);
+      const auto *A = cast<FlagEnumAttr>(At);
       return A->clone(C);
     }
     case attr::Flatten: {
-      const FlattenAttr *A = cast<FlattenAttr>(At);
+      const auto *A = cast<FlattenAttr>(At);
       return A->clone(C);
     }
     case attr::Format: {
-      const FormatAttr *A = cast<FormatAttr>(At);
+      const auto *A = cast<FormatAttr>(At);
       return A->clone(C);
     }
     case attr::FormatArg: {
-      const FormatArgAttr *A = cast<FormatArgAttr>(At);
+      const auto *A = cast<FormatArgAttr>(At);
       return A->clone(C);
     }
     case attr::GNUInline: {
-      const GNUInlineAttr *A = cast<GNUInlineAttr>(At);
+      const auto *A = cast<GNUInlineAttr>(At);
       return A->clone(C);
     }
     case attr::GuardedBy: {
-      const GuardedByAttr *A = cast<GuardedByAttr>(At);
+      const auto *A = cast<GuardedByAttr>(At);
       Expr * tempInstArg;
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
@@ -361,39 +375,55 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       return new (C) GuardedByAttr(A->getLocation(), C, tempInstArg, A->getSpellingListIndex());
     }
     case attr::GuardedVar: {
-      const GuardedVarAttr *A = cast<GuardedVarAttr>(At);
+      const auto *A = cast<GuardedVarAttr>(At);
       return A->clone(C);
     }
     case attr::Hot: {
-      const HotAttr *A = cast<HotAttr>(At);
+      const auto *A = cast<HotAttr>(At);
       return A->clone(C);
     }
     case attr::IBAction: {
-      const IBActionAttr *A = cast<IBActionAttr>(At);
+      const auto *A = cast<IBActionAttr>(At);
       return A->clone(C);
     }
     case attr::IBOutlet: {
-      const IBOutletAttr *A = cast<IBOutletAttr>(At);
+      const auto *A = cast<IBOutletAttr>(At);
       return A->clone(C);
     }
     case attr::IBOutletCollection: {
-      const IBOutletCollectionAttr *A = cast<IBOutletCollectionAttr>(At);
+      const auto *A = cast<IBOutletCollectionAttr>(At);
+      return A->clone(C);
+    }
+    case attr::IFunc: {
+      const auto *A = cast<IFuncAttr>(At);
       return A->clone(C);
     }
     case attr::InitPriority: {
-      const InitPriorityAttr *A = cast<InitPriorityAttr>(At);
+      const auto *A = cast<InitPriorityAttr>(At);
       return A->clone(C);
     }
     case attr::InitSeg: {
-      const InitSegAttr *A = cast<InitSegAttr>(At);
+      const auto *A = cast<InitSegAttr>(At);
       return A->clone(C);
     }
     case attr::IntelOclBicc: {
-      const IntelOclBiccAttr *A = cast<IntelOclBiccAttr>(At);
+      const auto *A = cast<IntelOclBiccAttr>(At);
+      return A->clone(C);
+    }
+    case attr::InternalLinkage: {
+      const auto *A = cast<InternalLinkageAttr>(At);
+      return A->clone(C);
+    }
+    case attr::LTOVisibilityPublic: {
+      const auto *A = cast<LTOVisibilityPublicAttr>(At);
+      return A->clone(C);
+    }
+    case attr::LayoutVersion: {
+      const auto *A = cast<LayoutVersionAttr>(At);
       return A->clone(C);
     }
     case attr::LockReturned: {
-      const LockReturnedAttr *A = cast<LockReturnedAttr>(At);
+      const auto *A = cast<LockReturnedAttr>(At);
       Expr * tempInstArg;
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
@@ -403,8 +433,8 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       return new (C) LockReturnedAttr(A->getLocation(), C, tempInstArg, A->getSpellingListIndex());
     }
     case attr::LocksExcluded: {
-      const LocksExcludedAttr *A = cast<LocksExcludedAttr>(At);
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      const auto *A = cast<LocksExcludedAttr>(At);
+      auto *tempInstArgs = new (C, 16) Expr *[A->args_size()];
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         Expr * *TI = tempInstArgs;
@@ -418,235 +448,279 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       return new (C) LocksExcludedAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::LoopHint: {
-      const LoopHintAttr *A = cast<LoopHintAttr>(At);
+      const auto *A = cast<LoopHintAttr>(At);
       return A->clone(C);
     }
     case attr::MSABI: {
-      const MSABIAttr *A = cast<MSABIAttr>(At);
+      const auto *A = cast<MSABIAttr>(At);
       return A->clone(C);
     }
     case attr::MSInheritance: {
-      const MSInheritanceAttr *A = cast<MSInheritanceAttr>(At);
+      const auto *A = cast<MSInheritanceAttr>(At);
       return A->clone(C);
     }
     case attr::MSNoVTable: {
-      const MSNoVTableAttr *A = cast<MSNoVTableAttr>(At);
+      const auto *A = cast<MSNoVTableAttr>(At);
       return A->clone(C);
     }
     case attr::MSP430Interrupt: {
-      const MSP430InterruptAttr *A = cast<MSP430InterruptAttr>(At);
+      const auto *A = cast<MSP430InterruptAttr>(At);
       return A->clone(C);
     }
     case attr::MSStruct: {
-      const MSStructAttr *A = cast<MSStructAttr>(At);
+      const auto *A = cast<MSStructAttr>(At);
       return A->clone(C);
     }
     case attr::MSVtorDisp: {
-      const MSVtorDispAttr *A = cast<MSVtorDispAttr>(At);
+      const auto *A = cast<MSVtorDispAttr>(At);
       return A->clone(C);
     }
     case attr::MaxFieldAlignment: {
-      const MaxFieldAlignmentAttr *A = cast<MaxFieldAlignmentAttr>(At);
+      const auto *A = cast<MaxFieldAlignmentAttr>(At);
       return A->clone(C);
     }
     case attr::MayAlias: {
-      const MayAliasAttr *A = cast<MayAliasAttr>(At);
+      const auto *A = cast<MayAliasAttr>(At);
       return A->clone(C);
     }
     case attr::MinSize: {
-      const MinSizeAttr *A = cast<MinSizeAttr>(At);
+      const auto *A = cast<MinSizeAttr>(At);
       return A->clone(C);
     }
     case attr::Mips16: {
-      const Mips16Attr *A = cast<Mips16Attr>(At);
+      const auto *A = cast<Mips16Attr>(At);
+      return A->clone(C);
+    }
+    case attr::MipsInterrupt: {
+      const auto *A = cast<MipsInterruptAttr>(At);
       return A->clone(C);
     }
     case attr::Mode: {
-      const ModeAttr *A = cast<ModeAttr>(At);
+      const auto *A = cast<ModeAttr>(At);
       return A->clone(C);
     }
     case attr::NSConsumed: {
-      const NSConsumedAttr *A = cast<NSConsumedAttr>(At);
+      const auto *A = cast<NSConsumedAttr>(At);
       return A->clone(C);
     }
     case attr::NSConsumesSelf: {
-      const NSConsumesSelfAttr *A = cast<NSConsumesSelfAttr>(At);
+      const auto *A = cast<NSConsumesSelfAttr>(At);
       return A->clone(C);
     }
     case attr::NSReturnsAutoreleased: {
-      const NSReturnsAutoreleasedAttr *A = cast<NSReturnsAutoreleasedAttr>(At);
+      const auto *A = cast<NSReturnsAutoreleasedAttr>(At);
       return A->clone(C);
     }
     case attr::NSReturnsNotRetained: {
-      const NSReturnsNotRetainedAttr *A = cast<NSReturnsNotRetainedAttr>(At);
+      const auto *A = cast<NSReturnsNotRetainedAttr>(At);
       return A->clone(C);
     }
     case attr::NSReturnsRetained: {
-      const NSReturnsRetainedAttr *A = cast<NSReturnsRetainedAttr>(At);
+      const auto *A = cast<NSReturnsRetainedAttr>(At);
       return A->clone(C);
     }
     case attr::Naked: {
-      const NakedAttr *A = cast<NakedAttr>(At);
+      const auto *A = cast<NakedAttr>(At);
+      return A->clone(C);
+    }
+    case attr::NoAlias: {
+      const auto *A = cast<NoAliasAttr>(At);
       return A->clone(C);
     }
     case attr::NoCommon: {
-      const NoCommonAttr *A = cast<NoCommonAttr>(At);
+      const auto *A = cast<NoCommonAttr>(At);
       return A->clone(C);
     }
     case attr::NoDebug: {
-      const NoDebugAttr *A = cast<NoDebugAttr>(At);
+      const auto *A = cast<NoDebugAttr>(At);
       return A->clone(C);
     }
     case attr::NoDuplicate: {
-      const NoDuplicateAttr *A = cast<NoDuplicateAttr>(At);
+      const auto *A = cast<NoDuplicateAttr>(At);
       return A->clone(C);
     }
     case attr::NoInline: {
-      const NoInlineAttr *A = cast<NoInlineAttr>(At);
+      const auto *A = cast<NoInlineAttr>(At);
       return A->clone(C);
     }
     case attr::NoInstrumentFunction: {
-      const NoInstrumentFunctionAttr *A = cast<NoInstrumentFunctionAttr>(At);
+      const auto *A = cast<NoInstrumentFunctionAttr>(At);
       return A->clone(C);
     }
     case attr::NoMips16: {
-      const NoMips16Attr *A = cast<NoMips16Attr>(At);
+      const auto *A = cast<NoMips16Attr>(At);
       return A->clone(C);
     }
     case attr::NoReturn: {
-      const NoReturnAttr *A = cast<NoReturnAttr>(At);
+      const auto *A = cast<NoReturnAttr>(At);
       return A->clone(C);
     }
     case attr::NoSanitize: {
-      const NoSanitizeAttr *A = cast<NoSanitizeAttr>(At);
+      const auto *A = cast<NoSanitizeAttr>(At);
       return A->clone(C);
     }
     case attr::NoSplitStack: {
-      const NoSplitStackAttr *A = cast<NoSplitStackAttr>(At);
+      const auto *A = cast<NoSplitStackAttr>(At);
       return A->clone(C);
     }
     case attr::NoThreadSafetyAnalysis: {
-      const NoThreadSafetyAnalysisAttr *A = cast<NoThreadSafetyAnalysisAttr>(At);
+      const auto *A = cast<NoThreadSafetyAnalysisAttr>(At);
       return A->clone(C);
     }
     case attr::NoThrow: {
-      const NoThrowAttr *A = cast<NoThrowAttr>(At);
+      const auto *A = cast<NoThrowAttr>(At);
       return A->clone(C);
     }
     case attr::NonNull: {
-      const NonNullAttr *A = cast<NonNullAttr>(At);
+      const auto *A = cast<NonNullAttr>(At);
+      return A->clone(C);
+    }
+    case attr::NotTailCalled: {
+      const auto *A = cast<NotTailCalledAttr>(At);
+      return A->clone(C);
+    }
+    case attr::OMPCaptureNoInit: {
+      const auto *A = cast<OMPCaptureNoInitAttr>(At);
+      return A->clone(C);
+    }
+    case attr::OMPDeclareSimdDecl: {
+      const auto *A = cast<OMPDeclareSimdDeclAttr>(At);
+      return A->clone(C);
+    }
+    case attr::OMPDeclareTargetDecl: {
+      const auto *A = cast<OMPDeclareTargetDeclAttr>(At);
       return A->clone(C);
     }
     case attr::OMPThreadPrivateDecl: {
-      const OMPThreadPrivateDeclAttr *A = cast<OMPThreadPrivateDeclAttr>(At);
+      const auto *A = cast<OMPThreadPrivateDeclAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCBoxable: {
-      const ObjCBoxableAttr *A = cast<ObjCBoxableAttr>(At);
+      const auto *A = cast<ObjCBoxableAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCBridge: {
-      const ObjCBridgeAttr *A = cast<ObjCBridgeAttr>(At);
+      const auto *A = cast<ObjCBridgeAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCBridgeMutable: {
-      const ObjCBridgeMutableAttr *A = cast<ObjCBridgeMutableAttr>(At);
+      const auto *A = cast<ObjCBridgeMutableAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCBridgeRelated: {
-      const ObjCBridgeRelatedAttr *A = cast<ObjCBridgeRelatedAttr>(At);
+      const auto *A = cast<ObjCBridgeRelatedAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCDesignatedInitializer: {
-      const ObjCDesignatedInitializerAttr *A = cast<ObjCDesignatedInitializerAttr>(At);
+      const auto *A = cast<ObjCDesignatedInitializerAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCException: {
-      const ObjCExceptionAttr *A = cast<ObjCExceptionAttr>(At);
+      const auto *A = cast<ObjCExceptionAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCExplicitProtocolImpl: {
-      const ObjCExplicitProtocolImplAttr *A = cast<ObjCExplicitProtocolImplAttr>(At);
+      const auto *A = cast<ObjCExplicitProtocolImplAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCIndependentClass: {
-      const ObjCIndependentClassAttr *A = cast<ObjCIndependentClassAttr>(At);
+      const auto *A = cast<ObjCIndependentClassAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCMethodFamily: {
-      const ObjCMethodFamilyAttr *A = cast<ObjCMethodFamilyAttr>(At);
+      const auto *A = cast<ObjCMethodFamilyAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCNSObject: {
-      const ObjCNSObjectAttr *A = cast<ObjCNSObjectAttr>(At);
+      const auto *A = cast<ObjCNSObjectAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCPreciseLifetime: {
-      const ObjCPreciseLifetimeAttr *A = cast<ObjCPreciseLifetimeAttr>(At);
+      const auto *A = cast<ObjCPreciseLifetimeAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCRequiresPropertyDefs: {
-      const ObjCRequiresPropertyDefsAttr *A = cast<ObjCRequiresPropertyDefsAttr>(At);
+      const auto *A = cast<ObjCRequiresPropertyDefsAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCRequiresSuper: {
-      const ObjCRequiresSuperAttr *A = cast<ObjCRequiresSuperAttr>(At);
+      const auto *A = cast<ObjCRequiresSuperAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCReturnsInnerPointer: {
-      const ObjCReturnsInnerPointerAttr *A = cast<ObjCReturnsInnerPointerAttr>(At);
+      const auto *A = cast<ObjCReturnsInnerPointerAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCRootClass: {
-      const ObjCRootClassAttr *A = cast<ObjCRootClassAttr>(At);
+      const auto *A = cast<ObjCRootClassAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCRuntimeName: {
-      const ObjCRuntimeNameAttr *A = cast<ObjCRuntimeNameAttr>(At);
+      const auto *A = cast<ObjCRuntimeNameAttr>(At);
       return A->clone(C);
     }
-    case attr::OpenCLImageAccess: {
-      const OpenCLImageAccessAttr *A = cast<OpenCLImageAccessAttr>(At);
+    case attr::ObjCRuntimeVisible: {
+      const auto *A = cast<ObjCRuntimeVisibleAttr>(At);
+      return A->clone(C);
+    }
+    case attr::OpenCLAccess: {
+      const auto *A = cast<OpenCLAccessAttr>(At);
       return A->clone(C);
     }
     case attr::OpenCLKernel: {
-      const OpenCLKernelAttr *A = cast<OpenCLKernelAttr>(At);
+      const auto *A = cast<OpenCLKernelAttr>(At);
+      return A->clone(C);
+    }
+    case attr::OpenCLUnrollHint: {
+      const auto *A = cast<OpenCLUnrollHintAttr>(At);
       return A->clone(C);
     }
     case attr::OptimizeNone: {
-      const OptimizeNoneAttr *A = cast<OptimizeNoneAttr>(At);
+      const auto *A = cast<OptimizeNoneAttr>(At);
       return A->clone(C);
     }
     case attr::Overloadable: {
-      const OverloadableAttr *A = cast<OverloadableAttr>(At);
+      const auto *A = cast<OverloadableAttr>(At);
       return A->clone(C);
     }
     case attr::Override: {
-      const OverrideAttr *A = cast<OverrideAttr>(At);
+      const auto *A = cast<OverrideAttr>(At);
       return A->clone(C);
     }
     case attr::Ownership: {
-      const OwnershipAttr *A = cast<OwnershipAttr>(At);
+      const auto *A = cast<OwnershipAttr>(At);
       return A->clone(C);
     }
     case attr::Packed: {
-      const PackedAttr *A = cast<PackedAttr>(At);
+      const auto *A = cast<PackedAttr>(At);
       return A->clone(C);
     }
     case attr::ParamTypestate: {
-      const ParamTypestateAttr *A = cast<ParamTypestateAttr>(At);
+      const auto *A = cast<ParamTypestateAttr>(At);
       return A->clone(C);
     }
     case attr::Pascal: {
-      const PascalAttr *A = cast<PascalAttr>(At);
+      const auto *A = cast<PascalAttr>(At);
+      return A->clone(C);
+    }
+    case attr::PassObjectSize: {
+      const auto *A = cast<PassObjectSizeAttr>(At);
       return A->clone(C);
     }
     case attr::Pcs: {
-      const PcsAttr *A = cast<PcsAttr>(At);
+      const auto *A = cast<PcsAttr>(At);
+      return A->clone(C);
+    }
+    case attr::PreserveAll: {
+      const auto *A = cast<PreserveAllAttr>(At);
+      return A->clone(C);
+    }
+    case attr::PreserveMost: {
+      const auto *A = cast<PreserveMostAttr>(At);
       return A->clone(C);
     }
     case attr::PtGuardedBy: {
-      const PtGuardedByAttr *A = cast<PtGuardedByAttr>(At);
+      const auto *A = cast<PtGuardedByAttr>(At);
       Expr * tempInstArg;
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
@@ -656,16 +730,16 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       return new (C) PtGuardedByAttr(A->getLocation(), C, tempInstArg, A->getSpellingListIndex());
     }
     case attr::PtGuardedVar: {
-      const PtGuardedVarAttr *A = cast<PtGuardedVarAttr>(At);
+      const auto *A = cast<PtGuardedVarAttr>(At);
       return A->clone(C);
     }
     case attr::Pure: {
-      const PureAttr *A = cast<PureAttr>(At);
+      const auto *A = cast<PureAttr>(At);
       return A->clone(C);
     }
     case attr::ReleaseCapability: {
-      const ReleaseCapabilityAttr *A = cast<ReleaseCapabilityAttr>(At);
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      const auto *A = cast<ReleaseCapabilityAttr>(At);
+      auto *tempInstArgs = new (C, 16) Expr *[A->args_size()];
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         Expr * *TI = tempInstArgs;
@@ -678,13 +752,17 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       }
       return new (C) ReleaseCapabilityAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
+    case attr::RenderScriptKernel: {
+      const auto *A = cast<RenderScriptKernelAttr>(At);
+      return A->clone(C);
+    }
     case attr::ReqdWorkGroupSize: {
-      const ReqdWorkGroupSizeAttr *A = cast<ReqdWorkGroupSizeAttr>(At);
+      const auto *A = cast<ReqdWorkGroupSizeAttr>(At);
       return A->clone(C);
     }
     case attr::RequiresCapability: {
-      const RequiresCapabilityAttr *A = cast<RequiresCapabilityAttr>(At);
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      const auto *A = cast<RequiresCapabilityAttr>(At);
+      auto *tempInstArgs = new (C, 16) Expr *[A->args_size()];
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         Expr * *TI = tempInstArgs;
@@ -698,50 +776,50 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       return new (C) RequiresCapabilityAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::Restrict: {
-      const RestrictAttr *A = cast<RestrictAttr>(At);
+      const auto *A = cast<RestrictAttr>(At);
       return A->clone(C);
     }
     case attr::ReturnTypestate: {
-      const ReturnTypestateAttr *A = cast<ReturnTypestateAttr>(At);
+      const auto *A = cast<ReturnTypestateAttr>(At);
       return A->clone(C);
     }
     case attr::ReturnsNonNull: {
-      const ReturnsNonNullAttr *A = cast<ReturnsNonNullAttr>(At);
+      const auto *A = cast<ReturnsNonNullAttr>(At);
       return A->clone(C);
     }
     case attr::ReturnsTwice: {
-      const ReturnsTwiceAttr *A = cast<ReturnsTwiceAttr>(At);
+      const auto *A = cast<ReturnsTwiceAttr>(At);
       return A->clone(C);
     }
     case attr::ScopedLockable: {
-      const ScopedLockableAttr *A = cast<ScopedLockableAttr>(At);
+      const auto *A = cast<ScopedLockableAttr>(At);
       return A->clone(C);
     }
     case attr::Section: {
-      const SectionAttr *A = cast<SectionAttr>(At);
+      const auto *A = cast<SectionAttr>(At);
       return A->clone(C);
     }
     case attr::SelectAny: {
-      const SelectAnyAttr *A = cast<SelectAnyAttr>(At);
+      const auto *A = cast<SelectAnyAttr>(At);
       return A->clone(C);
     }
     case attr::Sentinel: {
-      const SentinelAttr *A = cast<SentinelAttr>(At);
+      const auto *A = cast<SentinelAttr>(At);
       return A->clone(C);
     }
     case attr::SetTypestate: {
-      const SetTypestateAttr *A = cast<SetTypestateAttr>(At);
+      const auto *A = cast<SetTypestateAttr>(At);
       return A->clone(C);
     }
     case attr::SharedTrylockFunction: {
-      const SharedTrylockFunctionAttr *A = cast<SharedTrylockFunctionAttr>(At);
+      const auto *A = cast<SharedTrylockFunctionAttr>(At);
       Expr * tempInstSuccessValue;
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         ExprResult Result = S.SubstExpr(A->getSuccessValue(), TemplateArgs);
         tempInstSuccessValue = Result.getAs<Expr>();
       }
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      auto *tempInstArgs = new (C, 16) Expr *[A->args_size()];
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         Expr * *TI = tempInstArgs;
@@ -755,46 +833,62 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       return new (C) SharedTrylockFunctionAttr(A->getLocation(), C, tempInstSuccessValue, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::StdCall: {
-      const StdCallAttr *A = cast<StdCallAttr>(At);
+      const auto *A = cast<StdCallAttr>(At);
+      return A->clone(C);
+    }
+    case attr::SwiftCall: {
+      const auto *A = cast<SwiftCallAttr>(At);
+      return A->clone(C);
+    }
+    case attr::SwiftContext: {
+      const auto *A = cast<SwiftContextAttr>(At);
+      return A->clone(C);
+    }
+    case attr::SwiftErrorResult: {
+      const auto *A = cast<SwiftErrorResultAttr>(At);
+      return A->clone(C);
+    }
+    case attr::SwiftIndirectResult: {
+      const auto *A = cast<SwiftIndirectResultAttr>(At);
       return A->clone(C);
     }
     case attr::SysVABI: {
-      const SysVABIAttr *A = cast<SysVABIAttr>(At);
+      const auto *A = cast<SysVABIAttr>(At);
       return A->clone(C);
     }
     case attr::TLSModel: {
-      const TLSModelAttr *A = cast<TLSModelAttr>(At);
+      const auto *A = cast<TLSModelAttr>(At);
       return A->clone(C);
     }
     case attr::Target: {
-      const TargetAttr *A = cast<TargetAttr>(At);
+      const auto *A = cast<TargetAttr>(At);
       return A->clone(C);
     }
     case attr::TestTypestate: {
-      const TestTypestateAttr *A = cast<TestTypestateAttr>(At);
+      const auto *A = cast<TestTypestateAttr>(At);
       return A->clone(C);
     }
     case attr::ThisCall: {
-      const ThisCallAttr *A = cast<ThisCallAttr>(At);
+      const auto *A = cast<ThisCallAttr>(At);
       return A->clone(C);
     }
     case attr::Thread: {
-      const ThreadAttr *A = cast<ThreadAttr>(At);
+      const auto *A = cast<ThreadAttr>(At);
       return A->clone(C);
     }
     case attr::TransparentUnion: {
-      const TransparentUnionAttr *A = cast<TransparentUnionAttr>(At);
+      const auto *A = cast<TransparentUnionAttr>(At);
       return A->clone(C);
     }
     case attr::TryAcquireCapability: {
-      const TryAcquireCapabilityAttr *A = cast<TryAcquireCapabilityAttr>(At);
+      const auto *A = cast<TryAcquireCapabilityAttr>(At);
       Expr * tempInstSuccessValue;
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         ExprResult Result = S.SubstExpr(A->getSuccessValue(), TemplateArgs);
         tempInstSuccessValue = Result.getAs<Expr>();
       }
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      auto *tempInstArgs = new (C, 16) Expr *[A->args_size()];
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         Expr * *TI = tempInstArgs;
@@ -808,74 +902,78 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       return new (C) TryAcquireCapabilityAttr(A->getLocation(), C, tempInstSuccessValue, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::TypeTagForDatatype: {
-      const TypeTagForDatatypeAttr *A = cast<TypeTagForDatatypeAttr>(At);
+      const auto *A = cast<TypeTagForDatatypeAttr>(At);
       return A->clone(C);
     }
     case attr::TypeVisibility: {
-      return NULL;
+      return nullptr;
     }
     case attr::Unavailable: {
-      const UnavailableAttr *A = cast<UnavailableAttr>(At);
+      const auto *A = cast<UnavailableAttr>(At);
       return A->clone(C);
     }
     case attr::Unused: {
-      const UnusedAttr *A = cast<UnusedAttr>(At);
+      const auto *A = cast<UnusedAttr>(At);
       return A->clone(C);
     }
     case attr::Used: {
-      const UsedAttr *A = cast<UsedAttr>(At);
+      const auto *A = cast<UsedAttr>(At);
       return A->clone(C);
     }
     case attr::Uuid: {
-      const UuidAttr *A = cast<UuidAttr>(At);
+      const auto *A = cast<UuidAttr>(At);
       return A->clone(C);
     }
     case attr::VecReturn: {
-      const VecReturnAttr *A = cast<VecReturnAttr>(At);
+      const auto *A = cast<VecReturnAttr>(At);
       return A->clone(C);
     }
     case attr::VecTypeHint: {
-      const VecTypeHintAttr *A = cast<VecTypeHintAttr>(At);
+      const auto *A = cast<VecTypeHintAttr>(At);
       return A->clone(C);
     }
     case attr::VectorCall: {
-      const VectorCallAttr *A = cast<VectorCallAttr>(At);
+      const auto *A = cast<VectorCallAttr>(At);
       return A->clone(C);
     }
     case attr::Visibility: {
-      return NULL;
+      return nullptr;
     }
     case attr::WarnUnused: {
-      const WarnUnusedAttr *A = cast<WarnUnusedAttr>(At);
+      const auto *A = cast<WarnUnusedAttr>(At);
       return A->clone(C);
     }
     case attr::WarnUnusedResult: {
-      const WarnUnusedResultAttr *A = cast<WarnUnusedResultAttr>(At);
+      const auto *A = cast<WarnUnusedResultAttr>(At);
       return A->clone(C);
     }
     case attr::Weak: {
-      const WeakAttr *A = cast<WeakAttr>(At);
+      const auto *A = cast<WeakAttr>(At);
       return A->clone(C);
     }
     case attr::WeakImport: {
-      const WeakImportAttr *A = cast<WeakImportAttr>(At);
+      const auto *A = cast<WeakImportAttr>(At);
       return A->clone(C);
     }
     case attr::WeakRef: {
-      const WeakRefAttr *A = cast<WeakRefAttr>(At);
+      const auto *A = cast<WeakRefAttr>(At);
       return A->clone(C);
     }
     case attr::WorkGroupSizeHint: {
-      const WorkGroupSizeHintAttr *A = cast<WorkGroupSizeHintAttr>(At);
+      const auto *A = cast<WorkGroupSizeHintAttr>(At);
       return A->clone(C);
     }
     case attr::X86ForceAlignArgPointer: {
-      const X86ForceAlignArgPointerAttr *A = cast<X86ForceAlignArgPointerAttr>(At);
+      const auto *A = cast<X86ForceAlignArgPointerAttr>(At);
+      return A->clone(C);
+    }
+    case attr::XRayInstrument: {
+      const auto *A = cast<XRayInstrumentAttr>(At);
       return A->clone(C);
     }
   } // end switch
   llvm_unreachable("Unknown attribute!");
-  return 0;
+  return nullptr;
 }
 
 } // end namespace sema

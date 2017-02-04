@@ -795,6 +795,6 @@ const CommandInfo *CommandTraits::getBuiltinCommandInfo(
     }
     break;
   }
-  return NULL;
+  return nullptr;
 }
 

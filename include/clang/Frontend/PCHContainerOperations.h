@@ -27,14 +27,12 @@ namespace clang {
 class ASTConsumer;
 class CodeGenOptions;
 class DiagnosticsEngine;
-class HeaderSearchOptions;
-class LangOptions;
-class PreprocessorOptions;
-class TargetOptions;
+class CompilerInstance;
 
 struct PCHBuffer {
-  bool IsComplete;
+  uint64_t Signature;
   llvm::SmallVector<char, 0> Data;
+  bool IsComplete;
 };
   
 /// This abstract interface provides operations for creating
@@ -48,12 +46,12 @@ public:
   /// Return an ASTConsumer that can be chained with a
   /// PCHGenerator that produces a wrapper file format containing a
   /// serialized AST bitstream.
-  virtual std::unique_ptr<ASTConsumer> CreatePCHContainerGenerator(
-      DiagnosticsEngine &Diags, const HeaderSearchOptions &HSO,
-      const PreprocessorOptions &PPO, const TargetOptions &TO,
-      const LangOptions &LO, const std::string &MainFileName,
-      const std::string &OutputFileName, llvm::raw_pwrite_stream *OS,
-      std::shared_ptr<PCHBuffer> Buffer) const = 0;
+  virtual std::unique_ptr<ASTConsumer>
+  CreatePCHContainerGenerator(CompilerInstance &CI,
+                              const std::string &MainFileName,
+                              const std::string &OutputFileName,
+                              std::unique_ptr<llvm::raw_pwrite_stream> OS,
+                              std::shared_ptr<PCHBuffer> Buffer) const = 0;
 };
 
 /// This abstract interface provides operations for unwrapping
@@ -77,12 +75,12 @@ class RawPCHContainerWriter : public PCHContainerWriter {
 
   /// Return an ASTConsumer that can be chained with a
   /// PCHGenerator that writes the module to a flat file.
-  std::unique_ptr<ASTConsumer> CreatePCHContainerGenerator(
-      DiagnosticsEngine &Diags, const HeaderSearchOptions &HSO,
-      const PreprocessorOptions &PPO, const TargetOptions &TO,
-      const LangOptions &LO, const std::string &MainFileName,
-      const std::string &OutputFileName, llvm::raw_pwrite_stream *OS,
-      std::shared_ptr<PCHBuffer> Buffer) const override;
+  std::unique_ptr<ASTConsumer>
+  CreatePCHContainerGenerator(CompilerInstance &CI,
+                              const std::string &MainFileName,
+                              const std::string &OutputFileName,
+                              std::unique_ptr<llvm::raw_pwrite_stream> OS,
+                              std::shared_ptr<PCHBuffer> Buffer) const override;
 };
 
 /// Implements read operations for a raw pass-through PCH container.

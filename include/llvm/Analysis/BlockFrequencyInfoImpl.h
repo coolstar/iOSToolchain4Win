@@ -16,12 +16,16 @@
 #define LLVM_ANALYSIS_BLOCKFREQUENCYINFOIMPL_H
 
 #include "llvm/ADT/DenseMap.h"
+#include "llvm/ADT/GraphTraits.h"
+#include "llvm/ADT/Optional.h"
 #include "llvm/ADT/PostOrderIterator.h"
 #include "llvm/ADT/iterator_range.h"
 #include "llvm/IR/BasicBlock.h"
 #include "llvm/Support/BlockFrequency.h"
 #include "llvm/Support/BranchProbability.h"
+#include "llvm/Support/DOTGraphTraits.h"
 #include "llvm/Support/Debug.h"
+#include "llvm/Support/Format.h"
 #include "llvm/Support/ScaledNumber.h"
 #include "llvm/Support/raw_ostream.h"
 #include <deque>
@@ -84,7 +88,7 @@ public:
   /// \brief Add another mass.
   ///
   /// Adds another mass, saturating at \a isFull() rather than overflowing.
-  BlockMass &operator+=(const BlockMass &X) {
+  BlockMass &operator+=(BlockMass X) {
     uint64_t Sum = Mass + X.Mass;
     Mass = Sum < Mass ? UINT64_MAX : Sum;
     return *this;
@@ -94,23 +98,23 @@ public:
   ///
   /// Subtracts another mass, saturating at \a isEmpty() rather than
   /// undeflowing.
-  BlockMass &operator-=(const BlockMass &X) {
+  BlockMass &operator-=(BlockMass X) {
     uint64_t Diff = Mass - X.Mass;
     Mass = Diff > Mass ? 0 : Diff;
     return *this;
   }
 
-  BlockMass &operator*=(const BranchProbability &P) {
+  BlockMass &operator*=(BranchProbability P) {
     Mass = P.scale(Mass);
     return *this;
   }
 
-  bool operator==(const BlockMass &X) const { return Mass == X.Mass; }
-  bool operator!=(const BlockMass &X) const { return Mass != X.Mass; }
-  bool operator<=(const BlockMass &X) const { return Mass <= X.Mass; }
-  bool operator>=(const BlockMass &X) const { return Mass >= X.Mass; }
-  bool operator<(const BlockMass &X) const { return Mass < X.Mass; }
-  bool operator>(const BlockMass &X) const { return Mass > X.Mass; }
+  bool operator==(BlockMass X) const { return Mass == X.Mass; }
+  bool operator!=(BlockMass X) const { return Mass != X.Mass; }
+  bool operator<=(BlockMass X) const { return Mass <= X.Mass; }
+  bool operator>=(BlockMass X) const { return Mass >= X.Mass; }
+  bool operator<(BlockMass X) const { return Mass < X.Mass; }
+  bool operator>(BlockMass X) const { return Mass > X.Mass; }
 
   /// \brief Convert to scaled number.
   ///
@@ -122,20 +126,20 @@ public:
   raw_ostream &print(raw_ostream &OS) const;
 };
 
-inline BlockMass operator+(const BlockMass &L, const BlockMass &R) {
+inline BlockMass operator+(BlockMass L, BlockMass R) {
   return BlockMass(L) += R;
 }
-inline BlockMass operator-(const BlockMass &L, const BlockMass &R) {
+inline BlockMass operator-(BlockMass L, BlockMass R) {
   return BlockMass(L) -= R;
 }
-inline BlockMass operator*(const BlockMass &L, const BranchProbability &R) {
+inline BlockMass operator*(BlockMass L, BranchProbability R) {
   return BlockMass(L) *= R;
 }
-inline BlockMass operator*(const BranchProbability &L, const BlockMass &R) {
+inline BlockMass operator*(BranchProbability L, BlockMass R) {
   return BlockMass(R) *= L;
 }
 
-inline raw_ostream &operator<<(raw_ostream &OS, const BlockMass &X) {
+inline raw_ostream &operator<<(raw_ostream &OS, BlockMass X) {
   return X.print(OS);
 }
 
@@ -476,6 +480,10 @@ public:
   Scaled64 getFloatingBlockFreq(const BlockNode &Node) const;
 
   BlockFrequency getBlockFreq(const BlockNode &Node) const;
+  Optional<uint64_t> getBlockProfileCount(const Function &F,
+                                          const BlockNode &Node) const;
+
+  void setBlockFreq(const BlockNode &Node, uint64_t Freq);
 
   raw_ostream &printBlockFreq(raw_ostream &OS, const BlockNode &Node) const;
   raw_ostream &printBlockFreq(raw_ostream &OS,
@@ -905,17 +913,24 @@ template <class BT> class BlockFrequencyInfoImpl : BlockFrequencyInfoImplBase {
 public:
   const FunctionT *getFunction() const { return F; }
 
-  void doFunction(const FunctionT *F, const BranchProbabilityInfoT *BPI,
-                  const LoopInfoT *LI);
+  void calculate(const FunctionT &F, const BranchProbabilityInfoT &BPI,
+                 const LoopInfoT &LI);
   BlockFrequencyInfoImpl() : BPI(nullptr), LI(nullptr), F(nullptr) {}
 
   using BlockFrequencyInfoImplBase::getEntryFreq;
   BlockFrequency getBlockFreq(const BlockT *BB) const {
     return BlockFrequencyInfoImplBase::getBlockFreq(getNode(BB));
   }
+  Optional<uint64_t> getBlockProfileCount(const Function &F,
+                                          const BlockT *BB) const {
+    return BlockFrequencyInfoImplBase::getBlockProfileCount(F, getNode(BB));
+  }
+  void setBlockFreq(const BlockT *BB, uint64_t Freq);
   Scaled64 getFloatingBlockFreq(const BlockT *BB) const {
     return BlockFrequencyInfoImplBase::getFloatingBlockFreq(getNode(BB));
   }
+
+  const BranchProbabilityInfoT &getBPI() const { return *BPI; }
 
   /// \brief Print the frequencies for the current function.
   ///
@@ -938,13 +953,13 @@ public:
 };
 
 template <class BT>
-void BlockFrequencyInfoImpl<BT>::doFunction(const FunctionT *F,
-                                            const BranchProbabilityInfoT *BPI,
-                                            const LoopInfoT *LI) {
+void BlockFrequencyInfoImpl<BT>::calculate(const FunctionT &F,
+                                           const BranchProbabilityInfoT &BPI,
+                                           const LoopInfoT &LI) {
   // Save the parameters.
-  this->BPI = BPI;
-  this->LI = LI;
-  this->F = F;
+  this->BPI = &BPI;
+  this->LI = &LI;
+  this->F = &F;
 
   // Clean up left-over data structures.
   BlockFrequencyInfoImplBase::clear();
@@ -952,8 +967,8 @@ void BlockFrequencyInfoImpl<BT>::doFunction(const FunctionT *F,
   Nodes.clear();
 
   // Initialize.
-  DEBUG(dbgs() << "\nblock-frequency: " << F->getName() << "\n================="
-               << std::string(F->getName().size(), '=') << "\n");
+  DEBUG(dbgs() << "\nblock-frequency: " << F.getName() << "\n================="
+               << std::string(F.getName().size(), '=') << "\n");
   initializeRPOT();
   initializeLoops();
 
@@ -965,8 +980,23 @@ void BlockFrequencyInfoImpl<BT>::doFunction(const FunctionT *F,
   finalizeMetrics();
 }
 
+template <class BT>
+void BlockFrequencyInfoImpl<BT>::setBlockFreq(const BlockT *BB, uint64_t Freq) {
+  if (Nodes.count(BB))
+    BlockFrequencyInfoImplBase::setBlockFreq(getNode(BB), Freq);
+  else {
+    // If BB is a newly added block after BFI is done, we need to create a new
+    // BlockNode for it assigned with a new index. The index can be determined
+    // by the size of Freqs.
+    BlockNode NewNode(Freqs.size());
+    Nodes[BB] = NewNode;
+    Freqs.emplace_back();
+    BlockFrequencyInfoImplBase::setBlockFreq(NewNode, Freq);
+  }
+}
+
 template <class BT> void BlockFrequencyInfoImpl<BT>::initializeRPOT() {
-  const BlockT *Entry = F->begin();
+  const BlockT *Entry = &F->front();
   RPOT.reserve(F->size());
   std::copy(po_begin(Entry), po_end(Entry), std::back_inserter(RPOT));
   std::reverse(RPOT.begin(), RPOT.end());
@@ -1155,6 +1185,11 @@ void BlockFrequencyInfoImpl<BT>::computeIrreducibleMass(
   updateLoopWithIrreducible(*OuterLoop);
 }
 
+// A helper function that converts a branch probability into weight.
+inline uint32_t getWeightFromBranchProb(const BranchProbability Prob) {
+  return Prob.getNumerator();
+}
+
 template <class BT>
 bool
 BlockFrequencyInfoImpl<BT>::propagateMassToSuccessors(LoopData *OuterLoop,
@@ -1171,10 +1206,8 @@ BlockFrequencyInfoImpl<BT>::propagateMassToSuccessors(LoopData *OuterLoop,
     const BlockT *BB = getBlock(Node);
     for (auto SI = Successor::child_begin(BB), SE = Successor::child_end(BB);
          SI != SE; ++SI)
-      // Do not dereference SI, or getEdgeWeight() is linear in the number of
-      // successors.
       if (!addToDist(Dist, OuterLoop, Node, getNode(*SI),
-                     BPI->getEdgeWeight(BB, SI)))
+                     getWeightFromBranchProb(BPI->getEdgeProbability(BB, SI))))
         // Irreducible backedge.
         return false;
   }
@@ -1190,15 +1223,125 @@ raw_ostream &BlockFrequencyInfoImpl<BT>::print(raw_ostream &OS) const {
   if (!F)
     return OS;
   OS << "block-frequency-info: " << F->getName() << "\n";
-  for (const BlockT &BB : *F)
-    OS << " - " << bfi_detail::getBlockName(&BB)
-       << ": float = " << getFloatingBlockFreq(&BB)
-       << ", int = " << getBlockFreq(&BB).getFrequency() << "\n";
+  for (const BlockT &BB : *F) {
+    OS << " - " << bfi_detail::getBlockName(&BB) << ": float = ";
+    getFloatingBlockFreq(&BB).print(OS, 5)
+        << ", int = " << getBlockFreq(&BB).getFrequency() << "\n";
+  }
 
   // Add an extra newline for readability.
   OS << "\n";
   return OS;
 }
+
+// Graph trait base class for block frequency information graph
+// viewer.
+
+enum GVDAGType { GVDT_None, GVDT_Fraction, GVDT_Integer, GVDT_Count };
+
+template <class BlockFrequencyInfoT, class BranchProbabilityInfoT>
+struct BFIDOTGraphTraitsBase : public DefaultDOTGraphTraits {
+  explicit BFIDOTGraphTraitsBase(bool isSimple = false)
+      : DefaultDOTGraphTraits(isSimple) {}
+
+  typedef GraphTraits<BlockFrequencyInfoT *> GTraits;
+  typedef typename GTraits::NodeType NodeType;
+  typedef typename GTraits::ChildIteratorType EdgeIter;
+  typedef typename GTraits::nodes_iterator NodeIter;
+
+  uint64_t MaxFrequency = 0;
+  static std::string getGraphName(const BlockFrequencyInfoT *G) {
+    return G->getFunction()->getName();
+  }
+
+  std::string getNodeAttributes(const NodeType *Node,
+                                const BlockFrequencyInfoT *Graph,
+                                unsigned HotPercentThreshold = 0) {
+    std::string Result;
+    if (!HotPercentThreshold)
+      return Result;
+
+    // Compute MaxFrequency on the fly:
+    if (!MaxFrequency) {
+      for (NodeIter I = GTraits::nodes_begin(Graph),
+                    E = GTraits::nodes_end(Graph);
+           I != E; ++I) {
+        NodeType &N = *I;
+        MaxFrequency =
+            std::max(MaxFrequency, Graph->getBlockFreq(&N).getFrequency());
+      }
+    }
+    BlockFrequency Freq = Graph->getBlockFreq(Node);
+    BlockFrequency HotFreq =
+        (BlockFrequency(MaxFrequency) *
+         BranchProbability::getBranchProbability(HotPercentThreshold, 100));
+
+    if (Freq < HotFreq)
+      return Result;
+
+    raw_string_ostream OS(Result);
+    OS << "color=\"red\"";
+    OS.flush();
+    return Result;
+  }
+
+  std::string getNodeLabel(const NodeType *Node,
+                           const BlockFrequencyInfoT *Graph, GVDAGType GType) {
+    std::string Result;
+    raw_string_ostream OS(Result);
+
+    OS << Node->getName().str() << " : ";
+    switch (GType) {
+    case GVDT_Fraction:
+      Graph->printBlockFreq(OS, Node);
+      break;
+    case GVDT_Integer:
+      OS << Graph->getBlockFreq(Node).getFrequency();
+      break;
+    case GVDT_Count: {
+      auto Count = Graph->getBlockProfileCount(Node);
+      if (Count)
+        OS << Count.getValue();
+      else
+        OS << "Unknown";
+      break;
+    }
+    case GVDT_None:
+      llvm_unreachable("If we are not supposed to render a graph we should "
+                       "never reach this point.");
+    }
+    return Result;
+  }
+
+  std::string getEdgeAttributes(const NodeType *Node, EdgeIter EI,
+                                const BlockFrequencyInfoT *BFI,
+                                const BranchProbabilityInfoT *BPI,
+                                unsigned HotPercentThreshold = 0) {
+    std::string Str;
+    if (!BPI)
+      return Str;
+
+    BranchProbability BP = BPI->getEdgeProbability(Node, EI);
+    uint32_t N = BP.getNumerator();
+    uint32_t D = BP.getDenominator();
+    double Percent = 100.0 * N / D;
+    raw_string_ostream OS(Str);
+    OS << format("label=\"%.1f%%\"", Percent);
+
+    if (HotPercentThreshold) {
+      BlockFrequency EFreq = BFI->getBlockFreq(Node) * BP;
+      BlockFrequency HotFreq = BlockFrequency(MaxFrequency) *
+                               BranchProbability(HotPercentThreshold, 100);
+
+      if (EFreq >= HotFreq) {
+        OS << ",color=\"red\"";
+      }
+    }
+
+    OS.flush();
+    return Str;
+  }
+};
 
 } // end namespace llvm
 

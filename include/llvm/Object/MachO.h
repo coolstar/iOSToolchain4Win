@@ -100,7 +100,7 @@ private:
 };
 typedef content_iterator<ExportEntry> export_iterator;
 
-/// MachORebaseEntry encapsulates the current state in the decompression of   
+/// MachORebaseEntry encapsulates the current state in the decompression of
 /// rebasing opcodes. This allows you to iterate through the compressed table of
 /// rebasing using:
 ///    for (const llvm::object::MachORebaseEntry &Entry : Obj->rebaseTable()) {
@@ -116,7 +116,7 @@ public:
   bool operator==(const MachORebaseEntry &) const;
 
   void moveNext();
-  
+
 private:
   friend class MachOObjectFile;
   void moveToFirst();
@@ -193,25 +193,24 @@ public:
   typedef SmallVector<LoadCommandInfo, 4> LoadCommandList;
   typedef LoadCommandList::const_iterator load_command_iterator;
 
-  MachOObjectFile(MemoryBufferRef Object, bool IsLittleEndian, bool Is64Bits,
-                  std::error_code &EC);
+  static Expected<std::unique_ptr<MachOObjectFile>>
+  create(MemoryBufferRef Object, bool IsLittleEndian, bool Is64Bits);
 
   void moveSymbolNext(DataRefImpl &Symb) const override;
 
   uint64_t getNValue(DataRefImpl Sym) const;
-  ErrorOr<StringRef> getSymbolName(DataRefImpl Symb) const override;
+  Expected<StringRef> getSymbolName(DataRefImpl Symb) const override;
 
   // MachO specific.
   std::error_code getIndirectName(DataRefImpl Symb, StringRef &Res) const;
   unsigned getSectionType(SectionRef Sec) const;
 
-  ErrorOr<uint64_t> getSymbolAddress(DataRefImpl Symb) const override;
+  Expected<uint64_t> getSymbolAddress(DataRefImpl Symb) const override;
   uint32_t getSymbolAlignment(DataRefImpl Symb) const override;
   uint64_t getCommonSymbolSizeImpl(DataRefImpl Symb) const override;
-  SymbolRef::Type getSymbolType(DataRefImpl Symb) const override;
+  Expected<SymbolRef::Type> getSymbolType(DataRefImpl Symb) const override;
   uint32_t getSymbolFlags(DataRefImpl Symb) const override;
-  std::error_code getSymbolSection(DataRefImpl Symb,
-                                   section_iterator &Res) const override;
+  Expected<section_iterator> getSymbolSection(DataRefImpl Symb) const override;
   unsigned getSymbolSectionID(SymbolRef Symb) const;
   unsigned getSectionID(SectionRef Sec) const;
 
@@ -223,10 +222,12 @@ public:
   std::error_code getSectionContents(DataRefImpl Sec,
                                      StringRef &Res) const override;
   uint64_t getSectionAlignment(DataRefImpl Sec) const override;
+  bool isSectionCompressed(DataRefImpl Sec) const override;
   bool isSectionText(DataRefImpl Sec) const override;
   bool isSectionData(DataRefImpl Sec) const override;
   bool isSectionBSS(DataRefImpl Sec) const override;
   bool isSectionVirtual(DataRefImpl Sec) const override;
+  bool isSectionBitcode(DataRefImpl Sec) const override;
   relocation_iterator section_rel_begin(DataRefImpl Sec) const override;
   relocation_iterator section_rel_end(DataRefImpl Sec) const override;
 
@@ -252,6 +253,7 @@ public:
 
   // MachO specific.
   basic_symbol_iterator getSymbolByIndex(unsigned Index) const;
+  uint64_t getSymbolIndex(DataRefImpl Symb) const;
 
   section_iterator section_begin() const override;
   section_iterator section_end() const override;
@@ -260,7 +262,8 @@ public:
 
   StringRef getFileFormatName() const override;
   unsigned getArch() const override;
-  Triple getArch(const char **McpuDefault, Triple *ThumbTriple) const;
+  SubtargetFeatures getFeatures() const override { return SubtargetFeatures(); }
+  Triple getArchTriple(const char **McpuDefault = nullptr) const;
 
   relocation_iterator section_rel_begin(unsigned Index) const;
   relocation_iterator section_rel_end(unsigned Index) const;
@@ -406,12 +409,8 @@ public:
                                          StringRef &Suffix);
 
   static Triple::ArchType getArch(uint32_t CPUType);
-  static Triple getArch(uint32_t CPUType, uint32_t CPUSubType,
-                        const char **McpuDefault = nullptr);
-  static Triple getThumbArch(uint32_t CPUType, uint32_t CPUSubType,
-                             const char **McpuDefault = nullptr);
-  static Triple getArch(uint32_t CPUType, uint32_t CPUSubType,
-                        const char **McpuDefault, Triple *ThumbTriple);
+  static Triple getArchTriple(uint32_t CPUType, uint32_t CPUSubType,
+                              const char **McpuDefault = nullptr);
   static bool isValidArch(StringRef ArchFlag);
   static Triple getHostArch();
 
@@ -423,7 +422,29 @@ public:
     return v->isMachO();
   }
 
+  static uint32_t
+  getVersionMinMajor(MachO::version_min_command &C, bool SDK) {
+    uint32_t VersionOrSDK = (SDK) ? C.sdk : C.version;
+    return (VersionOrSDK >> 16) & 0xffff;
+  }
+
+  static uint32_t
+  getVersionMinMinor(MachO::version_min_command &C, bool SDK) {
+    uint32_t VersionOrSDK = (SDK) ? C.sdk : C.version;
+    return (VersionOrSDK >> 8) & 0xff;
+  }
+
+  static uint32_t
+  getVersionMinUpdate(MachO::version_min_command &C, bool SDK) {
+    uint32_t VersionOrSDK = (SDK) ? C.sdk : C.version;
+    return VersionOrSDK & 0xff;
+  }
+
 private:
+
+  MachOObjectFile(MemoryBufferRef Object, bool IsLittleEndian, bool Is64Bits,
+                  Error &Err);
+
   uint64_t getSymbolValueImpl(DataRefImpl Symb) const override;
 
   union {
@@ -504,4 +525,3 @@ inline const ObjectFile *DiceRef::getObjectFile() const {
 }
 
 #endif
-

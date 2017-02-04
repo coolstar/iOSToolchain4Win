@@ -80,6 +80,11 @@ class SDTCisSameNumEltsAs<int OpNum, int OtherOp> : SDTypeConstraint<OpNum> {
   int OtherOperandNum = OtherOp;
 }
 
+// SDTCisSameSizeAs - The two specified operands have identical size.
+class SDTCisSameSizeAs<int OpNum, int OtherOp> : SDTypeConstraint<OpNum> {
+  int OtherOperandNum = OtherOp;
+}
+
 //===----------------------------------------------------------------------===//
 // Selection DAG Type Profile definitions.
 //
@@ -110,6 +115,9 @@ def SDTIntBinOp : SDTypeProfile<1, 2, [     // add, and, or, xor, udiv, etc.
 ]>;
 def SDTIntShiftOp : SDTypeProfile<1, 2, [   // shl, sra, srl
   SDTCisSameAs<0, 1>, SDTCisInt<0>, SDTCisInt<2>
+]>;
+def SDTIntSatNoShOp : SDTypeProfile<1, 2, [   // ssat with no shift
+  SDTCisSameAs<0, 1>, SDTCisInt<2>
 ]>;
 def SDTIntBinHiLoOp : SDTypeProfile<2, 2, [ // mulhi, mullo, sdivrem, udivrem
   SDTCisSameAs<0, 1>, SDTCisSameAs<0, 2>, SDTCisSameAs<0, 3>,SDTCisInt<0>
@@ -162,7 +170,7 @@ def SDTSelect : SDTypeProfile<1, 3, [       // select
 ]>;
 
 def SDTVSelect : SDTypeProfile<1, 3, [       // vselect
-  SDTCisInt<1>, SDTCisSameAs<0, 2>, SDTCisSameAs<2, 3>
+  SDTCisInt<1>, SDTCisSameAs<0, 2>, SDTCisSameAs<2, 3>, SDTCisSameNumEltsAs<0, 1>
 ]>;
 
 def SDTSelectCC : SDTypeProfile<1, 5, [     // select_cc
@@ -186,6 +194,10 @@ def SDTBrind : SDTypeProfile<0, 1, [        // brind
   SDTCisPtrTy<0>
 ]>;
 
+def SDTCatchret : SDTypeProfile<0, 2, [     // catchret
+  SDTCisVT<0, OtherVT>, SDTCisVT<1, OtherVT>
+]>;
+
 def SDTNone : SDTypeProfile<0, 0, []>;      // ret, trap
 
 def SDTLoad : SDTypeProfile<1, 1, [         // load
@@ -201,11 +213,12 @@ def SDTIStore : SDTypeProfile<1, 3, [       // indexed store
 ]>;
 
 def SDTMaskedStore: SDTypeProfile<0, 3, [       // masked store
-  SDTCisPtrTy<0>, SDTCisVec<1>, SDTCisVec<2>
+  SDTCisPtrTy<0>, SDTCisVec<1>, SDTCisVec<2>, SDTCisSameNumEltsAs<1, 2>
 ]>;
 
 def SDTMaskedLoad: SDTypeProfile<1, 3, [       // masked load
-  SDTCisVec<0>, SDTCisPtrTy<1>, SDTCisVec<2>, SDTCisSameAs<0, 3>
+  SDTCisVec<0>, SDTCisPtrTy<1>, SDTCisVec<2>, SDTCisSameAs<0, 3>,
+  SDTCisSameNumEltsAs<0, 2>
 ]>;
 
 def SDTMaskedGather: SDTypeProfile<2, 3, [       // masked gather
@@ -290,7 +303,9 @@ def SDNPWantParent  : SDNodeProperty;   // ComplexPattern gets the parent
 
 //===----------------------------------------------------------------------===//
 // Selection DAG Pattern Operations
-class SDPatternOperator;
+class SDPatternOperator {
+  list<SDNodeProperty> Properties = [];
+}
 
 //===----------------------------------------------------------------------===//
 // Selection DAG Node definitions.
@@ -300,7 +315,7 @@ class SDNode<string opcode, SDTypeProfile typeprof,
              : SDPatternOperator {
   string Opcode  = opcode;
   string SDClass = sdclass;
-  list<SDNodeProperty> Properties = props;
+  let Properties = props;
   SDTypeProfile TypeProfile = typeprof;
 }
 
@@ -381,12 +396,17 @@ def subc       : SDNode<"ISD::SUBC"      , SDTIntBinOp,
                         [SDNPOutGlue]>;
 def sube       : SDNode<"ISD::SUBE"      , SDTIntBinOp,
                         [SDNPOutGlue, SDNPInGlue]>;
-def smin       : SDNode<"ISD::SMIN"      , SDTIntBinOp>;
-def smax       : SDNode<"ISD::SMAX"      , SDTIntBinOp>;
-def umin       : SDNode<"ISD::UMIN"      , SDTIntBinOp>;
-def umax       : SDNode<"ISD::UMAX"      , SDTIntBinOp>;
+def smin       : SDNode<"ISD::SMIN"      , SDTIntBinOp,
+                                  [SDNPCommutative, SDNPAssociative]>;
+def smax       : SDNode<"ISD::SMAX"      , SDTIntBinOp,
+                                  [SDNPCommutative, SDNPAssociative]>;
+def umin       : SDNode<"ISD::UMIN"      , SDTIntBinOp,
+                                  [SDNPCommutative, SDNPAssociative]>;
+def umax       : SDNode<"ISD::UMAX"      , SDTIntBinOp,
+                                  [SDNPCommutative, SDNPAssociative]>;
 
 def sext_inreg : SDNode<"ISD::SIGN_EXTEND_INREG", SDTExtInreg>;
+def bitreverse : SDNode<"ISD::BITREVERSE" , SDTIntUnaryOp>;
 def bswap      : SDNode<"ISD::BSWAP"      , SDTIntUnaryOp>;
 def ctlz       : SDNode<"ISD::CTLZ"       , SDTIntUnaryOp>;
 def cttz       : SDNode<"ISD::CTTZ"       , SDTIntUnaryOp>;
@@ -410,9 +430,14 @@ def frem       : SDNode<"ISD::FREM"       , SDTFPBinOp>;
 def fma        : SDNode<"ISD::FMA"        , SDTFPTernaryOp>;
 def fmad       : SDNode<"ISD::FMAD"       , SDTFPTernaryOp>;
 def fabs       : SDNode<"ISD::FABS"       , SDTFPUnaryOp>;
-def fminnum    : SDNode<"ISD::FMINNUM"    , SDTFPBinOp>;
-def fmaxnum    : SDNode<"ISD::FMAXNUM"    , SDTFPBinOp>;
+def fminnum    : SDNode<"ISD::FMINNUM"    , SDTFPBinOp,
+                                  [SDNPCommutative, SDNPAssociative]>;
+def fmaxnum    : SDNode<"ISD::FMAXNUM"    , SDTFPBinOp,
+                                  [SDNPCommutative, SDNPAssociative]>;
+def fminnan    : SDNode<"ISD::FMINNAN"    , SDTFPBinOp>;
+def fmaxnan    : SDNode<"ISD::FMAXNAN"    , SDTFPBinOp>;
 def fgetsign   : SDNode<"ISD::FGETSIGN"   , SDTFPToIntOp>;
+def fcanonicalize : SDNode<"ISD::FCANONICALIZE", SDTFPUnaryOp>;
 def fneg       : SDNode<"ISD::FNEG"       , SDTFPUnaryOp>;
 def fsqrt      : SDNode<"ISD::FSQRT"      , SDTFPUnaryOp>;
 def fsin       : SDNode<"ISD::FSIN"       , SDTFPUnaryOp>;
@@ -447,6 +472,12 @@ def brcc       : SDNode<"ISD::BR_CC"      , SDTBrCC,   [SDNPHasChain]>;
 def brcond     : SDNode<"ISD::BRCOND"     , SDTBrcond, [SDNPHasChain]>;
 def brind      : SDNode<"ISD::BRIND"      , SDTBrind,  [SDNPHasChain]>;
 def br         : SDNode<"ISD::BR"         , SDTBr,     [SDNPHasChain]>;
+def catchret   : SDNode<"ISD::CATCHRET"   , SDTCatchret,
+                        [SDNPHasChain, SDNPSideEffect]>;
+def cleanupret : SDNode<"ISD::CLEANUPRET" , SDTNone,   [SDNPHasChain]>;
+def catchpad   : SDNode<"ISD::CATCHPAD"   , SDTNone,
+                        [SDNPHasChain, SDNPSideEffect]>;
+
 def trap       : SDNode<"ISD::TRAP"       , SDTNone,
                         [SDNPHasChain, SDNPSideEffect]>;
 def debugtrap  : SDNode<"ISD::DEBUGTRAP"  , SDTNone,
@@ -513,6 +544,9 @@ def vector_shuffle : SDNode<"ISD::VECTOR_SHUFFLE", SDTVecShuffle, []>;
 def build_vector : SDNode<"ISD::BUILD_VECTOR", SDTypeProfile<1, -1, []>, []>;
 def scalar_to_vector : SDNode<"ISD::SCALAR_TO_VECTOR", SDTypeProfile<1, 1, []>,
                               []>;
+
+// vector_extract/vector_insert are deprecated. extractelt/insertelt
+// are preferred.
 def vector_extract : SDNode<"ISD::EXTRACT_VECTOR_ELT",
     SDTypeProfile<1, 2, [SDTCisPtrTy<2>]>, []>;
 def vector_insert : SDNode<"ISD::INSERT_VECTOR_ELT",
@@ -523,7 +557,7 @@ def concat_vectors : SDNode<"ISD::CONCAT_VECTORS",
 // This operator does not do subvector type checking.  The ARM
 // backend, at least, needs it.
 def vector_extract_subvec : SDNode<"ISD::EXTRACT_SUBVECTOR",
-    SDTypeProfile<1, 2, [SDTCisInt<2>, SDTCisVec<1>, SDTCisVec<0>]>, 
+    SDTypeProfile<1, 2, [SDTCisInt<2>, SDTCisVec<1>, SDTCisVec<0>]>,
     []>;
 
 // This operator does subvector type checking.
@@ -815,6 +849,21 @@ def truncstoref64 : PatFrag<(ops node:$val, node:$ptr),
   return cast<StoreSDNode>(N)->getMemoryVT() == MVT::f64;
 }]>;
 
+def truncstorevi8 : PatFrag<(ops node:$val, node:$ptr),
+                            (truncstore node:$val, node:$ptr), [{
+  return cast<StoreSDNode>(N)->getMemoryVT().getScalarType() == MVT::i8;
+}]>;
+
+def truncstorevi16 : PatFrag<(ops node:$val, node:$ptr),
+                             (truncstore node:$val, node:$ptr), [{
+  return cast<StoreSDNode>(N)->getMemoryVT().getScalarType() == MVT::i16;
+}]>;
+
+def truncstorevi32 : PatFrag<(ops node:$val, node:$ptr),
+                             (truncstore node:$val, node:$ptr), [{
+  return cast<StoreSDNode>(N)->getMemoryVT().getScalarType() == MVT::i32;
+}]>;
+
 // indexed store fragments.
 def istore : PatFrag<(ops node:$val, node:$base, node:$offset),
                      (ist node:$val, node:$base, node:$offset), [{
@@ -887,6 +936,36 @@ def post_truncsti32 : PatFrag<(ops node:$val, node:$base, node:$offset),
 def post_truncstf32 : PatFrag<(ops node:$val, node:$base, node:$offset),
                               (post_truncst node:$val, node:$base, node:$offset), [{
   return cast<StoreSDNode>(N)->getMemoryVT() == MVT::f32;
+}]>;
+
+// nontemporal store fragments.
+def nontemporalstore : PatFrag<(ops node:$val, node:$ptr),
+                               (store node:$val, node:$ptr), [{
+  return cast<StoreSDNode>(N)->isNonTemporal();
+}]>;
+
+def alignednontemporalstore : PatFrag<(ops node:$val, node:$ptr),
+                                      (nontemporalstore node:$val, node:$ptr), [{
+  StoreSDNode *St = cast<StoreSDNode>(N);
+  return St->getAlignment() >= St->getMemoryVT().getStoreSize();
+}]>;
+
+def unalignednontemporalstore : PatFrag<(ops node:$val, node:$ptr),
+                                        (nontemporalstore node:$val, node:$ptr), [{
+  StoreSDNode *St = cast<StoreSDNode>(N);
+  return St->getAlignment() < St->getMemoryVT().getStoreSize();
+}]>;
+
+// nontemporal load fragments.
+def nontemporalload : PatFrag<(ops node:$ptr),
+                               (load node:$ptr), [{
+  return cast<LoadSDNode>(N)->isNonTemporal();
+}]>;
+
+def alignednontemporalload : PatFrag<(ops node:$ptr),
+                                      (nontemporalload node:$ptr), [{
+  LoadSDNode *Ld = cast<LoadSDNode>(N);
+  return Ld->getAlignment() >= Ld->getMemoryVT().getStoreSize();
 }]>;
 
 // setcc convenience fragments.

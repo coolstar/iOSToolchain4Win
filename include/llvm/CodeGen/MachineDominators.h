@@ -216,6 +216,8 @@ public:
 
   void releaseMemory() override;
 
+  void verifyAnalysis() const override;
+
   void print(raw_ostream &OS, const Module*) const override;
 
   /// \brief Record that the critical edge (FromBB, ToBB) has been
@@ -239,6 +241,27 @@ public:
            "A basic block inserted via edge splitting cannot appear twice");
     CriticalEdgesToSplit.push_back({FromBB, ToBB, NewBB});
   }
+
+  /// \brief Returns *false* if the other dominator tree matches this dominator
+  /// tree.
+  inline bool compare(const MachineDominatorTree &Other) const {
+    const MachineDomTreeNode *R = getRootNode();
+    const MachineDomTreeNode *OtherR = Other.getRootNode();
+
+    if (!R || !OtherR || R->getBlock() != OtherR->getBlock())
+      return true;
+
+    if (DT->compare(*Other.DT))
+      return true;
+
+    return false;
+  }
+
+  /// \brief Verify the correctness of the domtree by re-computing it.
+  ///
+  /// This should only be used for debugging as it aborts the program if the
+  /// verification fails.
+  void verifyDomTree() const;
 };
 
 //===-------------------------------------
@@ -246,21 +269,29 @@ public:
 /// iterable by generic graph iterators.
 ///
 
-template<class T> struct GraphTraits;
+template <class Node, class ChildIterator>
+struct MachineDomTreeGraphTraitsBase {
+  typedef Node NodeType;
+  typedef ChildIterator ChildIteratorType;
 
-template <> struct GraphTraits<MachineDomTreeNode *> {
-  typedef MachineDomTreeNode NodeType;
-  typedef NodeType::iterator  ChildIteratorType;
-
-  static NodeType *getEntryNode(NodeType *N) {
-    return N;
-  }
-  static inline ChildIteratorType child_begin(NodeType* N) {
+  static NodeType *getEntryNode(NodeType *N) { return N; }
+  static inline ChildIteratorType child_begin(NodeType *N) {
     return N->begin();
   }
-  static inline ChildIteratorType child_end(NodeType* N) {
-    return N->end();
-  }
+  static inline ChildIteratorType child_end(NodeType *N) { return N->end(); }
+};
+
+template <class T> struct GraphTraits;
+
+template <>
+struct GraphTraits<MachineDomTreeNode *>
+    : public MachineDomTreeGraphTraitsBase<MachineDomTreeNode,
+                                           MachineDomTreeNode::iterator> {};
+
+template <>
+struct GraphTraits<const MachineDomTreeNode *>
+    : public MachineDomTreeGraphTraitsBase<const MachineDomTreeNode,
+                                           MachineDomTreeNode::const_iterator> {
 };
 
 template <> struct GraphTraits<MachineDominatorTree*>

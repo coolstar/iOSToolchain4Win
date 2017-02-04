@@ -102,29 +102,12 @@ public:
   /// \brief Finds all declarations lexically contained within the given
   /// DeclContext, after applying an optional filter predicate.
   ///
-  /// \param isKindWeWant a predicate function that returns true if the passed
-  /// declaration kind is one we are looking for. If NULL, all declarations
-  /// are returned.
-  ///
-  /// \return an indication of whether the load succeeded or failed.
-  ExternalLoadResult FindExternalLexicalDecls(const DeclContext *DC,
-                                bool (*isKindWeWant)(Decl::Kind),
-                                SmallVectorImpl<Decl*> &Result) override;
-
-  /// \brief Finds all declarations lexically contained within the given
-  /// DeclContext.
-  ///
-  /// \return true if an error occurred
-  ExternalLoadResult FindExternalLexicalDecls(const DeclContext *DC,
-                                SmallVectorImpl<Decl*> &Result) {
-    return FindExternalLexicalDecls(DC, nullptr, Result);
-  }
-
-  template <typename DeclTy>
-  ExternalLoadResult FindExternalLexicalDeclsBy(const DeclContext *DC,
-                                  SmallVectorImpl<Decl*> &Result) {
-    return FindExternalLexicalDecls(DC, DeclTy::classofKind, Result);
-  }
+  /// \param IsKindWeWant a predicate function that returns true if the passed
+  /// declaration kind is one we are looking for.
+  void
+  FindExternalLexicalDecls(const DeclContext *DC,
+                           llvm::function_ref<bool(Decl::Kind)> IsKindWeWant,
+                           SmallVectorImpl<Decl *> &Result) override;
 
   /// \brief Get the decls that are contained in a file in the Offset/Length
   /// range. \p Length can be 0 to indicate a point at \p Offset instead of
@@ -220,6 +203,10 @@ public:
   /// selector.
   void ReadMethodPool(Selector Sel) override;
 
+  /// Load the contents of the global method pool for a given
+  /// selector if necessary.
+  void updateOutOfDateSelector(Selector Sel) override;
+
   /// \brief Load the set of namespaces that are known to the external source,
   /// which will be used during typo correction.
   void
@@ -228,7 +215,7 @@ public:
   /// \brief Load the set of used but not defined functions or variables with
   /// internal linkage, or used but not defined inline functions.
   void ReadUndefinedButUsed(
-                llvm::DenseMap<NamedDecl*, SourceLocation> &Undefined) override;
+      llvm::MapVector<NamedDecl *, SourceLocation> &Undefined) override;
 
   void ReadMismatchingDeleteExpressions(llvm::MapVector<
       FieldDecl *, llvm::SmallVector<std::pair<SourceLocation, bool>, 4>> &

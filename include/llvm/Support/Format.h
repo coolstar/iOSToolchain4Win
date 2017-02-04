@@ -118,6 +118,7 @@ class FormattedString {
   unsigned Width;
   bool RightJustify;
   friend class raw_ostream;
+
 public:
     FormattedString(StringRef S, unsigned W, bool R)
       : Str(S), Width(W), RightJustify(R) { }
@@ -146,6 +147,7 @@ class FormattedNumber {
   bool Upper;
   bool HexPrefix;
   friend class raw_ostream;
+
 public:
   FormattedNumber(uint64_t HV, int64_t DV, unsigned W, bool H, bool U,
                   bool Prefix)
@@ -168,17 +170,17 @@ inline FormattedNumber format_hex(uint64_t N, unsigned Width,
 /// format_hex_no_prefix - Output \p N as a fixed width hexadecimal. Does not
 /// prepend '0x' to the outputted string.  If number will not fit in width,
 /// full number is still printed.  Examples:
-///   OS << format_hex_no_prefix(255, 4)              => ff
-///   OS << format_hex_no_prefix(255, 4, true)        => FF
-///   OS << format_hex_no_prefix(255, 6)              => 00ff
 ///   OS << format_hex_no_prefix(255, 2)              => ff
+///   OS << format_hex_no_prefix(255, 2, true)        => FF
+///   OS << format_hex_no_prefix(255, 4)              => 00ff
+///   OS << format_hex_no_prefix(255, 1)              => ff
 inline FormattedNumber format_hex_no_prefix(uint64_t N, unsigned Width,
                                             bool Upper = false) {
-  assert(Width <= 18 && "hex width must be <= 18");
+  assert(Width <= 16 && "hex width must be <= 16");
   return FormattedNumber(N, 0, Width, true, Upper, false);
 }
 
-/// format_decimal - Output \p N as a right justified, fixed-width decimal. If 
+/// format_decimal - Output \p N as a right justified, fixed-width decimal. If
 /// number will not fit in width, full number is still printed.  Examples:
 ///   OS << format_decimal(0, 5)     => "    0"
 ///   OS << format_decimal(255, 5)   => "  255"
@@ -187,7 +189,6 @@ inline FormattedNumber format_hex_no_prefix(uint64_t N, unsigned Width,
 inline FormattedNumber format_decimal(int64_t N, unsigned Width) {
   return FormattedNumber(0, N, Width, false, false, false);
 }
-
 
 } // end namespace llvm
 
